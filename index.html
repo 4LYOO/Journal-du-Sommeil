@@ -129,6 +129,28 @@ button:active,a.btn:active{transform:scale(.96)}
 table{width:100%;border-collapse:collapse;font-size:.85rem;margin-bottom:8px}td,th{padding:9px 4px;border-bottom:1px solid var(--cdb);text-align:right;font-weight:500}td:first-child,th:first-child{text-align:left}th{color:var(--mu);font-size:.72rem;font-weight:600}
 tr:last-child td{border-bottom:0}
 
+/* ---------- Barres cliquables / comparaisons ---------- */
+.bars[data-nav]{cursor:pointer}
+.bars i.hit{filter:brightness(1.35);box-shadow:0 0 0 2px var(--tx)}
+.btn.back{display:inline-flex;width:auto;min-height:38px;padding:7px 14px 7px 10px;margin:0 0 12px;font-size:.88rem;border-style:solid;color:var(--tx)}
+.cmh2{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 6px}
+.sum{display:grid;gap:6px;margin:10px 0 4px}
+.sum div{display:flex;align-items:baseline;gap:8px;font-size:.85rem;padding:9px 11px;border-radius:12px;background:var(--fld);border:1px solid var(--fldb);box-shadow:var(--ins)}
+.sum small{color:var(--mu);margin-left:auto;white-space:nowrap}
+.cmp{padding:13px 0 2px;border-top:1px solid var(--cdb)}.cmp:first-of-type{border-top:0}
+.cmh{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:6px;font-size:.92rem;font-weight:500}
+.dl{flex:none;font-size:.74rem;font-weight:600;padding:3px 9px;border-radius:999px;background:var(--fld);border:1px solid var(--fldb);color:var(--mu)}
+.dl.g{color:var(--ok);background:color-mix(in srgb,var(--ok) 15%,transparent);border-color:transparent}
+.dl.b{color:var(--ba);background:color-mix(in srgb,var(--ba) 15%,transparent);border-color:transparent}
+.cb{display:grid;grid-template-columns:112px 1fr 54px;align-items:center;gap:8px;font-size:.76rem;color:var(--mu);margin-top:5px}
+.cb b{color:var(--tx);text-align:right;font-weight:600;font-size:.85rem}
+.tr{height:9px;border-radius:5px;background:var(--fld);box-shadow:var(--ins);overflow:hidden}
+.tr i{display:block;height:100%;border-radius:5px;background:var(--ac);transform-origin:left;animation:grw .7s cubic-bezier(.2,.9,.25,1.05) both}.tr i.o{opacity:.38}
+@keyframes grw{from{transform:scaleX(0)}}
+.it.s{padding:10px 13px;border-radius:15px;margin-bottom:6px;box-shadow:inset 0 1px 0 var(--hi)}.it.s small{font-size:.74rem}.it.s b{font-size:.92rem}
+.it .r b{color:var(--tx);font-weight:600}.it.s .r{text-transform:none}
+.tbl{overflow-x:auto;margin:0 -4px}.tbl table{min-width:100%}.tbl td,.tbl th{padding:8px 4px;white-space:nowrap}
+
 /* ---------- Barre d'onglets ---------- */
 .tbw{position:fixed;left:0;right:0;bottom:0;padding:0 14px calc(12px + env(safe-area-inset-bottom,0px));pointer-events:none;z-index:20}
 .tb{position:relative;pointer-events:auto;max-width:410px;margin:0 auto;display:flex;padding:5px;border-radius:30px;touch-action:none;user-select:none;-webkit-user-select:none;
@@ -182,6 +204,8 @@ play:'<path d="M7 4.5v15l12-7.5Z"/>',
 cl:'<path d="m15 18-6-6 6-6"/>',cr:'<path d="m9 18 6-6-6-6"/>',
 plus:'<path d="M12 5v14M5 12h14"/>',x:'<path d="M18 6 6 18M6 6l12 12"/>',
 file:'<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M8 13h8M8 17h8"/>',
+scale:'<path d="M12 3v18"/><path d="M5 7h14"/><path d="m5 7-3 7a3.5 3.5 0 0 0 6 0Z"/><path d="m19 7-3 7a3.5 3.5 0 0 0 6 0Z"/><path d="M8 21h8"/>',
+trophy:'<path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/>',
 list:'<path d="M8 6h13M8 12h13M8 18h13"/><path d="M3 6h.01M3 12h.01M3 18h.01"/>'};
 const ic=(n,z=18,w=1.7)=>`<svg class="i" width="${z}" height="${z}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${IP[n]}</svg>`;
 const hd=(n,t)=>`<h2><span class="tile">${ic(n,15)}</span>${t}</h2>`;
@@ -213,7 +237,7 @@ const esc=s=>String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g
 const tm=(k,l)=>`<label class="f"><span>${l}</span><input type="time" data-k="${k}" value="${cur[k]}"></label>`;
 const nm=(k,l,v,u)=>`<div class="f"><span>${l}</span><div class="nr"><input type="number" inputmode="numeric" min="0" data-k="${k}" value="${esc(cur[k])}" placeholder="0"><em>${u}</em></div><div class="ch">${v.map(x=>`<button type="button" data-set="${k}:${x}" class="${cur[k]==x&&cur[k]!==''?'on':''}">${x}</button>`).join('')}</div></div>`;
 function form(){const c=cur;
- return `${strip()}<div class="card"><div class="nav"><button type="button" class="ar" data-day="-1" aria-label="Jour précédent">${ic('cl',20)}</button><label><span>Nuit se terminant le (jour du réveil)</span><input type="date" data-k="date" value="${c.date}"></label><button type="button" class="ar" data-day="1" aria-label="Jour suivant">${ic('cr',20)}</button></div><p class="day">${lg(c.date)}${entries[c.date]?'<span class="tag">enregistrée</span>':''}</p>
+ return `${back?`<button class="btn g back" id="back" type="button">${ic('cl',16)}Retour ${back==3?'aux statistiques':'à l’historique'}</button>`:''}${strip()}<div class="card"><div class="nav"><button type="button" class="ar" data-day="-1" aria-label="Jour précédent">${ic('cl',20)}</button><label><span>Nuit se terminant le (jour du réveil)</span><input type="date" data-k="date" value="${c.date}"></label><button type="button" class="ar" data-day="1" aria-label="Jour suivant">${ic('cr',20)}</button></div><p class="day">${lg(c.date)}${entries[c.date]?'<span class="tag">enregistrée</span>':''}</p>
  <button class="btn" id="prev" type="button">${ic('redo',16)}Reprendre la nuit précédente</button></div>
  <div class="card">${hd('bed','Coucher')}<div class="g2">${tm('bed','Mise au lit')}${tm('try','Heure d’essai pour dormir')}</div>
  ${nm('lat','Temps estimé avant l’endormissement',[5,10,15,30,45,60,90],'min')}</div>
@@ -269,7 +293,7 @@ function hist(){const ds=Object.keys(entries).sort().reverse();
  const L=ds.slice(0,7).map(d=>({e:entries[d],s:stats(entries[d])})),av=f=>{const v=L.map(f).filter(x=>x!=null&&!isNaN(x));return v.length?v.reduce((a,b)=>a+b,0)/v.length:null};
  const r=ds.slice(0,14).reverse(),mx=600;
  return `<div class="card">${hd('chart','Moyennes · '+L.length+' dernière(s) nuit(s)')}<div class="calc"><div><b>${hm(av(x=>x.s.sleep))}</b><small>sommeil</small></div><div><b>${av(x=>+x.e.lat||0)==null?'–':Math.round(av(x=>+x.e.lat||0))+' min'}</b><small>endormissement</small></div><div><b>${av(x=>+x.e.wakes||0)==null?'–':av(x=>+x.e.wakes||0).toFixed(1)}</b><small>réveils</small></div></div>
- <div class="bars">${r.map(d=>{const s=stats(entries[d]).sleep||0;return `<i title="${fd(d)}" style="height:${Math.min(100,s/mx*100)}%;background:${FC[entries[d].feel]||'var(--ac)'}"></i>`}).join('')}</div><div class="ax"><span>Sommeil estimé, 14 dernières nuits</span><span>couleur = impression</span></div></div>`
+ <div class="bars" data-nav>${r.map(d=>{const s=stats(entries[d]).sleep||0;return `<i data-open="${d}" title="${fd(d)}" style="height:${Math.min(100,s/mx*100)}%;background:${FC[entries[d].feel]||'var(--ac)'}"></i>`}).join('')}</div><div class="ax"><span>Sommeil estimé, 14 dernières nuits</span><span>couleur = impression</span></div></div>`
  +ds.map(d=>{const e=entries[d],s=stats(e);return `<button class="it" data-open="${d}"><span><b>${lg(d)}</b><br><small>${hm(s.sleep)} de sommeil · ${s.eff==null?'–':s.eff+' %'}</small></span><span class="r"><span class="dot" style="background:${FC[e.feel]||'var(--bd)'}"></span>${e.feel||'–'}${ic('cr',16)}</span></button>`}).join('')
  +`<div class="acts" style="margin-top:14px"><button class="btn" id="cpa" type="button">${ic('copy',16)}Tout copier au format note</button><button class="btn" id="csv" type="button">${ic('file',16)}Exporter en CSV</button><button class="btn" id="bk" type="button">${ic('arch',16)}Sauvegarde complète</button></div>`}
 function lastBk(){try{const t=localStorage.getItem('sommeil-bk');return t?'Dernière sauvegarde : '+new Date(+t).toLocaleDateString('fr-FR',{day:'numeric',month:'long',year:'numeric'}):'Aucune sauvegarde faite sur cet appareil.'}catch(e){return ''}}
@@ -324,28 +348,67 @@ function importView(){const B=imp.blocks;
 const slink=u=>{u=(u||'').trim();if(!/^https?:\/\/\S+$/i.test(u))return '';const h=u.toLowerCase();return `<a class="lk" href="${esc(u)}" target="_blank" rel="noopener noreferrer">${ic('play',14)}Ouvrir ${h.includes('spotify')?'dans Spotify':/youtu/.test(h)?'sur YouTube':'le lien'}${ic('ext',14)}</a>`};
 let rg=14,lt=1,fresh=true;const mean=a=>{a=a.filter(x=>x!=null&&!isNaN(x));return a.length?a.reduce((s,x)=>s+x,0)/a.length:null};
 const tavg=a=>{a=a.filter(Boolean).map(t=>(mi(t)+360)%1440);return a.length?hm((mean(a)+1080)%1440):'–'};
+let cm='sleep',back=0,backY=0;
+const NV=k=>x=>x.e[k]===''||x.e[k]==null?null:+x.e[k],sg=v=>v<0?'−':'+',dm=m=>m<60?Math.round(m)+' min':hm(m);
+const CM={sleep:{l:'Sommeil',f:x=>x.s.sleep,fm:hm,up:1,th:10,df:v=>sg(v)+dm(Math.abs(v))},
+ lat:{l:'Endormissement',f:NV('lat'),fm:v=>Math.round(v)+' min',up:0,th:3,df:v=>sg(v)+Math.round(Math.abs(v))+' min'},
+ wakes:{l:'Réveils',f:NV('wakes'),fm:v=>v.toFixed(1),up:0,th:.25,df:v=>sg(v)+Math.abs(v).toFixed(1)},
+ eff:{l:'Efficacité',f:x=>x.s.eff,fm:v=>Math.round(v)+' %',up:1,th:2,max:100,df:v=>sg(v)+Math.round(Math.abs(v))+' pts'},
+ good:{l:'Bonnes nuits',f:x=>x.e.feel?(x.e.feel==='bonne'?100:0):null,fm:v=>Math.round(v)+' %',up:1,th:8,max:100,df:v=>sg(v)+Math.round(Math.abs(v))+' pts'}};
+// Chaque facteur renvoie true (groupe « avec »), false (groupe « sans ») ou null (nuit non classable)
+function factors(L){const F=[],add=(l,f,y,n)=>F.push({l,f,y,n}),M=x=>x.e.meds||[];
+ add('Fond sonore',x=>x.e.sound?x.e.sound==='oui':null,'avec','sans');
+ add('Produit pris',x=>M(x).length>0,'avec','sans');
+ const nms=[...new Set(L.flatMap(x=>M(x).map(m=>(m.n||'').trim()).filter(Boolean)))];
+ if(nms.length>1)nms.forEach(nm=>add(nm,x=>M(x).some(m=>(m.n||'').trim()===nm),'avec','sans'));
+ add('Sieste dans la journée',x=>(x.e.naps||[]).length>0,'avec','sans');
+ [...new Set(L.flatMap(x=>x.e.odd||[]))].forEach(o=>add(o,x=>(x.e.odd||[]).includes(o),'oui','non'));
+ const bt=L.map(x=>x.e.bed).filter(Boolean).map(t=>(mi(t)+720)%1440).sort((a,b)=>a-b);
+ if(bt.length>=4){const md=bt[Math.floor(bt.length/2)];add('Coucher avant '+hm((md+720)%1440),x=>x.e.bed?(mi(x.e.bed)+720)%1440<md:null,'plus tôt','plus tard')}
+ add('Plus de 15 min au lit avant d’essayer',x=>x.e.bed&&x.e.try?df(x.e.bed,x.e.try)>15:null,'oui','non');
+ add('Nuit de week-end',x=>{const g=new Date(x.d+'T12:00').getDay();return g===0||g===6},'week-end','semaine');
+ add('Après une nuit difficile',x=>{const p=entries[shift(x.d,-1)];return p&&p.feel?p.feel==='difficile':null},'oui','non');
+ return F}
+function cmpView(L){const M=CM[cm];
+ const rows=factors(L).map(F=>{const Y=L.filter(x=>F.f(x)===true),Z=L.filter(x=>F.f(x)===false);if(!Y.length||!Z.length)return null;
+  const a=mean(Y.map(M.f)),b=mean(Z.map(M.f));if(a==null||b==null)return null;
+  const d=a-b,few=Y.length<2||Z.length<2,cls=few||Math.abs(d)<M.th?'':((d>0)===!!M.up?'g':'b');
+  return {...F,ny:Y.length,nz:Z.length,a,b,d,few,cls,sc:few?-1:Math.abs(d)/M.th}}).filter(Boolean).sort((p,q)=>q.sc-p.sc);
+ const tabs=`<div class="ch cmh2">${Object.entries(CM).map(([k,v])=>`<button type="button" data-cm="${k}" class="${cm===k?'on':''}">${v.l}</button>`).join('')}</div>`;
+ if(!rows.length)return `<div class="card">${hd('scale','Comparaisons')}${tabs}<p class="st" style="margin-top:10px">Pas encore assez de nuits variées pour comparer. Renseignez fond sonore, produits, siestes et conditions : les comparaisons apparaîtront ici.</p></div>`;
+ const mx=M.max||Math.max(1,...rows.flatMap(r=>[r.a,r.b]))*1.05,best=rows.find(r=>r.cls==='g'),worst=rows.find(r=>r.cls==='b');
+ const sm=(r,t,c)=>r?`<div><span class="dot" style="background:var(--${c})"></span><span>${t} : <b>${esc(r.l)}</b> (${r.y})</span><small>${M.df(r.d)}</small></div>`:'';
+ return `<div class="card">${hd('scale','Comparaisons')}${tabs}${best||worst?`<div class="sum">${sm(best,'Le plus favorable','ok')}${sm(worst,'Le moins favorable','ba')}</div>`:''}`
+ +rows.map(r=>`<div class="cmp"><div class="cmh"><span>${esc(r.l)}</span><span class="dl ${r.cls}">${r.few?'peu de nuits':M.df(r.d)}</span></div>${[[r.y,r.ny,r.a,''],[r.n,r.nz,r.b,'o']].map(([l,n,v,o])=>`<div class="cb"><span>${l} · ${n} nuit${n>1?'s':''}</span><div class="tr"><i class="${o}" style="width:${Math.max(2,v/mx*100)}%"></i></div><b>${M.fm(v)}</b></div>`).join('')}</div>`).join('')
+ +`<p class="st" style="margin:12px 0 0">Écart = nuits « avec » moins nuits « sans ». Vert : plutôt favorable, rouge : plutôt défavorable. Ce sont des tendances, pas des preuves : à lire avec prudence quand il y a peu de nuits.</p></div>`}
 function statsView(){const cut=shift(today(),1-rg),L=Object.keys(entries).sort().filter(d=>d>=cut).map(d=>({d,e:entries[d],s:stats(entries[d])}));
- const rc=`<div class="card"><div class="ch" style="margin:0">${[7,14,30,90].map(n=>`<button type="button" data-rg="${n}" class="${rg===n?'on':''}">${n} j</button>`).join('')}</div><small style="color:var(--mu);display:block;margin-top:10px">Couleur des barres : ${FEEL.map(f=>`<span class="dot" style="background:${FC[f]};margin-left:6px"></span>${f}`).join('')}</small></div>`;
+ const rc=`<div class="card"><div class="ch" style="margin:0">${[7,14,30,90].map(n=>`<button type="button" data-rg="${n}" class="${rg===n?'on':''}">${n} j</button>`).join('')}</div><small style="color:var(--mu);display:block;margin-top:10px">Couleur des barres : ${FEEL.map(f=>`<span class="dot" style="background:${FC[f]};margin-left:6px"></span>${f}`).join('')}</small><small style="color:var(--mu);display:block;margin-top:4px">Touchez une barre pour ouvrir le détail de la nuit.</small></div>`;
  if(!L.length)return rc+'<div class="card">Aucune nuit sur cette période.</div>';
- const N=k=>x=>x.e[k]===''||x.e[k]==null?null:+x.e[k],mn=f=>mean(L.map(f)),R=(v,u,g)=>v==null?'–':(g?v.toFixed(1):Math.round(v))+u;
+ const N=NV,mn=f=>mean(L.map(f)),R=(v,u,g)=>v==null?'–':(g?v.toFixed(1):Math.round(v))+u;
  const C=[[hm(mn(x=>x.s.sleep)),'sommeil'],[R(mn(N('lat')),' min'),'endormissement'],[R(mn(N('wakes')),'',1),'réveils / nuit'],[R(mn(x=>x.s.eff),' %'),'efficacité'],[tavg(L.map(x=>x.e.bed)),'coucher'],[tavg(L.map(x=>x.e.up)),'lever']];
  const ch=(t,f,fm)=>{const P=L.map(x=>({d:x.d,v:f(x),f:x.e.feel})).filter(p=>p.v!=null&&!isNaN(p.v));if(!P.length)return '';const mx=Math.max(1,...P.map(p=>p.v)),a=mean(P.map(p=>p.v));
-  return `<div class="card"><h2>${t}</h2><small style="color:var(--mu)">Moyenne ${fm(a)} · max ${fm(mx)}</small><div class="bars">${P.map(p=>`<i title="${fd(p.d)} : ${fm(p.v)}" style="height:${Math.max(3,p.v/mx*100)}%;background:${FC[p.f]||'var(--ac)'}"></i>`).join('')}</div><div class="ax"><span>${fd(P[0].d).slice(0,5)}</span><span>${fd(P[P.length-1].d).slice(0,5)}</span></div></div>`};
+  return `<div class="card"><h2>${t}</h2><small style="color:var(--mu)">Moyenne ${fm(a)} · max ${fm(mx)}</small><div class="bars" data-nav>${P.map(p=>`<i data-open="${p.d}" title="${fd(p.d)} : ${fm(p.v)}" style="height:${Math.max(3,p.v/mx*100)}%;background:${FC[p.f]||'var(--ac)'}"></i>`).join('')}</div><div class="ax"><span>${fd(P[0].d).slice(0,5)}</span><span>${fd(P[P.length-1].d).slice(0,5)}</span></div></div>`};
  const n=FEEL.map(f=>L.filter(x=>x.e.feel===f).length),tot=n.reduce((a,b)=>a+b,0)||1;
- const rw=(l,g)=>{const m=mean(g.map(N('lat')));return `<tr><td>${l}</td><td>${g.length}</td><td>${hm(mean(g.map(x=>x.s.sleep)))}</td><td>${m==null?'–':Math.round(m)+' min'}</td></tr>`};
- const fs=x=>x.e.sound==='oui',md=x=>(x.e.meds||[]).length>0,sn=x=>(x.e.naps||[]).length>0,Y=f=>L.filter(f),Z=f=>L.filter(x=>!f(x));
- return rc+`<div class="card"><h2>Moyennes</h2><div class="calc" style="row-gap:16px">${C.map(c=>`<div><b>${c[0]}</b><small>${c[1]}</small></div>`).join('')}</div></div>`
+ const pr=FEEL.slice().reverse().map(f=>{const g=L.filter(x=>x.e.feel===f),v=(k,u,dd)=>{const m=mean(g.map(N(k)));return m==null?'–':(dd?m.toFixed(1):Math.round(m))+u};
+  return `<tr><td><span class="dot" style="background:${FC[f]}"></span>${f}</td><td>${g.length}</td><td>${g.length?hm(mean(g.map(x=>x.s.sleep))):'–'}</td><td>${v('lat',' min')}</td><td>${v('wakes','',1)}</td><td>${tavg(g.map(x=>x.e.bed))}</td></tr>`}).join('');
+ const pick=(l,f,fm,hi,ok=()=>true)=>{const P=L.filter(x=>{const v=f(x);return v!=null&&!isNaN(v)&&ok(v)});if(!P.length)return '';const x=P.reduce((a,b)=>hi?(f(b)>f(a)?b:a):(f(b)<f(a)?b:a));
+  return `<button class="it s" data-open="${x.d}"><span><small>${l}</small><br><b>${lg(x.d)}</b></span><span class="r"><b>${fm(f(x))}</b>${ic('cr',16)}</span></button>`};
+ const rem=pick('Plus longue nuit',x=>x.s.sleep,hm,1)+pick('Plus courte nuit',x=>x.s.sleep,hm,0)+pick('Endormissement le plus long',N('lat'),v=>v+' min',1,v=>v>0)+pick('Le plus de réveils',N('wakes'),v=>v+' réveil'+(v>1?'s':''),1,v=>v>0)+pick('Meilleure efficacité',x=>x.s.eff,v=>v+' %',1);
+ return rc+`<div class="card">${hd('chart','Moyennes')}<div class="calc" style="row-gap:8px">${C.map(c=>`<div><b>${c[0]}</b><small>${c[1]}</small></div>`).join('')}</div></div>`
  +ch('Sommeil estimé',x=>x.s.sleep,hm)+ch('Temps d’endormissement',N('lat'),v=>Math.round(v)+' min')+ch('Réveils nocturnes',N('wakes'),v=>v.toFixed(v%1?1:0))+ch('Efficacité du sommeil',x=>x.s.eff,v=>Math.round(v)+' %')
- +`<div class="card"><h2>Impression générale</h2><div class="stk">${FEEL.map((f,i)=>`<i style="width:${n[i]/tot*100}%;background:${FC[f]}"></i>`).join('')}</div><small style="color:var(--mu)">${FEEL.map((f,i)=>f+' '+n[i]).join(' · ')}</small></div>`
- +`<div class="card"><h2>Comparaisons</h2><table><tr><th></th><th>nuits</th><th>sommeil</th><th>endorm.</th></tr>${rw('Fond sonore',Y(fs))}${rw('Sans fond sonore',Z(fs))}${rw('Avec produit',Y(md))}${rw('Sans produit',Z(md))}${rw('Avec sieste',Y(sn))}${rw('Sans sieste',Z(sn))}</table><small style="color:var(--mu)">À lire avec prudence quand il y a peu de nuits.</small></div>`}
-function render(){const ch=tab!==lt||fresh;fresh=false;if(tab!==lt){scrollTo(0,0);lt=tab}[1,2,3,4].forEach(n=>$('#t'+n).classList.toggle('on',tab==n));$('.pill').style.transform=`translateX(${(tab-1)*100}%)`;$('#app').classList.toggle('anim',ch);
+ +`<div class="card">${hd('star','Impression générale')}<div class="stk">${FEEL.map((f,i)=>`<i style="width:${n[i]/tot*100}%;background:${FC[f]}"></i>`).join('')}</div><small style="color:var(--mu)">${FEEL.map((f,i)=>f+' '+n[i]).join(' · ')}</small>
+ <p class="st" style="margin:14px 0 6px">Profil moyen selon l’impression :</p><div class="tbl"><table><tr><th></th><th>nuits</th><th>sommeil</th><th>endorm.</th><th>réveils</th><th>coucher</th></tr>${pr}</table></div></div>`
+ +cmpView(L)
+ +(rem?`<div class="card">${hd('trophy','Nuits remarquables')}${rem}</div>`:'')}
+function openNight(d){back=tab===1?back:tab;backY=scrollY;openDate(d);tab=1;fresh=true;render();scrollTo({top:0,behavior:'instant'})}
+function render(){if(tab!==1)back=0;const ch=tab!==lt||fresh;fresh=false;if(tab!==lt){scrollTo(0,0);lt=tab}[1,2,3,4].forEach(n=>$('#t'+n).classList.toggle('on',tab==n));$('.pill').style.transform=`translateX(${(tab-1)*100}%)`;$('#app').classList.toggle('anim',ch);
  $('#app').innerHTML=tab==1?form():tab==2?hist():tab==3?statsView():importView();medNames();if(tab==1){calc();const s=$('.strip'),a=$('.strip .on');if(s&&a)s.scrollLeft=a.offsetLeft-s.clientWidth/2}$$('.bars i').forEach((b,i)=>b.style.animationDelay=Math.min(i*20,600)+'ms')}
 async function csv(){const H=['date','mise_au_lit','essai_dormir','latence_min','reveils','duree_reveils_min','reveil_definitif','lever','siestes','fond_sonore','conditions','produits','impression','sommeil_estime_min','efficacite_pct','notes'];
  const q=v=>'"'+String(v??'').replace(/"/g,'""')+'"';
  const rows=Object.keys(entries).sort().map(d=>{const e=entries[d],s=stats(e);return [d,e.bed,e.try,e.lat,e.wakes,e.wakeDur,e.wake,e.up,e.naps.map(n=>n.h+' '+n.d).join(';'),e.sound+(e.soundNote?' '+e.soundNote:'')+(e.soundUrl?' '+e.soundUrl:''),[...e.odd,e.oddNote].filter(Boolean).join(';'),e.meds.map(m=>[m.n,m.q,m.t].join(' ')).join(';'),e.feel,s.sleep,s.eff,e.note].map(q).join(',')});
  const b=new Blob(['\ufeff'+H.join(',')+'\n'+rows.join('\n')],{type:'text/csv'});try{await saveFile(b,'journal-sommeil.csv')}catch(e){}}
 const app=$('#app');
-[['edit','Saisie'],['cal','Historique'],['chart','Stats'],['imp','Importer']].forEach(([n,l],i)=>{const b=$('#t'+(i+1));b.innerHTML=ic(n,22,1.6)+l;b.onclick=()=>{tab=i+1;render()}});
+[['edit','Saisie'],['cal','Historique'],['chart','Stats'],['imp','Importer']].forEach(([n,l],i)=>{const b=$('#t'+(i+1));b.innerHTML=ic(n,22,1.6)+l;b.onclick=()=>{tab=i+1;back=0;render()}});
 $('#lg').innerHTML=ic('moon',20,1.8);
 function setTheme(n){document.documentElement.dataset.theme=n;$('#th').innerHTML=ic(n==='dark'?'sun':'moon',18);$('meta[name=theme-color]').content=n==='dark'?'#09090b':'#f2f2f6'}
 let th0='dark';try{th0=localStorage.getItem('sommeil-th')||'dark'}catch(e){}setTheme(th0);
@@ -356,7 +419,7 @@ $('#th').onclick=()=>{const n=document.documentElement.dataset.theme==='dark'?'l
  tb.addEventListener('pointerdown',e=>{d={x0:e.clientX,r:tb.getBoundingClientRect(),id:e.pointerId,on:false}});
  tb.addEventListener('pointermove',e=>{if(!d)return;if(!d.on){if(Math.abs(e.clientX-d.x0)<8)return;d.on=true;try{tb.setPointerCapture(d.id)}catch(x){}tb.classList.add('drag')}
   const {p,i}=at(e.clientX);pill.style.transform=`translateX(${p}px)`;bs.forEach((b,j)=>b.classList.toggle('hov',j+1===i))});
- const end=e=>{if(!d)return;const was=d.on;if(was){tab=at(e.clientX).i;skip=true;setTimeout(()=>skip=false,80)}d=null;tb.classList.remove('drag');bs.forEach(b=>b.classList.remove('hov'));if(was)render()};
+ const end=e=>{if(!d)return;const was=d.on;if(was){tab=at(e.clientX).i;back=0;skip=true;setTimeout(()=>skip=false,80)}d=null;tb.classList.remove('drag');bs.forEach(b=>b.classList.remove('hov'));if(was)render()};
  tb.addEventListener('pointerup',end);tb.addEventListener('pointercancel',end);
  tb.addEventListener('click',e=>{if(skip){e.stopPropagation();e.preventDefault()}},true)})();
 app.addEventListener('input',e=>{const t=e.target;
@@ -364,12 +427,16 @@ app.addEventListener('input',e=>{const t=e.target;
  else if(t.dataset.nap){const[i,f]=t.dataset.nap.split(':');cur.naps[i][f]=t.value;touch()}
  else if(t.dataset.med){const[i,f]=t.dataset.med.split(':');cur.meds[i][f]=t.value;touch()}});
 app.addEventListener('change',e=>{const t=e.target;if(t.id==='rsf'){if(t.files[0])restore(t.files[0]);t.value='';return}if(t.dataset.bd!=null){imp.blocks[t.dataset.bd].date=t.value;return}if(t.dataset.k==='date'&&t.value){clearTimeout(tmr);save().then(()=>{openDate(t.value);render()})}});
-app.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;const d=b.dataset;
+app.addEventListener('click',e=>{const bs=e.target.closest('.bars[data-nav]');
+ if(bs){let hit=null,bd=1e9;$$('i[data-open]',bs).forEach(i=>{const r=i.getBoundingClientRect(),dx=Math.abs(r.left+r.width/2-e.clientX);if(dx<bd){bd=dx;hit=i}});if(hit){hit.classList.add('hit');setTimeout(()=>openNight(hit.dataset.open),130)}return}
+ const b=e.target.closest('button');if(!b)return;const d=b.dataset;
  if(d.day)go(shift(cur.date,+d.day));else if(d.goto)go(d.goto);else if(d.rg){rg=+d.rg;render()}else if(d.im){imp.text=$('#impt').value;imp.mode=d.im;if(imp.text.trim())imp.blocks=parseNotes(imp.text);render()}else if(b.id==='parse')doParse();else if(b.id==='doimp')doImport(b);else if(d.set){const[k,v]=d.set.split(':');cur[k]=(d.tg&&cur[k]===v)?'':v;$$('button',b.parentNode).forEach(x=>x.classList.toggle('on',x.dataset.set===k+':'+cur[k]));const i=$('input[data-k="'+k+'"]');if(i)i.value=cur[k];touch();calc()}
  else if(d.odd){const i=cur.odd.indexOf(d.odd);i<0?cur.odd.push(d.odd):cur.odd.splice(i,1);b.classList.toggle('on',i<0);touch()}
  else if(d.add){cur[d.add].push(d.add==='naps'?{h:'',d:''}:{n:'',q:'',t:''});render()}
  else if(d.rm){const[k,i]=d.rm.split(':');cur[k].splice(i,1);touch();render()}
- else if(d.open){openDate(d.open);tab=1;render();scrollTo(0,0)}
+ else if(d.open)openNight(d.open);
+ else if(d.cm){cm=d.cm;render()}
+ else if(b.id==='back'){const t=back,y=backY;back=0;tab=t;clearTimeout(tmr);save().then(()=>{render();requestAnimationFrame(()=>scrollTo({top:y,behavior:'instant'}))})}
  else if(b.id==='prev'){const p=Object.keys(entries).sort().filter(x=>x<cur.date).pop();if(p){const o=entries[p];Object.assign(cur,{bed:o.bed,try:o.try,sound:o.sound,soundNote:o.soundNote,meds:clone(o.meds)});touch();render()}else b.textContent='Aucune nuit précédente'}
  else if(b.id==='cp')copy(noteText(cur),b);
  else if(b.id==='cpa')copy(Object.keys(entries).sort().map(k=>noteText(entries[k])).join('\n\n———\n\n'),b);
