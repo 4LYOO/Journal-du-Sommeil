@@ -151,6 +151,14 @@ tr:last-child td{border-bottom:0}
 .it .r b{color:var(--tx);font-weight:600}.it.s .r{text-transform:none}
 .tbl{overflow-x:auto;margin:0 -4px}.tbl table{min-width:100%}.tbl td,.tbl th{padding:8px 4px;white-space:nowrap}
 
+/* ---------- Glisser pour changer de nuit ---------- */
+main.swp{will-change:transform}
+main.snap{transition:transform .32s cubic-bezier(.2,.9,.25,1.1),opacity .32s}
+main.out{transition:transform .2s ease-in,opacity .2s ease-in}
+main.inL{animation:inL .38s cubic-bezier(.2,.9,.25,1.05) both}main.inR{animation:inR .38s cubic-bezier(.2,.9,.25,1.05) both}
+@keyframes inL{from{opacity:0;transform:translateX(60px)}}@keyframes inR{from{opacity:0;transform:translateX(-60px)}}
+.hint{display:block;text-align:center;color:var(--mu2);font-size:.72rem;margin:-6px 0 12px}
+
 /* ---------- Barre d'onglets ---------- */
 .tbw{position:fixed;left:0;right:0;bottom:0;padding:0 14px calc(12px + env(safe-area-inset-bottom,0px));pointer-events:none;z-index:20}
 .tb{position:relative;pointer-events:auto;max-width:410px;margin:0 auto;display:flex;padding:5px;border-radius:30px;touch-action:none;user-select:none;-webkit-user-select:none;
@@ -238,7 +246,7 @@ const tm=(k,l)=>`<label class="f"><span>${l}</span><input type="time" data-k="${
 const nm=(k,l,v,u)=>`<div class="f"><span>${l}</span><div class="nr"><input type="number" inputmode="numeric" min="0" data-k="${k}" value="${esc(cur[k])}" placeholder="0"><em>${u}</em></div><div class="ch">${v.map(x=>`<button type="button" data-set="${k}:${x}" class="${cur[k]==x&&cur[k]!==''?'on':''}">${x}</button>`).join('')}</div></div>`;
 function form(){const c=cur;
  return `${back?`<button class="btn g back" id="back" type="button">${ic('cl',16)}Retour ${back==3?'aux statistiques':'à l’historique'}</button>`:''}${strip()}<div class="card"><div class="nav"><button type="button" class="ar" data-day="-1" aria-label="Jour précédent">${ic('cl',20)}</button><label><span>Nuit se terminant le (jour du réveil)</span><input type="date" data-k="date" value="${c.date}"></label><button type="button" class="ar" data-day="1" aria-label="Jour suivant">${ic('cr',20)}</button></div><p class="day">${lg(c.date)}${entries[c.date]?'<span class="tag">enregistrée</span>':''}</p>
- <button class="btn" id="prev" type="button">${ic('redo',16)}Reprendre la nuit précédente</button></div>
+ <small class="hint">Glissez l’écran pour changer de nuit</small><button class="btn" id="prev" type="button">${ic('redo',16)}Reprendre la nuit précédente</button></div>
  <div class="card">${hd('bed','Coucher')}<div class="g2">${tm('bed','Mise au lit')}${tm('try','Heure d’essai pour dormir')}</div>
  ${nm('lat','Temps estimé avant l’endormissement',[5,10,15,30,45,60,90],'min')}</div>
  <div class="card">${hd('night','Pendant la nuit')}
@@ -422,6 +430,17 @@ $('#th').onclick=()=>{const n=document.documentElement.dataset.theme==='dark'?'l
  const end=e=>{if(!d)return;const was=d.on;if(was){tab=at(e.clientX).i;back=0;skip=true;setTimeout(()=>skip=false,80)}d=null;tb.classList.remove('drag');bs.forEach(b=>b.classList.remove('hov'));if(was)render()};
  tb.addEventListener('pointerup',end);tb.addEventListener('pointercancel',end);
  tb.addEventListener('click',e=>{if(skip){e.stopPropagation();e.preventDefault()}},true)})();
+// Glisser l'écran horizontalement sur la page Saisie : nuit précédente / suivante
+(()=>{let g=null;
+ app.addEventListener('touchstart',e=>{if(tab!==1||e.touches.length>1||e.target.closest('.strip,textarea')){g=null;return}const t=e.touches[0];g={x:t.clientX,y:t.clientY,on:false,dx:0}},{passive:true});
+ app.addEventListener('touchmove',e=>{if(!g)return;const t=e.touches[0],dx=t.clientX-g.x,dy=t.clientY-g.y;
+  if(!g.on){if(Math.abs(dy)>12&&Math.abs(dy)>Math.abs(dx)){g=null;return}if(Math.abs(dx)<12)return;g.on=true;app.className='swp';document.activeElement&&document.activeElement.blur&&document.activeElement.blur()}
+  e.preventDefault();const fut=dx<0&&cur.date>=today();g.dx=dx;app.style.transform=`translateX(${fut?dx*.15:dx*.55}px)`;app.style.opacity=1-Math.min(.5,Math.abs(dx)/700)},{passive:false});
+ const end=()=>{if(!g||!g.on){g=null;return}const dx=g.dx;g=null;const n=dx<0?1:-1,d=shift(cur.date,n);
+  if(Math.abs(dx)<70||(n>0&&d>today())){app.className='snap';app.style.transform='';app.style.opacity='';if(n>0&&Math.abs(dx)>=70)setStatus('Pas de nuit après aujourd’hui');setTimeout(()=>app.className='',340);return}
+  app.className='out';app.style.transform=`translateX(${dx<0?-45:45}%)`;app.style.opacity='0';
+  setTimeout(()=>{clearTimeout(tmr);save().then(()=>{openDate(d);render();app.style.transform='';app.style.opacity='';app.className=n>0?'inL':'inR';scrollTo({top:0,behavior:'instant'});setTimeout(()=>app.className='',400)})},190)};
+ app.addEventListener('touchend',end);app.addEventListener('touchcancel',end)})();
 app.addEventListener('input',e=>{const t=e.target;
  if(t.dataset.k&&t.dataset.k!=='date'){cur[t.dataset.k]=t.value;touch();calc();if(t.dataset.k==='soundUrl')$('#sl').innerHTML=slink(t.value);if(['lat','wakeDur'].includes(t.dataset.k))$$('[data-set^="'+t.dataset.k+':"]').forEach(b=>b.classList.toggle('on',b.dataset.set===t.dataset.k+':'+t.value))}
  else if(t.dataset.nap){const[i,f]=t.dataset.nap.split(':');cur.naps[i][f]=t.value;touch()}
