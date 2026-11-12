@@ -1,6 +1,6 @@
 // Service worker : permet d'ouvrir l'application sans connexion.
 // Pensez à changer VERSION à chaque modification des fichiers pour forcer la mise à jour.
-const VERSION = 'sommeil-v4';
+const VERSION = 'sommeil-v5';
 const FILES = ['./', './index.html', './manifest.webmanifest', './icons/icon-192.png', './icons/icon-512.png', './icons/apple-touch-icon.png'];
 
 self.addEventListener('install', e => {

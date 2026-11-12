@@ -181,10 +181,74 @@ main.anim>*{animation:rise .5s cubic-bezier(.2,.9,.25,1.1) both}
 main.anim>*:nth-child(2){animation-delay:.04s}main.anim>*:nth-child(3){animation-delay:.08s}main.anim>*:nth-child(4){animation-delay:.12s}main.anim>*:nth-child(5){animation-delay:.16s}main.anim>*:nth-child(n+6){animation-delay:.2s}
 .ch button.on{animation:pop .3s cubic-bezier(.3,1.6,.5,1)}
 @media(prefers-reduced-motion:reduce){*,.amb i{animation:none!important;transition:none!important}}
+
+/* ---------- Profondeur ---------- */
+:root{--sh:0 1px 1px rgba(20,20,40,.05),0 3px 6px -2px rgba(20,20,40,.06),0 14px 28px -12px rgba(20,20,40,.18),0 36px 60px -36px rgba(20,20,40,.25);
+ --ins:inset 0 2px 4px rgba(0,0,0,.07),inset 0 -1px 0 rgba(255,255,255,.8);--edge:rgba(0,0,0,.05);--grain:.035}
+:root[data-theme="dark"]{--sh:0 1px 0 rgba(0,0,0,.4),0 4px 8px -2px rgba(0,0,0,.45),0 18px 36px -14px rgba(0,0,0,.8),0 46px 80px -40px rgba(0,0,0,.95);
+ --ins:inset 0 2px 5px rgba(0,0,0,.55),inset 0 -1px 0 rgba(255,255,255,.05);--edge:rgba(0,0,0,.45);--grain:.06}
+body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:var(--grain);
+ background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+body::after{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(120% 80% at 50% 40%,transparent 55%,rgba(0,0,0,.35))}
+:root:not([data-theme="dark"]) body::after{background:radial-gradient(120% 80% at 50% 40%,transparent 60%,rgba(40,40,80,.08))}
+.card{box-shadow:inset 0 1px 0 var(--hi),inset 0 -1px 0 var(--edge),var(--sh)}
+.card::before{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;background:linear-gradient(170deg,rgba(255,255,255,.07),transparent 35%)}
+:root:not([data-theme="dark"]) .card::before{background:linear-gradient(170deg,rgba(255,255,255,.9),transparent 40%)}
+.card>*{position:relative}
+.tile{background:linear-gradient(160deg,var(--hi),transparent 70%),var(--btn);box-shadow:inset 0 1px 0 var(--hi),inset 0 -1px 0 var(--edge),0 4px 10px -3px rgba(0,0,0,.45),0 1px 2px rgba(0,0,0,.3)}
+.btn,.strip button,#th{box-shadow:inset 0 1px 0 var(--hi),inset 0 -1px 0 var(--edge),0 1px 2px rgba(0,0,0,.25),0 8px 18px -10px rgba(0,0,0,.6)}
+.btn.p{background:linear-gradient(180deg,#fff,#d9d9df);color:#0b0b0d;box-shadow:inset 0 1px 0 #fff,inset 0 -2px 0 rgba(0,0,0,.12),0 2px 4px rgba(0,0,0,.3),0 14px 26px -12px rgba(0,0,0,.75)}
+:root:not([data-theme="dark"]) .btn.p{background:linear-gradient(180deg,#34343a,#111114);color:#fff;box-shadow:inset 0 1px 0 rgba(255,255,255,.18),0 2px 4px rgba(0,0,0,.2),0 14px 26px -12px rgba(0,0,0,.45)}
+.btn.g{box-shadow:none}
+.ch button.on,.strip button.on{background:linear-gradient(180deg,#fff,#d6d6dc);color:#0b0b0d;box-shadow:inset 0 1px 0 #fff,0 2px 4px rgba(0,0,0,.35),0 8px 16px -8px rgba(0,0,0,.7)}
+.strip button.on b{color:#0b0b0d}
+:root:not([data-theme="dark"]) .ch button.on,:root:not([data-theme="dark"]) .strip button.on{background:linear-gradient(180deg,#38383e,#111114);color:#fff;box-shadow:inset 0 1px 0 rgba(255,255,255,.18),0 6px 14px -6px rgba(0,0,0,.45)}
+:root:not([data-theme="dark"]) .strip button.on b{color:#fff}
+.feel button.on{box-shadow:inset 0 1px 0 rgba(255,255,255,.35),inset 0 -2px 0 rgba(0,0,0,.15),0 8px 18px -8px rgba(0,0,0,.6)}
+.feel button[data-set="feel:difficile"].on{background:linear-gradient(180deg,color-mix(in srgb,var(--ba) 80%,#fff),var(--ba))}
+.feel button[data-set="feel:moyenne"].on{background:linear-gradient(180deg,color-mix(in srgb,var(--wa) 80%,#fff),var(--wa))}
+.feel button[data-set="feel:bonne"].on{background:linear-gradient(180deg,color-mix(in srgb,var(--ok) 80%,#fff),var(--ok))}
+.bars i{position:relative;box-shadow:inset 0 1px 0 rgba(255,255,255,.35),0 4px 8px -4px rgba(0,0,0,.6)}
+.bars i::after{content:"";position:absolute;inset:0;border-radius:inherit;background:linear-gradient(180deg,rgba(255,255,255,.3),transparent 55%)}
+.tr i{background:linear-gradient(180deg,#fff,var(--ac));box-shadow:0 0 8px -2px rgba(255,255,255,.25)}
+:root:not([data-theme="dark"]) .tr i{background:linear-gradient(180deg,#55555c,#1c1c20);box-shadow:none}
+.ringw{filter:drop-shadow(0 14px 24px rgba(0,0,0,.45))}
+.rc::before{content:"";position:absolute;width:112px;height:112px;border-radius:50%;background:radial-gradient(circle at 50% 30%,var(--hi),transparent 70%);box-shadow:inset 0 2px 6px rgba(0,0,0,.35)}
+.rc>*{position:relative}
+.logo{box-shadow:inset 0 1px 0 rgba(255,255,255,.25),inset 0 -2px 0 rgba(0,0,0,.4),0 2px 4px rgba(0,0,0,.4),0 10px 22px -8px rgba(0,0,0,.7)}
+.tb{box-shadow:inset 0 1px 0 var(--hi),inset 0 -1px 0 var(--edge),0 2px 6px rgba(0,0,0,.25),0 24px 50px -14px rgba(0,0,0,.7)}
+.pill{background:linear-gradient(180deg,var(--pil),transparent 130%);box-shadow:inset 0 1px 0 var(--hi),0 2px 4px rgba(0,0,0,.25),0 8px 18px -6px rgba(0,0,0,.45)}
+.it{box-shadow:inset 0 1px 0 var(--hi),inset 0 -1px 0 var(--edge),0 2px 4px rgba(0,0,0,.2),0 12px 22px -14px rgba(0,0,0,.7)}
+.day{margin-top:2px}
+
+/* ---------- Bande des jours réduite (reste en haut au défilement) ---------- */
+#mini{position:fixed;top:0;left:0;right:0;z-index:18;pointer-events:none;padding:calc(env(safe-area-inset-top,0px) + 8px) 14px 0;
+ opacity:0;transform:translateY(-24px) scale(.96);transition:opacity .25s,transform .35s cubic-bezier(.2,.9,.25,1.1)}
+#mini.show{opacity:1;transform:none}#mini.show .ms{pointer-events:auto}
+.ms{max-width:410px;margin:0 auto;display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;padding:5px;border-radius:20px;
+ background:var(--tbg);border:1px solid var(--cdb);-webkit-backdrop-filter:blur(24px) saturate(180%);backdrop-filter:blur(24px) saturate(180%);
+ box-shadow:inset 0 1px 0 var(--hi),0 2px 6px rgba(0,0,0,.25),0 16px 34px -12px rgba(0,0,0,.7)}
+.ms::-webkit-scrollbar{display:none}
+.ms button{flex:0 0 auto;min-width:36px;height:34px;border:0;border-radius:14px;background:none;color:var(--mu2);font-weight:600;font-size:.92rem}
+.ms button.ok{color:var(--tx)}
+.ms button.on{background:linear-gradient(180deg,#fff,#d6d6dc);color:#0b0b0d;box-shadow:inset 0 1px 0 #fff,0 4px 10px -4px rgba(0,0,0,.6)}
+:root:not([data-theme="dark"]) .ms button.on{background:linear-gradient(180deg,#38383e,#111114);color:#fff}
+
+/* ---------- Bouton « reprendre la nuit précédente » ---------- */
+.iw{display:flex;gap:6px;align-items:center}.iw>input,.iw>textarea,.iw>.btn{flex:1;min-width:0}.iw.ta{align-items:flex-start}
+.iw+.iw,.ch+.iw{margin-top:8px}
+.g2 .f .iw input{width:118px;flex:none}
+.rp{flex:none;width:40px;height:40px;border-radius:12px;display:grid;place-items:center;border:1px solid var(--cdb);background:var(--btn);color:var(--mu);
+ box-shadow:inset 0 1px 0 var(--hi),inset 0 -1px 0 var(--edge),0 1px 2px rgba(0,0,0,.25),0 6px 14px -8px rgba(0,0,0,.6)}
+.rp:not(:disabled):active,.rp.done{color:var(--tx)}
+.rp.done{color:var(--ok);animation:pop .35s cubic-bezier(.3,1.6,.5,1)}
+.rp:disabled{opacity:.3;box-shadow:none}
+.nr .rp{margin-left:2px}
+.iw.ta .rp{margin-top:2px}
 </style></head><body><div class="amb"><i></i><i></i></div>
 <header class="hd"><div class="brand"><span class="logo" id="lg"></span><div><h1>Journal du sommeil</h1><p id="mode"></p></div></div><button id="th" type="button" aria-label="Changer de thème"></button></header>
 
-<main id="app"></main>
+<div id="mini"><div class="ms"></div></div><main id="app"></main>
 <div class="tbw"><nav class="tb"><b class="pill"></b><button id="t1" class="on">Saisie</button><button id="t2">Historique</button><button id="t3">Stats</button><button id="t4">Importer</button></nav></div><div id="sv"></div>
 <datalist id="dl"><option value="Donormyl"></datalist>
 <script>
@@ -214,6 +278,8 @@ plus:'<path d="M12 5v14M5 12h14"/>',x:'<path d="M18 6 6 18M6 6l12 12"/>',
 file:'<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M8 13h8M8 17h8"/>',
 scale:'<path d="M12 3v18"/><path d="M5 7h14"/><path d="m5 7-3 7a3.5 3.5 0 0 0 6 0Z"/><path d="m19 7-3 7a3.5 3.5 0 0 0 6 0Z"/><path d="M8 21h8"/>',
 trophy:'<path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/>',
+check:'<path d="M20 6 9 17l-5-5"/>',
+back2:'<path d="M9 14 4 9l5-5"/><path d="M20 20v-7a4 4 0 0 0-4-4H4"/>',
 list:'<path d="M8 6h13M8 12h13M8 18h13"/><path d="M3 6h.01M3 12h.01M3 18h.01"/>'};
 const ic=(n,z=18,w=1.7)=>`<svg class="i" width="${z}" height="${z}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${IP[n]}</svg>`;
 const hd=(n,t)=>`<h2><span class="tile">${ic(n,15)}</span>${t}</h2>`;
@@ -242,10 +308,15 @@ async function save(){if(!isFilled(cur))return;
 function openDate(d){cur=entries[d]?{...blank(d),...clone(entries[d])}:blank(d);delArm=false}
 function medNames(){const s=new Set();Object.values(entries).forEach(e=>(e.meds||[]).forEach(m=>m.n&&s.add(m.n)));$('#dl').innerHTML='<option value="Donormyl">'+[...s].filter(x=>x!=='Donormyl').map(x=>'<option value="'+x.replace(/"/g,'&quot;')+'">').join('')}
 const esc=s=>String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;');
-const tm=(k,l)=>`<label class="f"><span>${l}</span><input type="time" data-k="${k}" value="${cur[k]}"></label>`;
-const nm=(k,l,v,u)=>`<div class="f"><span>${l}</span><div class="nr"><input type="number" inputmode="numeric" min="0" data-k="${k}" value="${esc(cur[k])}" placeholder="0"><em>${u}</em></div><div class="ch">${v.map(x=>`<button type="button" data-set="${k}:${x}" class="${cur[k]==x&&cur[k]!==''?'on':''}">${x}</button>`).join('')}</div></div>`;
+// Valeur de la nuit précédente la plus proche qui a ce champ rempli
+const filled=v=>Array.isArray(v)?v.length>0:v!==''&&v!=null;
+function pv(k){return Object.keys(entries).sort().reverse().find(d=>d<cur.date&&filled(entries[d][k]))}
+function rb(k){const p=pv(k),v=p&&entries[p][k],t=p?(Array.isArray(v)?v.length+' élément(s)':String(v).slice(0,40))+' · '+lg(p):'';
+ return `<button type="button" class="rp" data-rp="${k}" ${p?'':'disabled'} title="${p?esc('Reprendre : '+t):'Rien à reprendre'}" aria-label="Reprendre la valeur de la nuit précédente">${ic('back2',16)}</button>`}
+const tm=(k,l)=>`<div class="f"><span>${l}</span><div class="iw"><input type="time" data-k="${k}" value="${cur[k]}" aria-label="${l}">${rb(k)}</div></div>`;
+const nm=(k,l,v,u)=>`<div class="f"><span>${l}</span><div class="nr"><input type="number" inputmode="numeric" min="0" data-k="${k}" value="${esc(cur[k])}" placeholder="0"><em>${u}</em>${rb(k)}</div><div class="ch">${v.map(x=>`<button type="button" data-set="${k}:${x}" class="${cur[k]==x&&cur[k]!==''?'on':''}">${x}</button>`).join('')}</div></div>`;
 function form(){const c=cur;
- return `${back?`<button class="btn g back" id="back" type="button">${ic('cl',16)}Retour ${back==3?'aux statistiques':'à l’historique'}</button>`:''}${strip()}<div class="card"><div class="nav"><button type="button" class="ar" data-day="-1" aria-label="Jour précédent">${ic('cl',20)}</button><label><span>Nuit se terminant le (jour du réveil)</span><input type="date" data-k="date" value="${c.date}"></label><button type="button" class="ar" data-day="1" aria-label="Jour suivant">${ic('cr',20)}</button></div><p class="day">${lg(c.date)}${entries[c.date]?'<span class="tag">enregistrée</span>':''}</p>
+ return `${back?`<button class="btn g back" id="back" type="button">${ic('cl',16)}Retour ${back==3?'aux statistiques':'à l’historique'}</button>`:''}${strip()}<div class="card"><div class="nav"><label><span>Nuit se terminant le (jour du réveil)</span><input type="date" data-k="date" value="${c.date}"></label></div><p class="day">${lg(c.date)}${entries[c.date]?'<span class="tag">enregistrée</span>':''}</p>
  <small class="hint">Glissez l’écran pour changer de nuit</small><button class="btn" id="prev" type="button">${ic('redo',16)}Reprendre la nuit précédente</button></div>
  <div class="card">${hd('bed','Coucher')}<div class="g2">${tm('bed','Mise au lit')}${tm('try','Heure d’essai pour dormir')}</div>
  ${nm('lat','Temps estimé avant l’endormissement',[5,10,15,30,45,60,90],'min')}</div>
@@ -254,16 +325,16 @@ function form(){const c=cur;
  ${nm('wakeDur','Durée totale estimée des réveils',[0,5,10,20,30,45,60,90],'min')}</div>
  <div class="card">${hd('rise','Matin')}<div class="g2">${tm('wake','Réveil définitif')}${tm('up','Heure de lever')}</div></div>
  <div class="card">${hd('nap','Sieste(s)')}${c.naps.map((n,i)=>`<div class="row n"><input type="time" data-nap="${i}:h" value="${n.h}"><input type="number" inputmode="numeric" min="0" placeholder="min" data-nap="${i}:d" value="${esc(n.d)}"><button type="button" data-rm="naps:${i}" aria-label="Retirer">${ic('x',16)}</button></div>`).join('')}
- <button class="btn g" type="button" data-add="naps">${ic('plus',16)}Ajouter une sieste</button></div>
+ <div class="iw"><button class="btn g" type="button" data-add="naps">${ic('plus',16)}Ajouter une sieste</button>${rb('naps')}</div></div>
  <div class="card">${hd('head','Conditions de sommeil')}
  <div class="f"><span>Fond sonore</span><div class="ch">${['oui','non'].map(x=>`<button type="button" data-tg="1" data-set="sound:${x}" class="${c.sound===x?'on':''}">${x}</button>`).join('')}</div>
- <input style="margin-top:8px" data-k="soundNote" placeholder="Précision (pluie, podcast…)" value="${esc(c.soundNote)}"><input type="url" inputmode="url" style="margin-top:8px" data-k="soundUrl" placeholder="Lien Spotify, YouTube…" value="${esc(c.soundUrl||'')}"><div id="sl">${slink(c.soundUrl)}</div></div>
+ <div class="iw"><input data-k="soundNote" placeholder="Précision (pluie, podcast…)" value="${esc(c.soundNote)}">${rb('soundNote')}</div><div class="iw"><input type="url" inputmode="url" data-k="soundUrl" placeholder="Lien Spotify, YouTube…" value="${esc(c.soundUrl||'')}">${rb('soundUrl')}</div><div id="sl">${slink(c.soundUrl)}</div></div>
  <div class="f"><span>Conditions inhabituelles</span><div class="ch">${ODD.map(x=>`<button type="button" data-odd="${x}" class="${c.odd.includes(x)?'on':''}">${x}</button>`).join('')}</div>
- <input style="margin-top:8px" data-k="oddNote" placeholder="Autre précision" value="${esc(c.oddNote)}"></div>
+ <div class="iw"><input data-k="oddNote" placeholder="Autre précision" value="${esc(c.oddNote)}">${rb('oddNote')}</div></div>
  <div class="f"><span>Donormyl ou autre produit : quantité et heure</span>${c.meds.map((m,i)=>`<div class="row"><input list="dl" data-med="${i}:n" placeholder="Produit" value="${esc(m.n)}"><input data-med="${i}:q" placeholder="Quantité" value="${esc(m.q)}"><input type="time" data-med="${i}:t" value="${m.t}"><button type="button" data-rm="meds:${i}" aria-label="Retirer">${ic('x',16)}</button></div>`).join('')}
- <button class="btn g" type="button" data-add="meds">${ic('plus',16)}Ajouter un produit</button></div></div>
+ <div class="iw"><button class="btn g" type="button" data-add="meds">${ic('plus',16)}Ajouter un produit</button>${rb('meds')}</div></div></div>
  <div class="card">${hd('star','Impression générale')}<div class="ch feel">${FEEL.map(x=>`<button type="button" data-tg="1" data-set="feel:${x}" class="${c.feel===x?'on':''}"><span class="dot" style="background:${FC[x]}"></span>${x}</button>`).join('')}</div>
- <label class="f" style="margin-top:12px"><span>Notes libres</span><textarea data-k="note">${esc(c.note)}</textarea></label></div>
+ <div class="f" style="margin-top:12px"><span>Notes libres</span><div class="iw ta"><textarea data-k="note" aria-label="Notes libres">${esc(c.note)}</textarea>${rb('note')}</div></div></div>
  <div class="card" id="calc"></div>
  <div class="acts"><button class="btn p" id="cp" type="button">${ic('copy',16)}Copier au format de ma note</button><a class="btn" id="hk" href="#">${ic('heart',16)}Envoyer vers Santé</a>
  ${entries[c.date]?`<button class="btn d" id="del" type="button">${delArm?'Confirmer la suppression':'Supprimer cette nuit'}</button>`:''}</div>`}
@@ -322,6 +393,10 @@ async function restore(file){let o;try{o=JSON.parse(await file.text())}catch(e){
  if(entries[cur.date])openDate(cur.date);tab=2;render();setStatus(ks.length+' nuit(s) restaurée(s)')}
 function shift(s,n){const d=new Date(s+'T12:00');d.setDate(d.getDate()+n);return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())}
 function go(d){clearTimeout(tmr);save().then(()=>{openDate(d);fresh=true;render()})}
+function miniStrip(){const m=$('#mini');if(tab!==1){m.classList.remove('show');return}let h='';
+ for(let i=13;i>=0;i--){const d=shift(today(),-i);h+=`<button type="button" data-goto="${d}" class="${d===cur.date?'on':''} ${entries[d]?'ok':''}" aria-label="${lg(d)}">${+d.slice(8)}</button>`}
+ const ms=$('.ms',m);ms.innerHTML=h;const a=$('.on',ms);if(a)ms.scrollLeft=a.offsetLeft-ms.clientWidth/2+a.offsetWidth/2;miniCheck()}
+function miniCheck(){const s=$('.strip'),m=$('#mini');m.classList.toggle('show',tab===1&&!!s&&s.getBoundingClientRect().bottom<8)}
 function strip(){let h='';for(let i=13;i>=0;i--){const d=shift(today(),-i),w=new Date(d+'T12:00').toLocaleDateString('fr-FR',{weekday:'short'}).replace('.','');h+=`<button type="button" data-goto="${d}" class="${d===cur.date?'on':''} ${entries[d]?'ok':''}">${w}<b>${+d.slice(8)}</b><i></i></button>`}return `<div class="strip">${h}</div>`}
 const MO=['janv','fevr','mars','avr','mai','juin','juil','aout','sept','oct','nov','dec'];
 function parseDate(s){const n=new Date();let m=s.match(/(\d{1,2})[\/.\-](\d{1,2})(?:[\/.\-](\d{2,4}))?/),d,mo,y=null;
@@ -410,7 +485,7 @@ function statsView(){const cut=shift(today(),1-rg),L=Object.keys(entries).sort()
  +(rem?`<div class="card">${hd('trophy','Nuits remarquables')}${rem}</div>`:'')}
 function openNight(d){back=tab===1?back:tab;backY=scrollY;openDate(d);tab=1;fresh=true;render();scrollTo({top:0,behavior:'instant'})}
 function render(){if(tab!==1)back=0;const ch=tab!==lt||fresh;fresh=false;if(tab!==lt){scrollTo(0,0);lt=tab}[1,2,3,4].forEach(n=>$('#t'+n).classList.toggle('on',tab==n));$('.pill').style.transform=`translateX(${(tab-1)*100}%)`;$('#app').classList.toggle('anim',ch);
- $('#app').innerHTML=tab==1?form():tab==2?hist():tab==3?statsView():importView();medNames();if(tab==1){calc();const s=$('.strip'),a=$('.strip .on');if(s&&a)s.scrollLeft=a.offsetLeft-s.clientWidth/2}$$('.bars i').forEach((b,i)=>b.style.animationDelay=Math.min(i*20,600)+'ms')}
+ $('#app').innerHTML=tab==1?form():tab==2?hist():tab==3?statsView():importView();medNames();if(tab==1){calc();const s=$('.strip'),a=$('.strip .on');if(s&&a)s.scrollLeft=a.offsetLeft-s.clientWidth/2}miniStrip();$$('.bars i').forEach((b,i)=>b.style.animationDelay=Math.min(i*20,600)+'ms')}
 async function csv(){const H=['date','mise_au_lit','essai_dormir','latence_min','reveils','duree_reveils_min','reveil_definitif','lever','siestes','fond_sonore','conditions','produits','impression','sommeil_estime_min','efficacite_pct','notes'];
  const q=v=>'"'+String(v??'').replace(/"/g,'""')+'"';
  const rows=Object.keys(entries).sort().map(d=>{const e=entries[d],s=stats(e);return [d,e.bed,e.try,e.lat,e.wakes,e.wakeDur,e.wake,e.up,e.naps.map(n=>n.h+' '+n.d).join(';'),e.sound+(e.soundNote?' '+e.soundNote:'')+(e.soundUrl?' '+e.soundUrl:''),[...e.odd,e.oddNote].filter(Boolean).join(';'),e.meds.map(m=>[m.n,m.q,m.t].join(' ')).join(';'),e.feel,s.sleep,s.eff,e.note].map(q).join(',')});
@@ -441,6 +516,8 @@ $('#th').onclick=()=>{const n=document.documentElement.dataset.theme==='dark'?'l
   app.className='out';app.style.transform=`translateX(${dx<0?-45:45}%)`;app.style.opacity='0';
   setTimeout(()=>{clearTimeout(tmr);save().then(()=>{openDate(d);render();app.style.transform='';app.style.opacity='';app.className=n>0?'inL':'inR';scrollTo({top:0,behavior:'instant'});setTimeout(()=>app.className='',400)})},190)};
  app.addEventListener('touchend',end);app.addEventListener('touchcancel',end)})();
+$('#mini').addEventListener('click',e=>{const b=e.target.closest('button[data-goto]');if(b)go(b.dataset.goto)});
+let mtk=0;addEventListener('scroll',()=>{if(!mtk)mtk=requestAnimationFrame(()=>{mtk=0;miniCheck()})},{passive:true});
 app.addEventListener('input',e=>{const t=e.target;
  if(t.dataset.k&&t.dataset.k!=='date'){cur[t.dataset.k]=t.value;touch();calc();if(t.dataset.k==='soundUrl')$('#sl').innerHTML=slink(t.value);if(['lat','wakeDur'].includes(t.dataset.k))$$('[data-set^="'+t.dataset.k+':"]').forEach(b=>b.classList.toggle('on',b.dataset.set===t.dataset.k+':'+t.value))}
  else if(t.dataset.nap){const[i,f]=t.dataset.nap.split(':');cur.naps[i][f]=t.value;touch()}
@@ -455,6 +532,12 @@ app.addEventListener('click',e=>{const bs=e.target.closest('.bars[data-nav]');
  else if(d.rm){const[k,i]=d.rm.split(':');cur[k].splice(i,1);touch();render()}
  else if(d.open)openNight(d.open);
  else if(d.cm){cm=d.cm;render()}
+ else if(d.rp){const k=d.rp,p=pv(k);if(!p)return;const v=clone(entries[p][k]);
+  if(k==='naps'||k==='meds'){const have=new Set(cur[k].map(x=>JSON.stringify(x)));v.forEach(x=>{if(!have.has(JSON.stringify(x)))cur[k].push(x)})}
+  else if(k==='note'&&cur.note.trim()&&!cur.note.includes(v))cur.note=cur.note.trimEnd()+'\n'+v;
+  else cur[k]=v;
+  touch();render();const nb=$('[data-rp="'+k+'"]');if(nb){nb.classList.add('done');nb.innerHTML=ic('check',16);setTimeout(()=>{if(nb.isConnected){nb.classList.remove('done');nb.innerHTML=ic('back2',16)}},1200)}
+  setStatus('Repris de la nuit du '+lg(p))}
  else if(b.id==='back'){const t=back,y=backY;back=0;tab=t;clearTimeout(tmr);save().then(()=>{render();requestAnimationFrame(()=>scrollTo({top:y,behavior:'instant'}))})}
  else if(b.id==='prev'){const p=Object.keys(entries).sort().filter(x=>x<cur.date).pop();if(p){const o=entries[p];Object.assign(cur,{bed:o.bed,try:o.try,sound:o.sound,soundNote:o.soundNote,meds:clone(o.meds)});touch();render()}else b.textContent='Aucune nuit précédente'}
  else if(b.id==='cp')copy(noteText(cur),b);
