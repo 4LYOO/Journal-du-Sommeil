@@ -66,10 +66,20 @@ Les nuits sont enregistrées **uniquement sur l'appareil**. Pour ne rien perdre 
 
 ## Lien avec l'app Santé
 
-Le bouton « Envoyer vers Santé » lance un raccourci iOS nommé
-**Journal sommeil**, à créer une fois dans l'app Raccourcis. Il reçoit un texte
-JSON avec les heures de coucher, d'endormissement, de réveil et de lever.
-(Non testé.)
+Le bouton « Envoyer vers Santé » lance un raccourci iOS nommé **Journal sommeil**
+(nom modifiable dans l'app), à créer **une seule fois** dans l'app Raccourcis.
+Au premier appui, l'application affiche le guide pas à pas ; il reste accessible
+via « Configurer le raccourci Santé ».
+
+Le raccourci reçoit un texte JSON, par exemple :
+`{"nuit":"2026-10-24","reveils":1,"coucher":"2026-10-23T22:50","lever":"2026-10-24T07:10","endormissement":"2026-10-23T23:15","reveil":"2026-10-24T06:55"}`
+
+Actions du raccourci :
+1. Obtenir le dictionnaire de *Entrée du raccourci* (entrée : Texte).
+2. Obtenir la valeur de `endormissement` → Obtenir les dates → variable `Début`.
+3. Obtenir la valeur de `reveil` → Obtenir les dates → variable `Fin`.
+4. Enregistrer un échantillon de santé : Analyse du sommeil, valeur Endormi, de `Début` à `Fin`.
+5. Facultatif : même chose avec `coucher` / `lever` et la valeur Au lit.
 
 ## Mettre à jour l'application
 

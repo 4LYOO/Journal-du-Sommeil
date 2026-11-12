@@ -476,11 +476,28 @@ body.wz #wiz{display:flex}
 /* Micro-animations : transitions d'onglets (désactivées si « réduire les animations ») */
 main.tabL{animation:inL .36s cubic-bezier(.2,.9,.25,1.05) both}main.tabR{animation:inR .36s cubic-bezier(.2,.9,.25,1.05) both}
 :root[data-night="1"] .cd.cf,:root[data-night="1"] .spark i,:root[data-night="1"] .tlb .sl,:root[data-night="1"] .meter i{filter:brightness(.8) saturate(.85)}
+
+/* Guide du raccourci Santé */
+body.hks{overflow:hidden}
+#hks{position:fixed;inset:0;z-index:61;display:none;flex-direction:column;padding:calc(env(safe-area-inset-top,0px) + 10px) 16px calc(env(safe-area-inset-bottom,0px) + 14px);
+ background:color-mix(in srgb,var(--bg) 86%,transparent);-webkit-backdrop-filter:blur(30px) saturate(160%);backdrop-filter:blur(30px) saturate(160%)}
+body.hks #hks{display:flex}
+#hks>div{max-width:440px;width:100%;margin:0 auto}
+.hkb{flex:1;overflow-y:auto;padding:14px 2px}
+.hkb h3{font-size:1.3rem;margin:4px 0 6px;letter-spacing:-.02em}.hkb>p{color:var(--mu);font-size:.88rem;margin:0 0 14px;line-height:1.45}
+.hkb ol{margin:0;padding:0;list-style:none;counter-reset:s;display:grid;gap:10px}
+.hkb li{counter-increment:s;position:relative;padding:12px 12px 12px 48px;border-radius:16px;background:var(--fld);border:1px solid var(--fldb);font-size:.9rem;line-height:1.45}
+.hkb li::before{content:counter(s);position:absolute;left:12px;top:11px;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font-family:var(--num);font-weight:700;font-size:.85rem;background:var(--inv);color:var(--invt)}
+.hkb code{font-family:var(--num);font-weight:700;padding:1px 6px;border-radius:6px;background:var(--btn);border:1px solid var(--cdb)}
+.hkb li small{display:block;color:var(--mu);margin-top:4px}
+.hkn{margin-top:14px}.hkn span{display:block;font-size:.82rem;color:var(--mu);margin-bottom:6px}
+.hka{display:grid;gap:8px;padding-top:8px}.hka .btn{min-height:52px}.hka .btn+.btn{margin-top:0}
+.hkx{display:flex;justify-content:flex-end}
 </style></head><body><div class="amb"><i></i><i></i></div>
 <header class="hd"><div class="brand"><span class="logo" id="lg"></span><div><h1>Journal du sommeil</h1><p id="mode"></p></div></div><button id="th" type="button" aria-label="Changer de thème"></button></header>
 
 <div id="mini"><div class="ms"></div></div><main id="app"></main>
-<div id="qa"><div class="qw"><button id="qBed" type="button"></button><button id="qUp" type="button"></button><button id="qWiz" type="button"></button></div></div><div id="wiz" role="dialog" aria-modal="true" aria-label="Assistant du matin"></div><div class="tbw"><nav class="tb"><b class="pill"></b><button id="t1" class="on">Saisie</button><button id="t2">Historique</button><button id="t3">Stats</button><button id="t4">Importer</button></nav></div><div id="sv"></div>
+<div id="qa"><div class="qw"><button id="qBed" type="button"></button><button id="qUp" type="button"></button><button id="qWiz" type="button"></button></div></div><div id="hks" role="dialog" aria-modal="true" aria-label="Configurer le raccourci Santé"></div><div id="wiz" role="dialog" aria-modal="true" aria-label="Assistant du matin"></div><div class="tbw"><nav class="tb"><b class="pill"></b><button id="t1" class="on">Saisie</button><button id="t2">Historique</button><button id="t3">Stats</button><button id="t4">Importer</button></nav></div><div id="sv"></div>
 <datalist id="dl"><option value="Donormyl"></datalist>
 <script>
 const IP={
@@ -605,7 +622,7 @@ function form(){const c=cur,M=missing();medSug=freqMeds(c.date,c.meds);
  <div class="card">${hd('star','Impression générale')}<div class="ch feel">${FEEL.map(x=>`<button type="button" data-tg="1" data-set="feel:${x}" class="${c.feel===x?'on':''}"><span class="dot" style="background:${FC[x]}"></span>${x}</button>`).join('')}</div>
  <div class="f" style="margin-top:12px"><span>Notes libres</span><div class="iw ta"><textarea data-k="note" aria-label="Notes libres">${esc(c.note)}</textarea>${rb('note')}</div></div></div>
  <div id="warn">${warnHTML(c)}</div><div class="card" id="calc"></div>
- <div class="acts"><button class="btn p" id="cp" type="button">${ic('copy',16)}Copier au format de ma note</button><a class="btn" id="hk" href="#">${ic('heart',16)}Envoyer vers Santé</a>
+ <div class="acts"><button class="btn p" id="cp" type="button">${ic('copy',16)}Copier au format de ma note</button><a class="btn" id="hk" href="#">${ic('heart',16)}Envoyer vers Santé</a><button class="btn g" id="hkg" type="button">Configurer le raccourci Santé</button>
  ${entries[c.date]?`<button class="btn d" id="del" type="button">${delArm?'Confirmer la suppression':'Supprimer cette nuit'}</button>`:''}</div>`}
 // Frise de la nuit : coucher → lever ; latence en dégradé, réveils en encoches (position approximative)
 function tl(e,small){const s0=e.bed||e.try,u0=e.up||e.wake;if(!s0||!u0)return '';const R=df(s0,u0);if(R<60||R>16*60)return '';
@@ -622,11 +639,30 @@ function calc(){const s=stats(cur),el=$('#calc');
  if(!$('#rp')){el.innerHTML=`${hd('gauge','Résumé calculé')}<div id="tlw"></div><div class="ringw"><svg viewBox="0 0 120 120" class="ring"><defs><linearGradient id="rg"><stop offset="0" style="stop-color:var(--r2)"/><stop offset="1" style="stop-color:var(--r1)"/></linearGradient></defs><circle cx="60" cy="60" r="52" class="rb"/><circle id="rp" cx="60" cy="60" r="52" class="rf" stroke-dasharray="326.7" stroke-dashoffset="326.7"/></svg><div class="rc"><b id="rv"></b><small>sommeil estimé</small></div></div><div class="calc" style="grid-template-columns:1fr 1fr"><div><b id="ri"></b><small>temps au lit</small></div><div><b id="re"></b><small>efficacité</small></div></div>`;void el.offsetWidth}
  const w=$('#warn');if(w)w.innerHTML=warnHTML(cur);const tw=$('#tlw');if(tw)tw.innerHTML=tl(cur);
  $('#rp').style.strokeDashoffset=326.7*(1-(s.sleep==null?0:Math.min(1,s.sleep/480)));$('#rv').textContent=hm(s.sleep);$('#ri').textContent=hm(s.inbed);$('#re').textContent=s.eff==null?'–':s.eff+' %'}
+let hkName='Journal sommeil';try{hkName=localStorage.getItem('sommeil-hk-nom')||hkName}catch(e){}
 function hkUrl(){const e=cur,iso=(d,m)=>{const x=new Date(d+'T00:00');x.setMinutes(m);return x.getFullYear()+'-'+pad(x.getMonth()+1)+'-'+pad(x.getDate())+'T'+pad(x.getHours())+':'+pad(x.getMinutes())},o={nuit:e.date,reveils:+e.wakes||0};
  if(e.bed&&e.up){o.coucher=iso(e.date,mi(e.up)-df(e.bed,e.up));o.lever=iso(e.date,mi(e.up))}
  if(e.try&&e.wake){o.endormissement=iso(e.date,mi(e.wake)-(df(e.try,e.wake)-(+e.lat||0)));o.reveil=iso(e.date,mi(e.wake))}
- return 'shortcuts://run-shortcut?name='+encodeURIComponent('Journal sommeil')+'&input=text&text='+encodeURIComponent(JSON.stringify(o))}
-document.addEventListener('click',e=>{const a=e.target.closest('#hk');if(a)a.href=hkUrl()});
+ return 'shortcuts://run-shortcut?name='+encodeURIComponent(hkName)+'&input=text&text='+encodeURIComponent(JSON.stringify(o))}
+// Bouton Santé : le raccourci doit exister sur l'iPhone. La 1re fois, on affiche le guide pour le créer.
+function hkGuide(){$('#hks').innerHTML=`<div class="hkx"><button type="button" class="wzx" data-hk="close" aria-label="Fermer">${ic('x',20)}</button></div>
+ <div class="hkb"><h3>Relier l’app à Santé</h3><p>L’envoi passe par un raccourci iOS nommé <b class="hknm">${esc(hkName)}</b>, à créer une seule fois dans l’app Raccourcis. L’application lui transmet les heures de la nuit ; le raccourci les enregistre dans Santé (Analyse du sommeil).</p>
+ <ol><li>Touchez <b>Ouvrir Raccourcis</b> ci-dessous (ou ouvrez l’app Raccourcis puis <b>+</b>). Nommez le raccourci exactement <code class="hknm">${esc(hkName)}</code>.</li>
+ <li>Ajoutez l’action <b>Obtenir le dictionnaire de</b> et choisissez la variable <b>Entrée du raccourci</b>.<small>Si un bloc « Recevoir … en entrée » apparaît en haut, choisissez <b>Texte</b>.</small></li>
+ <li>Ajoutez <b>Obtenir la valeur de</b> la clé <code>endormissement</code> dans le dictionnaire, puis <b>Obtenir les dates de</b> ce résultat, puis <b>Définir la variable</b> <code>Début</code>.</li>
+ <li>Même chose avec la clé <code>reveil</code> (sans accent) → variable <code>Fin</code>.</li>
+ <li>Ajoutez <b>Enregistrer un échantillon de santé</b> : type <b>Analyse du sommeil</b>, valeur <b>Endormi</b>, date de début <code>Début</code>, date de fin <code>Fin</code>.</li>
+ <li><i>Facultatif</i> : refaites les étapes 3 à 5 avec les clés <code>coucher</code> et <code>lever</code> et la valeur <b>Au lit</b>.</li>
+ <li>Au premier envoi, iOS demande l’accès à Santé : touchez <b>Autoriser</b>.<small>Les noms exacts des actions peuvent varier selon la version d’iOS : cherchez « dictionnaire », « dates » ou « santé » dans la recherche d’actions.</small></li></ol>
+ <label class="f hkn"><span>Nom du raccourci (doit être identique, majuscules et espaces compris)</span><input id="hkn" value="${esc(hkName)}" autocomplete="off" autocapitalize="off"></label></div>
+ <div class="hka"><button type="button" class="btn p" data-hk="send">${ic('heart',16)}Raccourci créé : envoyer cette nuit</button><button type="button" class="btn" data-hk="open">${ic('ext',16)}Ouvrir Raccourcis</button></div>`;document.body.classList.add('hks')}
+function hkSend(){if(!cur.try||!cur.wake){setStatus('Renseignez l’heure d’essai et le réveil définitif pour envoyer vers Santé');return}location.href=hkUrl()}
+document.addEventListener('click',e=>{const a=e.target.closest('#hk');if(!a)return;e.preventDefault();let ok=false;try{ok=localStorage.getItem('sommeil-hk-ok')==='1'}catch(x){}if(ok)hkSend();else hkGuide()});
+$('#hks').addEventListener('input',e=>{if(e.target.id==='hkn'){hkName=e.target.value.trim()||'Journal sommeil';try{localStorage.setItem('sommeil-hk-nom',hkName)}catch(x){}$$('#hks .hknm').forEach(c=>c.textContent=hkName)}});
+$('#hks').addEventListener('click',e=>{const b=e.target.closest('[data-hk]');if(!b)return;const k=b.dataset.hk;
+ if(k==='close')document.body.classList.toggle('hks',false);
+ else if(k==='open')location.href='shortcuts://create-shortcut';
+ else if(k==='send'){try{localStorage.setItem('sommeil-hk-ok','1')}catch(x){}document.body.classList.toggle('hks',false);hkSend()}});
 function noteText(e){const M=v=>v!==''&&v!=null?v+' min':'';
  return `Nuit se terminant le ${fd(e.date)}
 * Mise au lit : ${e.bed}
@@ -938,6 +974,7 @@ app.addEventListener('click',e=>{const bs=e.target.closest('.bars[data-nav]');
  else if(b.id==='back'){const t=back,y=backY;back=0;tab=t;clearTimeout(tmr);save().then(()=>{render();requestAnimationFrame(()=>scrollTo({top:y,behavior:'instant'}))})}
  else if(b.id==='prev'){const p=Object.keys(entries).sort().filter(x=>x<cur.date).pop();if(p){const o=entries[p];Object.assign(cur,{bed:o.bed,try:o.try,sound:o.sound,soundNote:o.soundNote,meds:clone(o.meds)});touch();render()}else b.textContent='Aucune nuit précédente'}
  else if(b.id==='cp')copy(noteText(cur),b);
+ else if(b.id==='hkg')hkGuide();
  else if(b.id==='cpa')copy(Object.keys(entries).sort().map(k=>noteText(entries[k])).join('\n\n———\n\n'),b);
  else if(b.id==='csv')csv();
  else if(b.id==='bk')backup();
@@ -957,7 +994,7 @@ function normalize(o){const r={};Object.keys(o||{}).forEach(k=>{const v=o[k];
  modeLine();render()})();
 // Mises à jour automatiques : on vérifie à l'ouverture et à chaque retour dans l'app,
 // puis on recharge la page dès que la nouvelle version a pris le relais.
-const APP_VERSION=10;
+const APP_VERSION=11;
 if('serviceWorker' in navigator&&location.protocol!=='file:'){const sw=navigator.serviceWorker;let had=!!sw.controller,reloading=false;
  sw.addEventListener('controllerchange',()=>{if(!had){had=true;return}if(reloading)return;reloading=true;clearTimeout(tmr);
   Promise.resolve(isFilled(cur)?save():0).finally(()=>{setStatus('Mise à jour…');setTimeout(()=>location.reload(),300)})});
