@@ -279,6 +279,47 @@ body::after{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;bac
 :root[data-theme="dark"] body::after{background:radial-gradient(120% 80% at 50% 35%,transparent 45%,rgba(0,0,0,.6))}
 :root[data-theme="dark"] .card::before{background:linear-gradient(170deg,rgba(255,255,255,.05),transparent 32%)}
 :root[data-theme="dark"] .logo{background:linear-gradient(160deg,#1f2645,#050507)}
+
+/* ---------- Couleurs : plus franches, sans être criardes ---------- */
+:root{--ok:#1f9d57;--wa:#d9820f;--ba:#d53b43}
+:root[data-theme="dark"]{--ok:#2bbd6c;--wa:#eb961d;--ba:#e64a51}
+.bars i{opacity:1}.bars i::after{background:linear-gradient(180deg,rgba(255,255,255,.16),transparent 45%)}
+.feel button[data-set="feel:difficile"].on{background:linear-gradient(180deg,color-mix(in srgb,var(--ba) 88%,#fff),var(--ba))}
+.feel button[data-set="feel:moyenne"].on{background:linear-gradient(180deg,color-mix(in srgb,var(--wa) 88%,#fff),var(--wa))}
+.feel button[data-set="feel:bonne"].on{background:linear-gradient(180deg,color-mix(in srgb,var(--ok) 88%,#fff),var(--ok))}
+
+/* ---------- Verre liquide ---------- */
+:root{--rim1:rgba(255,255,255,.95);--rim2:rgba(255,255,255,.35);--spec:rgba(255,255,255,.7);--gl:blur(34px) saturate(200%) brightness(1.04)}
+:root[data-theme="dark"]{--rim1:rgba(255,255,255,.34);--rim2:rgba(255,255,255,.1);--spec:rgba(255,255,255,.085);--gl:blur(34px) saturate(210%) brightness(1.12)}
+/* lumière de fond légèrement teintée, pour que le verre ait quelque chose à réfracter */
+.amb i:nth-child(1){background:radial-gradient(circle,rgba(70,95,200,.16),transparent 60%)}
+.amb i:nth-child(2){background:radial-gradient(circle,rgba(125,85,190,.12),transparent 60%)}
+:root:not([data-theme="dark"]) .amb{display:block}
+:root:not([data-theme="dark"]) .amb i:nth-child(1){background:radial-gradient(circle,rgba(110,140,255,.22),transparent 60%)}
+:root:not([data-theme="dark"]) .amb i:nth-child(2){background:radial-gradient(circle,rgba(190,140,255,.18),transparent 60%)}
+.card,.tb,.strip,.ms,.it,#sv,#th,.btn:not(.p):not(.g),.rp,.tile{-webkit-backdrop-filter:var(--gl);backdrop-filter:var(--gl)}
+.card,.tb,.it,#th,.btn,.rp,.tile{position:relative}
+.card{border-color:transparent}
+/* liseré lumineux en dégradé (reflet sur l'arête du verre) */
+.card::after,.tb::after,.it::after,#th::after,.btn:not(.g)::after,.rp::after,.tile::after{content:"";position:absolute;inset:0;border-radius:inherit;padding:1px;pointer-events:none;
+ background:linear-gradient(140deg,var(--rim1),var(--rim2) 22%,transparent 45%,transparent 62%,var(--rim2) 85%,var(--rim1));
+ -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask:linear-gradient(#000 0 0) content-box exclude,linear-gradient(#000 0 0)}
+.btn.p::after{opacity:.5}
+/* reflet spéculaire en haut à gauche */
+.card::before{background:radial-gradient(130% 70% at 0% 0%,var(--spec),transparent 55%),linear-gradient(180deg,var(--spec),transparent 22%)}
+.it::before{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;background:radial-gradient(120% 90% at 0% 0%,var(--spec),transparent 55%)}
+.it>*{position:relative}
+.strip,.ms{border-color:transparent;box-shadow:inset 1px 1px 0 var(--rim2),inset -1px -1px 0 rgba(255,255,255,.04),inset 0 0 18px rgba(255,255,255,.03),0 2px 6px rgba(0,0,0,.3),0 18px 36px -12px rgba(0,0,0,.75)}
+.tb{border-color:transparent;background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.015)),var(--tbg)}
+:root:not([data-theme="dark"]) .tb{background:linear-gradient(180deg,rgba(255,255,255,.55),rgba(255,255,255,.25))}
+/* la pastille de l'onglet actif devient une lentille */
+.pill{background:radial-gradient(120% 120% at 30% 0%,rgba(255,255,255,.28),rgba(255,255,255,.06) 60%);
+ box-shadow:inset 1px 1px 0 rgba(255,255,255,.4),inset -1px -1px 0 rgba(255,255,255,.08),inset 0 0 14px rgba(255,255,255,.08),0 6px 16px -6px rgba(0,0,0,.6)}
+:root:not([data-theme="dark"]) .pill{background:radial-gradient(120% 120% at 30% 0%,rgba(255,255,255,.95),rgba(255,255,255,.5) 60%);box-shadow:inset 0 0 0 1px rgba(255,255,255,.9),0 6px 16px -6px rgba(0,0,0,.25)}
+.tb.drag .pill{scale:1.12;box-shadow:inset 1px 1px 0 rgba(255,255,255,.5),inset 0 0 20px rgba(255,255,255,.14),0 10px 26px -8px rgba(0,0,0,.6)}
+/* puces et champs : verre plus fin */
+.ch button:not(.on){-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);box-shadow:inset 1px 1px 0 var(--rim2),var(--ins)}
+#mini .ms{background:var(--mbg)}
 </style></head><body><div class="amb"><i></i><i></i></div>
 <header class="hd"><div class="brand"><span class="logo" id="lg"></span><div><h1>Journal du sommeil</h1><p id="mode"></p></div></div><button id="th" type="button" aria-label="Changer de thème"></button></header>
 
@@ -590,7 +631,7 @@ app.addEventListener('click',e=>{const bs=e.target.closest('.bars[data-nav]');
  $('#mode').innerHTML=store?'<span class="dot" style="background:var(--ok)"></span>Synchronisé avec votre compte':'<span class="dot" style="background:var(--wa)"></span>Sur cet appareil · pensez à sauvegarder';render()})();
 // Mises à jour automatiques : on vérifie à l'ouverture et à chaque retour dans l'app,
 // puis on recharge la page dès que la nouvelle version a pris le relais.
-const APP_VERSION=8;
+const APP_VERSION=9;
 if('serviceWorker' in navigator&&location.protocol!=='file:'){const sw=navigator.serviceWorker;let had=!!sw.controller,reloading=false;
  sw.addEventListener('controllerchange',()=>{if(!had){had=true;return}if(reloading)return;reloading=true;clearTimeout(tmr);
   Promise.resolve(isFilled(cur)?save():0).finally(()=>{setStatus('Mise à jour…');setTimeout(()=>location.reload(),300)})});
