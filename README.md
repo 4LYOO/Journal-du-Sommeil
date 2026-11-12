@@ -36,6 +36,23 @@ s'ajoute à l'écran d'accueil de l'iPhone avec sa propre icône, s'ouvre en ple
 
 Sur Android : ouvrir l'adresse dans Chrome → menu ⋮ → **Installer l'application**.
 
+## Utilisation au quotidien
+
+- **Le soir** : bouton **Je me couche** (barre en bas de l'onglet Saisie) : la mise
+  au lit est notée à l'heure actuelle, sur la nuit qui se termine le lendemain.
+- **Le matin** : **Je me lève**, puis **Assistant** : une question par écran,
+  grande heure tactile, boutons ±5 / ±15 min, valeurs habituelles proposées,
+  récapitulatif avant d'enregistrer. « Formulaire complet » reste accessible.
+- **Formulaire complet** : toutes les cases, avec puces « habituel » et valeurs
+  fréquentes, bouton ↩ par champ pour reprendre la valeur de la veille, alertes
+  douces en cas d'incohérence, nuits manquantes signalées.
+- **Historique** : calendrier du mois (couleur = impression, pointillés = nuit
+  non saisie ; toucher un jour pour l'ouvrir), puis la liste des nuits.
+- **Stats** : carte Tendances (7 jours), graphiques, comparaisons.
+- **Mode nuit** : de 0 h à 5 h, l'interface passe d'elle-même en teintes ambrées.
+
+Une copie de la version précédente est conservée dans `index.backup.html`.
+
 ## Sauvegarde des données (important)
 
 Les nuits sont enregistrées **uniquement sur l'appareil**. Pour ne rien perdre :
