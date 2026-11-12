@@ -1,0 +1,643 @@
+<!doctype html>
+<html lang="fr" data-theme="dark"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#000000"><title>Journal du sommeil</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Sommeil">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<style>
+/* ---------- Thèmes ---------- */
+:root{
+ --bg:#f2f2f6;--tx:#121215;--mu:rgba(60,60,67,.64);--mu2:rgba(60,60,67,.32);
+ --cd:linear-gradient(180deg,rgba(255,255,255,.92),rgba(255,255,255,.74));--cdb:rgba(0,0,0,.06);--hi:rgba(255,255,255,1);
+ --fld:rgba(118,118,128,.09);--fldb:rgba(0,0,0,.06);--ins:inset 0 1px 2px rgba(0,0,0,.06);
+ --btn:linear-gradient(180deg,#fff,#f7f7fa);--inv:#17171a;--invt:#fff;--ring:rgba(0,0,0,.12);
+ --sh:0 1px 2px rgba(20,20,40,.05),0 10px 24px -10px rgba(20,20,40,.14),0 28px 50px -30px rgba(20,20,40,.18);
+ --tbg:rgba(250,250,252,.72);--pil:rgba(0,0,0,.07);--r1:#17171a;--r2:#8a8a92;
+ --ok:#2f9a68;--wa:#c98a22;--ba:#cf4c58;--ac:#2c2c31;--bd:rgba(0,0,0,.12);
+ --glow1:rgba(255,255,255,.9);--glow2:rgba(190,195,215,.35);color-scheme:light}
+:root[data-theme="dark"]{
+ --bg:#09090b;--tx:#f3f3f5;--mu:rgba(235,235,245,.56);--mu2:rgba(235,235,245,.24);
+ --cd:linear-gradient(180deg,rgba(255,255,255,.075),rgba(255,255,255,.035));--cdb:rgba(255,255,255,.075);--hi:rgba(255,255,255,.09);
+ --fld:rgba(0,0,0,.32);--fldb:rgba(255,255,255,.06);--ins:inset 0 1px 3px rgba(0,0,0,.45);
+ --btn:linear-gradient(180deg,rgba(255,255,255,.09),rgba(255,255,255,.045));--inv:#ececf0;--invt:#0b0b0d;--ring:rgba(255,255,255,.16);
+ --sh:0 1px 1px rgba(0,0,0,.35),0 14px 30px -12px rgba(0,0,0,.75),0 40px 70px -40px rgba(0,0,0,.9);
+ --tbg:rgba(28,28,32,.62);--pil:rgba(255,255,255,.11);--r1:#f3f3f5;--r2:#6e6e78;
+ --ok:#5cc395;--wa:#e2aa52;--ba:#ea7a84;--ac:#d9d9de;--bd:rgba(255,255,255,.14);
+ --glow1:rgba(255,255,255,.07);--glow2:rgba(120,125,150,.10);color-scheme:dark}
+
+/* ---------- Base ---------- */
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{background:var(--bg);-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+html,body{margin:0}
+body{color:var(--tx);font:16px/1.4 -apple-system,"SF Pro Text",system-ui,"Segoe UI",sans-serif;max-width:440px;margin:0 auto;
+ padding:env(safe-area-inset-top,0px) 16px calc(112px + env(safe-area-inset-bottom,0px));
+ background:radial-gradient(90% 45% at 50% -8%,var(--glow1),transparent 70%) fixed,radial-gradient(70% 40% at 100% 100%,var(--glow2),transparent 70%) fixed;-webkit-font-smoothing:antialiased}
+button{touch-action:manipulation;font:inherit;color:inherit;cursor:pointer}
+.i{display:block;flex:none}
+.amb{position:fixed;inset:0;z-index:-1;overflow:hidden;pointer-events:none}
+.amb i{position:absolute;width:70vmax;height:70vmax;border-radius:50%;background:radial-gradient(circle,var(--glow2),transparent 62%);animation:fl 26s ease-in-out infinite alternate;will-change:transform}
+.amb i:nth-child(1){top:-30vmax;left:-25vmax}.amb i:nth-child(2){bottom:-35vmax;right:-30vmax;animation-delay:-13s}
+@keyframes fl{to{transform:translate(10vmax,7vmax) scale(1.12)}}
+
+/* ---------- En-tête ---------- */
+.hd{display:flex;justify-content:space-between;align-items:center;padding:18px 0 4px}
+.brand{display:flex;align-items:center;gap:12px}
+.logo{width:38px;height:38px;border-radius:11px;display:grid;place-items:center;color:#eef3ff;
+ background:linear-gradient(160deg,#2a3358,#0d0d12);box-shadow:inset 0 1px 0 rgba(255,255,255,.18),0 6px 16px -6px rgba(0,0,0,.6)}
+h1{font-size:1.55rem;font-weight:700;letter-spacing:-.03em;margin:0;line-height:1.1}
+#mode{display:flex;align-items:center;gap:0;white-space:nowrap;color:var(--mu);font-size:.78rem;margin:2px 0 0}
+#th{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;border:1px solid var(--cdb);background:var(--btn);color:var(--tx);box-shadow:inset 0 1px 0 var(--hi),var(--sh)}
+.st{color:var(--mu);font-size:.82rem;margin:0 0 10px;line-height:1.45}
+
+/* ---------- Cartes ---------- */
+main{padding-top:14px}
+.card{position:relative;background:var(--cd);border:1px solid var(--cdb);border-radius:22px;padding:16px;margin-bottom:14px;
+ box-shadow:inset 0 1px 0 var(--hi),var(--sh);-webkit-backdrop-filter:blur(20px) saturate(160%);backdrop-filter:blur(20px) saturate(160%)}
+.card h2{display:flex;align-items:center;gap:10px;margin:0 0 14px;font-size:.74rem;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--mu)}
+.tile{width:30px;height:30px;border-radius:9px;display:grid;place-items:center;color:var(--tx);background:var(--btn);border:1px solid var(--cdb);box-shadow:inset 0 1px 0 var(--hi),0 3px 8px -3px rgba(0,0,0,.35)}
+
+/* ---------- Champs ---------- */
+.f{display:block;margin-bottom:14px}.f:last-child{margin-bottom:0}.f>span{display:block;font-size:.9rem;margin-bottom:6px}
+input,select,textarea{width:100%;font:inherit;color:var(--tx);background:var(--fld);border:1px solid var(--fldb);border-radius:12px;padding:11px 12px;min-height:46px;box-shadow:var(--ins);transition:box-shadow .2s,border-color .2s}
+textarea{min-height:84px;resize:vertical}
+input::placeholder,textarea::placeholder{color:var(--mu2)}
+input:focus,textarea:focus,select:focus{outline:none;border-color:transparent;box-shadow:var(--ins),0 0 0 3px var(--ring)}
+input[type=time],input[type=date]{-webkit-appearance:none;appearance:none;min-width:0;display:block;text-align:left}
+.g2 .f{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px}
+.g2 .f span{margin:0;flex:1}.g2 .f input{width:140px;flex:none}
+.g2+.f{margin-top:14px}
+.nr{display:flex;align-items:center;gap:8px}.nr em{color:var(--mu);font-style:normal;font-size:.9rem}
+.sep{height:1px;background:var(--cdb);margin:14px 0}
+
+/* ---------- Puces et boutons ---------- */
+.ch{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.ch button{border:1px solid var(--fldb);background:var(--fld);border-radius:999px;padding:7px 13px;font-size:.88rem;min-height:36px;box-shadow:var(--ins);transition:background .2s,color .2s,box-shadow .2s,transform .2s cubic-bezier(.3,1.6,.5,1)}
+.ch button.on{background:var(--inv);color:var(--invt);border-color:transparent;box-shadow:0 4px 12px -4px rgba(0,0,0,.45)}
+.feel{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.feel button{display:flex;align-items:center;justify-content:center;gap:8px;padding:12px 4px;border-radius:14px;text-transform:capitalize}
+.feel .dot{margin:0}
+.feel button.on{color:#fff}.feel button.on .dot{background:#fff!important;opacity:.9}
+.feel button[data-set="feel:difficile"].on{background:var(--ba)}.feel button[data-set="feel:moyenne"].on{background:var(--wa)}.feel button[data-set="feel:bonne"].on{background:var(--ok)}
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;min-height:48px;padding:12px;border-radius:14px;border:1px solid var(--cdb);background:var(--btn);color:var(--tx);font-weight:600;font-size:.95rem;text-decoration:none;box-shadow:inset 0 1px 0 var(--hi),0 4px 12px -6px rgba(0,0,0,.4)}
+.btn+.btn{margin-top:8px}
+.btn.p{background:var(--inv);color:var(--invt);border-color:transparent;box-shadow:0 1px 0 rgba(255,255,255,.1) inset,0 10px 22px -10px rgba(0,0,0,.6)}
+.btn.d{color:var(--ba)}
+.btn.g{background:none;box-shadow:none;border-style:dashed;border-color:var(--bd);color:var(--mu);font-weight:500}
+.acts{margin:4px 0 14px}
+button,a.btn,.ar{transition:transform .2s cubic-bezier(.3,1.6,.5,1),background .25s,color .25s,box-shadow .25s}
+button:active,a.btn:active{transform:scale(.96)}
+.lk{display:inline-flex;align-items:center;gap:6px;margin-top:10px;color:var(--tx);text-decoration:none;font-weight:600;font-size:.88rem;padding:7px 12px;border-radius:999px;background:var(--btn);border:1px solid var(--cdb);box-shadow:inset 0 1px 0 var(--hi)}
+
+/* ---------- Lignes siestes / produits ---------- */
+.row{display:grid;grid-template-columns:1fr 1fr 44px;gap:6px;margin-bottom:8px}.row:not(.n) input:first-child{grid-column:1/-1}
+.row button{height:46px;border-radius:12px;border:1px solid var(--fldb);background:var(--fld);color:var(--ba);display:grid;place-items:center}
+
+/* ---------- Sélecteur de jour ---------- */
+.nav{display:flex;gap:10px;align-items:flex-end}.nav label{flex:1}.nav label span{display:block;font-size:.78rem;color:var(--mu);margin-bottom:6px}
+.ar{width:46px;height:46px;border-radius:13px;border:1px solid var(--cdb);background:var(--btn);color:var(--tx);display:grid;place-items:center;box-shadow:inset 0 1px 0 var(--hi),0 4px 10px -5px rgba(0,0,0,.4)}
+.strip{display:flex;gap:7px;overflow-x:auto;padding:4px 2px 14px;margin:0 -2px;scrollbar-width:none}.strip::-webkit-scrollbar{display:none}
+.strip button{flex:0 0 auto;min-width:50px;border:1px solid var(--cdb);background:var(--btn);border-radius:15px;padding:7px 4px 8px;font-size:.7rem;line-height:1.2;color:var(--mu);display:flex;flex-direction:column;align-items:center;gap:3px;box-shadow:inset 0 1px 0 var(--hi),0 4px 10px -6px rgba(0,0,0,.4);text-transform:capitalize}
+.strip button b{font-size:1.05rem;color:var(--tx);font-weight:600}
+.strip button i{width:5px;height:5px;border-radius:50%;background:var(--mu2)}.strip button.ok i{background:var(--ok)}
+.strip button.on{background:var(--inv);border-color:transparent;color:var(--invt)}.strip button.on b{color:var(--invt)}
+.day{text-align:center;margin:12px 0 14px;color:var(--mu);font-size:.85rem;text-transform:capitalize}
+.tag{display:inline-block;margin-left:6px;padding:1px 8px;border-radius:999px;font-size:.72rem;background:var(--fld);border:1px solid var(--fldb);text-transform:none}
+
+/* ---------- Résumé (anneau) ---------- */
+.ringw{position:relative;width:160px;height:160px;margin:0 auto 16px;filter:drop-shadow(0 10px 20px rgba(0,0,0,.35))}
+.ring{width:100%;transform:rotate(-90deg)}.rb{fill:none;stroke:var(--fld);stroke-width:10}
+.rf{fill:none;stroke:url(#rg);stroke-width:10;stroke-linecap:round;transition:stroke-dashoffset 1s cubic-bezier(.2,.9,.25,1)}
+.rc{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}.rc b{font-size:1.75rem;letter-spacing:-.03em;font-weight:700}.rc small{color:var(--mu);font-size:.72rem}
+.calc{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;text-align:center}
+.calc>div{padding:10px 4px;border-radius:14px;background:var(--fld);border:1px solid var(--fldb);box-shadow:var(--ins)}
+.calc b{display:block;font-size:1.12rem;font-weight:650;letter-spacing:-.02em}.calc small{color:var(--mu);font-size:.72rem}
+
+/* ---------- Historique / stats ---------- */
+.it{display:flex;justify-content:space-between;align-items:center;gap:10px;width:100%;text-align:left;background:var(--cd);border:1px solid var(--cdb);border-radius:18px;padding:13px 14px;margin-bottom:8px;box-shadow:inset 0 1px 0 var(--hi),0 8px 18px -12px rgba(0,0,0,.6)}
+.it b{font-weight:600;text-transform:capitalize}.it small{color:var(--mu)}
+.it .r{display:flex;align-items:center;gap:6px;color:var(--mu);font-size:.85rem;text-transform:capitalize}
+.dot{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:6px}
+.bars{display:flex;align-items:flex-end;gap:4px;height:96px;margin-top:12px;padding:8px;border-radius:14px;background:var(--fld);border:1px solid var(--fldb);box-shadow:var(--ins)}
+.bars i{flex:1;border-radius:5px 5px 2px 2px;background:var(--ac);min-height:3px;opacity:.92;transform-origin:bottom;animation:grow .7s cubic-bezier(.2,.9,.25,1.1) both}
+.ax{display:flex;justify-content:space-between;color:var(--mu);font-size:.72rem;margin-top:6px}
+.stk{display:flex;height:12px;border-radius:6px;overflow:hidden;margin:4px 0 10px;box-shadow:var(--ins)}.stk i{display:block}
+table{width:100%;border-collapse:collapse;font-size:.85rem;margin-bottom:8px}td,th{padding:9px 4px;border-bottom:1px solid var(--cdb);text-align:right;font-weight:500}td:first-child,th:first-child{text-align:left}th{color:var(--mu);font-size:.72rem;font-weight:600}
+tr:last-child td{border-bottom:0}
+
+/* ---------- Barres cliquables / comparaisons ---------- */
+.bars[data-nav]{cursor:pointer}
+.bars i.hit{filter:brightness(1.35);box-shadow:0 0 0 2px var(--tx)}
+.btn.back{display:inline-flex;width:auto;min-height:38px;padding:7px 14px 7px 10px;margin:0 0 12px;font-size:.88rem;border-style:solid;color:var(--tx)}
+.cmh2{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 6px}
+.sum{display:grid;gap:6px;margin:10px 0 4px}
+.sum div{display:flex;align-items:baseline;gap:8px;font-size:.85rem;padding:9px 11px;border-radius:12px;background:var(--fld);border:1px solid var(--fldb);box-shadow:var(--ins)}
+.sum small{color:var(--mu);margin-left:auto;white-space:nowrap}
+.cmp{padding:13px 0 2px;border-top:1px solid var(--cdb)}.cmp:first-of-type{border-top:0}
+.cmh{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:6px;font-size:.92rem;font-weight:500}
+.dl{flex:none;font-size:.74rem;font-weight:600;padding:3px 9px;border-radius:999px;background:var(--fld);border:1px solid var(--fldb);color:var(--mu)}
+.dl.g{color:var(--ok);background:color-mix(in srgb,var(--ok) 15%,transparent);border-color:transparent}
+.dl.b{color:var(--ba);background:color-mix(in srgb,var(--ba) 15%,transparent);border-color:transparent}
+.cb{display:grid;grid-template-columns:112px 1fr 54px;align-items:center;gap:8px;font-size:.76rem;color:var(--mu);margin-top:5px}
+.cb b{color:var(--tx);text-align:right;font-weight:600;font-size:.85rem}
+.tr{height:9px;border-radius:5px;background:var(--fld);box-shadow:var(--ins);overflow:hidden}
+.tr i{display:block;height:100%;border-radius:5px;background:var(--ac);transform-origin:left;animation:grw .7s cubic-bezier(.2,.9,.25,1.05) both}.tr i.o{opacity:.38}
+@keyframes grw{from{transform:scaleX(0)}}
+.it.s{padding:10px 13px;border-radius:15px;margin-bottom:6px;box-shadow:inset 0 1px 0 var(--hi)}.it.s small{font-size:.74rem}.it.s b{font-size:.92rem}
+.it .r b{color:var(--tx);font-weight:600}.it.s .r{text-transform:none}
+.tbl{overflow-x:auto;margin:0 -4px}.tbl table{min-width:100%}.tbl td,.tbl th{padding:8px 4px;white-space:nowrap}
+
+/* ---------- Glisser pour changer de nuit ---------- */
+main.swp{will-change:transform}
+main.snap{transition:transform .32s cubic-bezier(.2,.9,.25,1.1),opacity .32s}
+main.out{transition:transform .2s ease-in,opacity .2s ease-in}
+main.inL{animation:inL .38s cubic-bezier(.2,.9,.25,1.05) both}main.inR{animation:inR .38s cubic-bezier(.2,.9,.25,1.05) both}
+@keyframes inL{from{opacity:0;transform:translateX(60px)}}@keyframes inR{from{opacity:0;transform:translateX(-60px)}}
+.hint{display:block;text-align:center;color:var(--mu2);font-size:.72rem;margin:-6px 0 12px}
+
+/* ---------- Barre d'onglets ---------- */
+.tbw{position:fixed;left:0;right:0;bottom:0;padding:0 14px calc(12px + env(safe-area-inset-bottom,0px));pointer-events:none;z-index:20}
+.tb{position:relative;pointer-events:auto;max-width:410px;margin:0 auto;display:flex;padding:5px;border-radius:30px;touch-action:none;user-select:none;-webkit-user-select:none;
+ background:var(--tbg);border:1px solid var(--cdb);-webkit-backdrop-filter:blur(26px) saturate(180%);backdrop-filter:blur(26px) saturate(180%);
+ box-shadow:inset 0 1px 0 var(--hi),0 18px 40px -12px rgba(0,0,0,.55),0 2px 6px rgba(0,0,0,.15)}
+.tb button{position:relative;z-index:1;flex:1;border:0;background:none;color:var(--mu);font-size:.66rem;font-weight:500;padding:8px 2px 7px;border-radius:24px;display:flex;flex-direction:column;align-items:center;gap:3px;transition:color .25s}
+.tb button.on,.tb button.hov{color:var(--tx);font-weight:600}
+.tb.drag button.on:not(.hov){color:var(--mu);font-weight:500}
+.pill{position:absolute;top:5px;bottom:5px;left:5px;width:calc((100% - 10px)/4);border-radius:24px;background:var(--pil);box-shadow:inset 0 1px 0 var(--hi),0 4px 14px -4px rgba(0,0,0,.35);transition:transform .5s cubic-bezier(.3,1.35,.5,1),scale .25s}
+.tb.drag .pill{transition:scale .25s;scale:1.06}
+#sv{position:fixed;left:50%;transform:translate(-50%,8px);bottom:calc(92px + env(safe-area-inset-bottom,0px));padding:7px 14px;border-radius:999px;font-size:.8rem;font-weight:500;opacity:0;transition:.25s;pointer-events:none;z-index:21;
+ background:var(--tbg);border:1px solid var(--cdb);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);box-shadow:0 8px 20px -8px rgba(0,0,0,.5)}
+#sv.show{opacity:1;transform:translate(-50%,0)}
+
+/* ---------- Animations ---------- */
+@keyframes rise{from{opacity:0;transform:translateY(16px) scale(.98)}}
+@keyframes grow{from{transform:scaleY(0)}}
+@keyframes pop{50%{transform:scale(1.07)}}
+main.anim>*{animation:rise .5s cubic-bezier(.2,.9,.25,1.1) both}
+main.anim>*:nth-child(2){animation-delay:.04s}main.anim>*:nth-child(3){animation-delay:.08s}main.anim>*:nth-child(4){animation-delay:.12s}main.anim>*:nth-child(5){animation-delay:.16s}main.anim>*:nth-child(n+6){animation-delay:.2s}
+.ch button.on{animation:pop .3s cubic-bezier(.3,1.6,.5,1)}
+@media(prefers-reduced-motion:reduce){*,.amb i{animation:none!important;transition:none!important}}
+
+/* ---------- Profondeur ---------- */
+:root{--sh:0 1px 1px rgba(20,20,40,.05),0 3px 6px -2px rgba(20,20,40,.06),0 14px 28px -12px rgba(20,20,40,.18),0 36px 60px -36px rgba(20,20,40,.25);
+ --ins:inset 0 2px 4px rgba(0,0,0,.07),inset 0 -1px 0 rgba(255,255,255,.8);--edge:rgba(0,0,0,.05);--grain:.035}
+:root[data-theme="dark"]{--sh:0 1px 0 rgba(0,0,0,.4),0 4px 8px -2px rgba(0,0,0,.45),0 18px 36px -14px rgba(0,0,0,.8),0 46px 80px -40px rgba(0,0,0,.95);
+ --ins:inset 0 2px 5px rgba(0,0,0,.55),inset 0 -1px 0 rgba(255,255,255,.05);--edge:rgba(0,0,0,.45);--grain:.06}
+body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:var(--grain);
+ background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+body::after{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(120% 80% at 50% 40%,transparent 55%,rgba(0,0,0,.35))}
+:root:not([data-theme="dark"]) body::after{background:radial-gradient(120% 80% at 50% 40%,transparent 60%,rgba(40,40,80,.08))}
+.card{box-shadow:inset 0 1px 0 var(--hi),inset 0 -1px 0 var(--edge),var(--sh)}
+.card::before{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;background:linear-gradient(170deg,rgba(255,255,255,.07),transparent 35%)}
+:root:not([data-theme="dark"]) .card::before{background:linear-gradient(170deg,rgba(255,255,255,.9),transparent 40%)}
+.card>*{position:relative}
+.tile{background:linear-gradient(160deg,var(--hi),transparent 70%),var(--btn);box-shadow:inset 0 1px 0 var(--hi),inset 0 -1px 0 var(--edge),0 4px 10px -3px rgba(0,0,0,.45),0 1px 2px rgba(0,0,0,.3)}
+.btn,.strip button,#th{box-shadow:inset 0 1px 0 var(--hi),inset 0 -1px 0 var(--edge),0 1px 2px rgba(0,0,0,.25),0 8px 18px -10px rgba(0,0,0,.6)}
+.btn.p{background:linear-gradient(180deg,#fff,#d9d9df);color:#0b0b0d;box-shadow:inset 0 1px 0 #fff,inset 0 -2px 0 rgba(0,0,0,.12),0 2px 4px rgba(0,0,0,.3),0 14px 26px -12px rgba(0,0,0,.75)}
+:root:not([data-theme="dark"]) .btn.p{background:linear-gradient(180deg,#34343a,#111114);color:#fff;box-shadow:inset 0 1px 0 rgba(255,255,255,.18),0 2px 4px rgba(0,0,0,.2),0 14px 26px -12px rgba(0,0,0,.45)}
+.btn.g{box-shadow:none}
+.ch button.on,.strip button.on{background:linear-gradient(180deg,#fff,#d6d6dc);color:#0b0b0d;box-shadow:inset 0 1px 0 #fff,0 2px 4px rgba(0,0,0,.35),0 8px 16px -8px rgba(0,0,0,.7)}
+.strip button.on b{color:#0b0b0d}
+:root:not([data-theme="dark"]) .ch button.on,:root:not([data-theme="dark"]) .strip button.on{background:linear-gradient(180deg,#38383e,#111114);color:#fff;box-shadow:inset 0 1px 0 rgba(255,255,255,.18),0 6px 14px -6px rgba(0,0,0,.45)}
+:root:not([data-theme="dark"]) .strip button.on b{color:#fff}
+.feel button.on{box-shadow:inset 0 1px 0 rgba(255,255,255,.35),inset 0 -2px 0 rgba(0,0,0,.15),0 8px 18px -8px rgba(0,0,0,.6)}
+.feel button[data-set="feel:difficile"].on{background:linear-gradient(180deg,color-mix(in srgb,var(--ba) 80%,#fff),var(--ba))}
+.feel button[data-set="feel:moyenne"].on{background:linear-gradient(180deg,color-mix(in srgb,var(--wa) 80%,#fff),var(--wa))}
+.feel button[data-set="feel:bonne"].on{background:linear-gradient(180deg,color-mix(in srgb,var(--ok) 80%,#fff),var(--ok))}
+.bars i{position:relative;box-shadow:inset 0 1px 0 rgba(255,255,255,.35),0 4px 8px -4px rgba(0,0,0,.6)}
+.bars i::after{content:"";position:absolute;inset:0;border-radius:inherit;background:linear-gradient(180deg,rgba(255,255,255,.3),transparent 55%)}
+.tr i{background:linear-gradient(180deg,#fff,var(--ac));box-shadow:0 0 8px -2px rgba(255,255,255,.25)}
+:root:not([data-theme="dark"]) .tr i{background:linear-gradient(180deg,#55555c,#1c1c20);box-shadow:none}
+.ringw{filter:drop-shadow(0 14px 24px rgba(0,0,0,.45))}
+.rc::before{content:"";position:absolute;width:112px;height:112px;border-radius:50%;background:radial-gradient(circle at 50% 30%,var(--hi),transparent 70%);box-shadow:inset 0 2px 6px rgba(0,0,0,.35)}
+.rc>*{position:relative}
+.logo{box-shadow:inset 0 1px 0 rgba(255,255,255,.25),inset 0 -2px 0 rgba(0,0,0,.4),0 2px 4px rgba(0,0,0,.4),0 10px 22px -8px rgba(0,0,0,.7)}
+.tb{box-shadow:inset 0 1px 0 var(--hi),inset 0 -1px 0 var(--edge),0 2px 6px rgba(0,0,0,.25),0 24px 50px -14px rgba(0,0,0,.7)}
+.pill{background:linear-gradient(180deg,var(--pil),transparent 130%);box-shadow:inset 0 1px 0 var(--hi),0 2px 4px rgba(0,0,0,.25),0 8px 18px -6px rgba(0,0,0,.45)}
+.it{box-shadow:inset 0 1px 0 var(--hi),inset 0 -1px 0 var(--edge),0 2px 4px rgba(0,0,0,.2),0 12px 22px -14px rgba(0,0,0,.7)}
+.day{margin-top:2px}
+
+/* ---------- Bande des jours réduite (reste en haut au défilement) ---------- */
+#mini{position:fixed;top:0;left:0;right:0;z-index:18;pointer-events:none;padding:calc(env(safe-area-inset-top,0px) + 8px) 14px 0;
+ opacity:0;transform:translateY(-24px) scale(.96);transition:opacity .25s,transform .35s cubic-bezier(.2,.9,.25,1.1)}
+#mini.show{opacity:1;transform:none}#mini.show .ms{pointer-events:auto}
+.ms{max-width:410px;margin:0 auto;display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;padding:5px;border-radius:20px;
+ background:var(--tbg);border:1px solid var(--cdb);-webkit-backdrop-filter:blur(24px) saturate(180%);backdrop-filter:blur(24px) saturate(180%);
+ box-shadow:inset 0 1px 0 var(--hi),0 2px 6px rgba(0,0,0,.25),0 16px 34px -12px rgba(0,0,0,.7)}
+.ms::-webkit-scrollbar{display:none}
+.ms button{flex:0 0 auto;min-width:36px;height:34px;border:0;border-radius:14px;background:none;color:var(--mu2);font-weight:600;font-size:.92rem}
+.ms button.ok{color:var(--tx)}
+.ms button.on{background:linear-gradient(180deg,#fff,#d6d6dc);color:#0b0b0d;box-shadow:inset 0 1px 0 #fff,0 4px 10px -4px rgba(0,0,0,.6)}
+:root:not([data-theme="dark"]) .ms button.on{background:linear-gradient(180deg,#38383e,#111114);color:#fff}
+
+/* ---------- Bouton « reprendre la nuit précédente » ---------- */
+.iw{display:flex;gap:6px;align-items:center}.iw>input,.iw>textarea,.iw>.btn{flex:1;min-width:0}.iw.ta{align-items:flex-start}
+.iw+.iw,.ch+.iw{margin-top:8px}
+.g2 .f .iw input{width:118px;flex:none}
+.rp{flex:none;width:40px;height:40px;border-radius:12px;display:grid;place-items:center;border:1px solid var(--cdb);background:var(--btn);color:var(--mu);
+ box-shadow:inset 0 1px 0 var(--hi),inset 0 -1px 0 var(--edge),0 1px 2px rgba(0,0,0,.25),0 6px 14px -8px rgba(0,0,0,.6)}
+.rp:not(:disabled):active,.rp.done{color:var(--tx)}
+.rp.done{color:var(--ok);animation:pop .35s cubic-bezier(.3,1.6,.5,1)}
+.rp:disabled{opacity:.3;box-shadow:none}
+.nr .rp{margin-left:2px}
+.iw.ta .rp{margin-top:2px}
+
+/* ---------- Transparence (verre) ---------- */
+:root{--cd:linear-gradient(180deg,rgba(255,255,255,.62),rgba(255,255,255,.4));--btn:linear-gradient(180deg,rgba(255,255,255,.75),rgba(255,255,255,.5));
+ --tbg:rgba(250,250,252,.5);--glow2:rgba(150,160,200,.30);--mbg:rgba(252,252,254,.9);--mnum:rgba(30,30,36,.55)}
+:root[data-theme="dark"]{--cd:linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.018));--btn:linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,.025));
+ --tbg:rgba(30,30,36,.4);--glow2:rgba(130,138,175,.17);--glow1:rgba(255,255,255,.09);--mbg:rgba(24,24,29,.9);--mnum:rgba(235,235,245,.6)}
+.card{-webkit-backdrop-filter:blur(28px) saturate(170%);backdrop-filter:blur(28px) saturate(170%)}
+.amb i{background:radial-gradient(circle,var(--glow2),transparent 60%)}
+.amb i:nth-child(1){top:-20vmax;left:-30vmax}.amb i:nth-child(2){bottom:-25vmax;right:-35vmax}
+.tb{-webkit-backdrop-filter:blur(30px) saturate(190%);backdrop-filter:blur(30px) saturate(190%)}
+.it{background:var(--cd);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px)}
+
+/* ---------- Bande des jours : une seule barre, en grand comme en réduit ---------- */
+.strip,.ms{background:var(--mbg);border:1px solid var(--cdb);-webkit-backdrop-filter:blur(30px) saturate(190%);backdrop-filter:blur(30px) saturate(190%);
+ box-shadow:inset 0 1px 0 var(--hi),inset 0 -1px 0 var(--edge),0 2px 6px rgba(0,0,0,.25),0 16px 34px -12px rgba(0,0,0,.7)}
+.strip{gap:2px;padding:5px;margin:0 0 14px;border-radius:24px}
+.strip button,.strip button:not(.on){border:0;background:none;box-shadow:none;min-width:48px;border-radius:19px;padding:7px 4px 8px;color:var(--mnum)}
+.strip button b{color:var(--mnum)}.strip button.ok b{color:var(--tx)}
+.strip button i{background:transparent}.strip button.ok i{background:var(--ok)}
+.strip button.on i{background:currentColor;opacity:.35}.strip button.on.ok i{background:var(--ok);opacity:1}
+.ms button{color:var(--mnum)}.ms button.ok{color:var(--tx)}
+.ms button.ok:not(.on){text-shadow:0 0 12px rgba(255,255,255,.25)}
+
+/* ---------- Mode sombre : noirs profonds ---------- */
+:root[data-theme="dark"]{--bg:#000;--glow1:rgba(255,255,255,.045);--glow2:rgba(110,118,160,.09);--grain:.04;
+ --cd:linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.012));--cdb:rgba(255,255,255,.065);--hi:rgba(255,255,255,.075);
+ --btn:linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.018));--fld:rgba(0,0,0,.55);--fldb:rgba(255,255,255,.05);
+ --tbg:rgba(14,14,17,.55);--mbg:rgba(10,10,12,.92);--pil:rgba(255,255,255,.1);--edge:rgba(0,0,0,.7);
+ --ins:inset 0 2px 6px rgba(0,0,0,.8),inset 0 -1px 0 rgba(255,255,255,.04);
+ --sh:0 1px 0 rgba(0,0,0,.6),0 4px 10px -2px rgba(0,0,0,.7),0 20px 40px -14px rgba(0,0,0,.95),0 50px 90px -40px #000}
+:root[data-theme="dark"],:root[data-theme="dark"] body{background-color:#000}
+:root[data-theme="dark"] body::after{background:radial-gradient(120% 80% at 50% 35%,transparent 45%,rgba(0,0,0,.6))}
+:root[data-theme="dark"] .card::before{background:linear-gradient(170deg,rgba(255,255,255,.05),transparent 32%)}
+:root[data-theme="dark"] .logo{background:linear-gradient(160deg,#1f2645,#050507)}
+
+/* ---------- Couleurs : plus franches, sans être criardes ---------- */
+:root{--ok:#1f9d57;--wa:#d9820f;--ba:#d53b43}
+:root[data-theme="dark"]{--ok:#2bbd6c;--wa:#eb961d;--ba:#e64a51}
+.bars i{opacity:1}.bars i::after{background:linear-gradient(180deg,rgba(255,255,255,.16),transparent 45%)}
+.feel button[data-set="feel:difficile"].on{background:linear-gradient(180deg,color-mix(in srgb,var(--ba) 88%,#fff),var(--ba))}
+.feel button[data-set="feel:moyenne"].on{background:linear-gradient(180deg,color-mix(in srgb,var(--wa) 88%,#fff),var(--wa))}
+.feel button[data-set="feel:bonne"].on{background:linear-gradient(180deg,color-mix(in srgb,var(--ok) 88%,#fff),var(--ok))}
+
+/* ---------- Verre liquide ---------- */
+:root{--rim1:rgba(255,255,255,.95);--rim2:rgba(255,255,255,.35);--spec:rgba(255,255,255,.7);--gl:blur(34px) saturate(200%) brightness(1.04)}
+:root[data-theme="dark"]{--rim1:rgba(255,255,255,.34);--rim2:rgba(255,255,255,.1);--spec:rgba(255,255,255,.085);--gl:blur(34px) saturate(210%) brightness(1.12)}
+/* lumière de fond légèrement teintée, pour que le verre ait quelque chose à réfracter */
+.amb i:nth-child(1){background:radial-gradient(circle,rgba(70,95,200,.16),transparent 60%)}
+.amb i:nth-child(2){background:radial-gradient(circle,rgba(125,85,190,.12),transparent 60%)}
+:root:not([data-theme="dark"]) .amb{display:block}
+:root:not([data-theme="dark"]) .amb i:nth-child(1){background:radial-gradient(circle,rgba(110,140,255,.22),transparent 60%)}
+:root:not([data-theme="dark"]) .amb i:nth-child(2){background:radial-gradient(circle,rgba(190,140,255,.18),transparent 60%)}
+.card,.tb,.strip,.ms,.it,#sv,#th,.btn:not(.p):not(.g),.rp,.tile{-webkit-backdrop-filter:var(--gl);backdrop-filter:var(--gl)}
+.card,.tb,.it,#th,.btn,.rp,.tile{position:relative}
+.card{border-color:transparent}
+/* liseré lumineux en dégradé (reflet sur l'arête du verre) */
+.card::after,.tb::after,.it::after,#th::after,.btn:not(.g)::after,.rp::after,.tile::after{content:"";position:absolute;inset:0;border-radius:inherit;padding:1px;pointer-events:none;
+ background:linear-gradient(140deg,var(--rim1),var(--rim2) 22%,transparent 45%,transparent 62%,var(--rim2) 85%,var(--rim1));
+ -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask:linear-gradient(#000 0 0) content-box exclude,linear-gradient(#000 0 0)}
+.btn.p::after{opacity:.5}
+/* reflet spéculaire en haut à gauche */
+.card::before{background:radial-gradient(130% 70% at 0% 0%,var(--spec),transparent 55%),linear-gradient(180deg,var(--spec),transparent 22%)}
+.it::before{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;background:radial-gradient(120% 90% at 0% 0%,var(--spec),transparent 55%)}
+.it>*{position:relative}
+.strip,.ms{border-color:transparent;box-shadow:inset 1px 1px 0 var(--rim2),inset -1px -1px 0 rgba(255,255,255,.04),inset 0 0 18px rgba(255,255,255,.03),0 2px 6px rgba(0,0,0,.3),0 18px 36px -12px rgba(0,0,0,.75)}
+.tb{border-color:transparent;background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.015)),var(--tbg)}
+:root:not([data-theme="dark"]) .tb{background:linear-gradient(180deg,rgba(255,255,255,.55),rgba(255,255,255,.25))}
+/* la pastille de l'onglet actif devient une lentille */
+.pill{background:radial-gradient(120% 120% at 30% 0%,rgba(255,255,255,.28),rgba(255,255,255,.06) 60%);
+ box-shadow:inset 1px 1px 0 rgba(255,255,255,.4),inset -1px -1px 0 rgba(255,255,255,.08),inset 0 0 14px rgba(255,255,255,.08),0 6px 16px -6px rgba(0,0,0,.6)}
+:root:not([data-theme="dark"]) .pill{background:radial-gradient(120% 120% at 30% 0%,rgba(255,255,255,.95),rgba(255,255,255,.5) 60%);box-shadow:inset 0 0 0 1px rgba(255,255,255,.9),0 6px 16px -6px rgba(0,0,0,.25)}
+.tb.drag .pill{scale:1.12;box-shadow:inset 1px 1px 0 rgba(255,255,255,.5),inset 0 0 20px rgba(255,255,255,.14),0 10px 26px -8px rgba(0,0,0,.6)}
+/* puces et champs : verre plus fin */
+.ch button:not(.on){-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);box-shadow:inset 1px 1px 0 var(--rim2),var(--ins)}
+#mini .ms{background:var(--mbg)}
+</style></head><body><div class="amb"><i></i><i></i></div>
+<header class="hd"><div class="brand"><span class="logo" id="lg"></span><div><h1>Journal du sommeil</h1><p id="mode"></p></div></div><button id="th" type="button" aria-label="Changer de thème"></button></header>
+
+<div id="mini"><div class="ms"></div></div><main id="app"></main>
+<div class="tbw"><nav class="tb"><b class="pill"></b><button id="t1" class="on">Saisie</button><button id="t2">Historique</button><button id="t3">Stats</button><button id="t4">Importer</button></nav></div><div id="sv"></div>
+<datalist id="dl"><option value="Donormyl"></datalist>
+<script>
+const IP={
+moon:'<path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>',
+sun:'<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>',
+edit:'<path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/>',
+cal:'<rect x="3" y="4.5" width="18" height="17" rx="3"/><path d="M16 2.5v4M8 2.5v4M3 10h18"/>',
+chart:'<path d="M3 3v16a2 2 0 0 0 2 2h16"/><path d="M8 17v-4M13 17V8M18 17v-7"/>',
+imp:'<path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/>',
+bed:'<path d="M2 4v16"/><path d="M2 8h18a2 2 0 0 1 2 2v10"/><path d="M2 17h20"/><path d="M6 8v9"/>',
+night:'<path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/><path d="M19 2v4M21 4h-4"/>',
+rise:'<path d="M12 2v7"/><path d="m4.93 10.93 1.41 1.41"/><path d="M2 18h2M20 18h2"/><path d="m19.07 10.93-1.41 1.41"/><path d="M22 22H2"/><path d="m8 5 4-4 4 4"/><path d="M16 18a4 4 0 0 0-8 0"/>',
+nap:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+head:'<path d="M3 14h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-7a9 9 0 0 1 18 0v7a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3"/>',
+star:'<path d="m12 2 3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>',
+gauge:'<path d="m12 14 4-4"/><path d="M3.34 19a10 10 0 1 1 17.32 0"/>',
+heart:'<path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>',
+arch:'<rect x="2" y="3" width="20" height="5" rx="1.5"/><path d="M4 8v11a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8"/><path d="M10 12h4"/>',
+up:'<path d="M12 21V9"/><path d="m7 14 5-5 5 5"/><path d="M5 3h14"/>',
+redo:'<path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/><path d="M3 21v-5h5"/>',
+copy:'<rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>',
+ext:'<path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>',
+play:'<path d="M7 4.5v15l12-7.5Z"/>',
+cl:'<path d="m15 18-6-6 6-6"/>',cr:'<path d="m9 18 6-6-6-6"/>',
+plus:'<path d="M12 5v14M5 12h14"/>',x:'<path d="M18 6 6 18M6 6l12 12"/>',
+file:'<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M8 13h8M8 17h8"/>',
+scale:'<path d="M12 3v18"/><path d="M5 7h14"/><path d="m5 7-3 7a3.5 3.5 0 0 0 6 0Z"/><path d="m19 7-3 7a3.5 3.5 0 0 0 6 0Z"/><path d="M8 21h8"/>',
+trophy:'<path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/>',
+check:'<path d="M20 6 9 17l-5-5"/>',
+back2:'<path d="M9 14 4 9l5-5"/><path d="M20 20v-7a4 4 0 0 0-4-4H4"/>',
+list:'<path d="M8 6h13M8 12h13M8 18h13"/><path d="M3 6h.01M3 12h.01M3 18h.01"/>'};
+const ic=(n,z=18,w=1.7)=>`<svg class="i" width="${z}" height="${z}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${IP[n]}</svg>`;
+const hd=(n,t)=>`<h2><span class="tile">${ic(n,15)}</span>${t}</h2>`;
+const KEY='sommeil-v1',$=(s,r=document)=>r.querySelector(s),$$=(s,r=document)=>[...r.querySelectorAll(s)];
+const pad=n=>String(n).padStart(2,'0'),today=()=>{const d=new Date();return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())};
+const blank=d=>({date:d,bed:'',try:'',lat:'',wakes:'',wakeDur:'',wake:'',up:'',naps:[],sound:'',soundNote:'',soundUrl:'',odd:[],oddNote:'',meds:[],feel:'',note:''});
+const clone=o=>JSON.parse(JSON.stringify(o));
+let entries={},cur=blank(today()),store=null,tab=1,tmr,delArm=false,imp={text:'',blocks:null};
+const ODD=['Bruit','Lumière','Inconfort','Chaleur','Froid','Stress','Écran tard','Repas tardif'];
+const FEEL=['difficile','moyenne','bonne'],FC={difficile:'var(--ba)',moyenne:'var(--wa)',bonne:'var(--ok)'};
+const mi=t=>{const [h,m]=t.split(':').map(Number);return h*60+m},df=(a,b)=>((mi(b)-mi(a))+1440)%1440;
+const hm=m=>m==null?'–':Math.floor(m/60)+'h'+pad(Math.round(m%60));
+const fd=d=>d.split('-').reverse().join('/');
+const lg=d=>new Date(d+'T12:00').toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long'});
+const isFilled=e=>JSON.stringify({...e,date:''})!==JSON.stringify({...blank(''),date:''});
+function stats(e){const r={inbed:null,sleep:null,eff:null};
+ if(e.bed&&e.up)r.inbed=df(e.bed,e.up);
+ if(e.try&&e.wake){const w=df(e.try,e.wake);r.sleep=Math.max(0,w-(+e.lat||0)-(+e.wakeDur||0))}
+ if(r.sleep!=null&&r.inbed>0)r.eff=Math.min(100,Math.round(r.sleep/r.inbed*100));return r}
+let stt;function setStatus(s){const e=$('#sv');e.textContent=s;e.classList.add('show');clearTimeout(stt);if(!/…$/.test(s))stt=setTimeout(()=>e.classList.remove('show'),1800)}
+function touch(){clearTimeout(tmr);setStatus('Enregistrement…');tmr=setTimeout(save,600)}
+async function save(){if(!isFilled(cur))return;
+ entries[cur.date]=clone(cur);
+ try{if(store)await store.doc(cur.date).set(entries[cur.date]);else localStorage.setItem(KEY,JSON.stringify(entries));setStatus('Enregistré')}
+ catch(e){setStatus('Échec de l’enregistrement, réessayez')}}
+function openDate(d){cur=entries[d]?{...blank(d),...clone(entries[d])}:blank(d);delArm=false}
+function medNames(){const s=new Set();Object.values(entries).forEach(e=>(e.meds||[]).forEach(m=>m.n&&s.add(m.n)));$('#dl').innerHTML='<option value="Donormyl">'+[...s].filter(x=>x!=='Donormyl').map(x=>'<option value="'+x.replace(/"/g,'&quot;')+'">').join('')}
+const esc=s=>String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;');
+// Valeur de la nuit précédente la plus proche qui a ce champ rempli
+const filled=v=>Array.isArray(v)?v.length>0:v!==''&&v!=null;
+function pv(k){return Object.keys(entries).sort().reverse().find(d=>d<cur.date&&filled(entries[d][k]))}
+function rb(k){const p=pv(k),v=p&&entries[p][k],t=p?(Array.isArray(v)?v.length+' élément(s)':String(v).slice(0,40))+' · '+lg(p):'';
+ return `<button type="button" class="rp" data-rp="${k}" ${p?'':'disabled'} title="${p?esc('Reprendre : '+t):'Rien à reprendre'}" aria-label="Reprendre la valeur de la nuit précédente">${ic('back2',16)}</button>`}
+const tm=(k,l)=>`<div class="f"><span>${l}</span><div class="iw"><input type="time" data-k="${k}" value="${cur[k]}" aria-label="${l}">${rb(k)}</div></div>`;
+const nm=(k,l,v,u)=>`<div class="f"><span>${l}</span><div class="nr"><input type="number" inputmode="numeric" min="0" data-k="${k}" value="${esc(cur[k])}" placeholder="0"><em>${u}</em>${rb(k)}</div><div class="ch">${v.map(x=>`<button type="button" data-set="${k}:${x}" class="${cur[k]==x&&cur[k]!==''?'on':''}">${x}</button>`).join('')}</div></div>`;
+function form(){const c=cur;
+ return `${back?`<button class="btn g back" id="back" type="button">${ic('cl',16)}Retour ${back==3?'aux statistiques':'à l’historique'}</button>`:''}${strip()}<div class="card"><div class="nav"><label><span>Nuit se terminant le (jour du réveil)</span><input type="date" data-k="date" value="${c.date}"></label></div><p class="day">${lg(c.date)}${entries[c.date]?'<span class="tag">enregistrée</span>':''}</p>
+ <small class="hint" style="margin-bottom:0">Glissez l’écran pour changer de nuit</small></div>
+ <div class="card">${hd('bed','Coucher')}<div class="g2">${tm('bed','Mise au lit')}${tm('try','Heure d’essai pour dormir')}</div>
+ ${nm('lat','Temps estimé avant l’endormissement',[5,10,15,30,45,60,90],'min')}</div>
+ <div class="card">${hd('night','Pendant la nuit')}
+ ${nm('wakes','Nombre de réveils nocturnes',[0,1,2,3,4,5],'')}
+ ${nm('wakeDur','Durée totale estimée des réveils',[0,5,10,20,30,45,60,90],'min')}</div>
+ <div class="card">${hd('rise','Matin')}<div class="g2">${tm('wake','Réveil définitif')}${tm('up','Heure de lever')}</div></div>
+ <div class="card">${hd('nap','Sieste(s)')}${c.naps.map((n,i)=>`<div class="row n"><input type="time" data-nap="${i}:h" value="${n.h}"><input type="number" inputmode="numeric" min="0" placeholder="min" data-nap="${i}:d" value="${esc(n.d)}"><button type="button" data-rm="naps:${i}" aria-label="Retirer">${ic('x',16)}</button></div>`).join('')}
+ <div class="iw"><button class="btn g" type="button" data-add="naps">${ic('plus',16)}Ajouter une sieste</button>${rb('naps')}</div></div>
+ <div class="card">${hd('head','Conditions de sommeil')}
+ <div class="f"><span>Fond sonore</span><div class="ch">${['oui','non'].map(x=>`<button type="button" data-tg="1" data-set="sound:${x}" class="${c.sound===x?'on':''}">${x}</button>`).join('')}</div>
+ <div class="iw"><input data-k="soundNote" placeholder="Précision (pluie, podcast…)" value="${esc(c.soundNote)}">${rb('soundNote')}</div><div class="iw"><input type="url" inputmode="url" data-k="soundUrl" placeholder="Lien Spotify, YouTube…" value="${esc(c.soundUrl||'')}">${rb('soundUrl')}</div><div id="sl">${slink(c.soundUrl)}</div></div>
+ <div class="f"><span>Conditions inhabituelles</span><div class="ch">${ODD.map(x=>`<button type="button" data-odd="${x}" class="${c.odd.includes(x)?'on':''}">${x}</button>`).join('')}</div>
+ <div class="iw"><input data-k="oddNote" placeholder="Autre précision" value="${esc(c.oddNote)}">${rb('oddNote')}</div></div>
+ <div class="f"><span>Donormyl ou autre produit : quantité et heure</span>${c.meds.map((m,i)=>`<div class="row"><input list="dl" data-med="${i}:n" placeholder="Produit" value="${esc(m.n)}"><input data-med="${i}:q" placeholder="Quantité" value="${esc(m.q)}"><input type="time" data-med="${i}:t" value="${m.t}"><button type="button" data-rm="meds:${i}" aria-label="Retirer">${ic('x',16)}</button></div>`).join('')}
+ <div class="iw"><button class="btn g" type="button" data-add="meds">${ic('plus',16)}Ajouter un produit</button>${rb('meds')}</div></div></div>
+ <div class="card">${hd('star','Impression générale')}<div class="ch feel">${FEEL.map(x=>`<button type="button" data-tg="1" data-set="feel:${x}" class="${c.feel===x?'on':''}"><span class="dot" style="background:${FC[x]}"></span>${x}</button>`).join('')}</div>
+ <div class="f" style="margin-top:12px"><span>Notes libres</span><div class="iw ta"><textarea data-k="note" aria-label="Notes libres">${esc(c.note)}</textarea>${rb('note')}</div></div></div>
+ <div class="card" id="calc"></div>
+ <div class="acts"><button class="btn p" id="cp" type="button">${ic('copy',16)}Copier au format de ma note</button><a class="btn" id="hk" href="#">${ic('heart',16)}Envoyer vers Santé</a>
+ ${entries[c.date]?`<button class="btn d" id="del" type="button">${delArm?'Confirmer la suppression':'Supprimer cette nuit'}</button>`:''}</div>`}
+function calc(){const s=stats(cur),el=$('#calc');
+ if(!$('#rp')){el.innerHTML=`${hd('gauge','Résumé calculé')}<div class="ringw"><svg viewBox="0 0 120 120" class="ring"><defs><linearGradient id="rg"><stop offset="0" style="stop-color:var(--r2)"/><stop offset="1" style="stop-color:var(--r1)"/></linearGradient></defs><circle cx="60" cy="60" r="52" class="rb"/><circle id="rp" cx="60" cy="60" r="52" class="rf" stroke-dasharray="326.7" stroke-dashoffset="326.7"/></svg><div class="rc"><b id="rv"></b><small>sommeil estimé</small></div></div><div class="calc" style="grid-template-columns:1fr 1fr"><div><b id="ri"></b><small>temps au lit</small></div><div><b id="re"></b><small>efficacité</small></div></div>`;void el.offsetWidth}
+ $('#rp').style.strokeDashoffset=326.7*(1-(s.sleep==null?0:Math.min(1,s.sleep/480)));$('#rv').textContent=hm(s.sleep);$('#ri').textContent=hm(s.inbed);$('#re').textContent=s.eff==null?'–':s.eff+' %'}
+function hkUrl(){const e=cur,iso=(d,m)=>{const x=new Date(d+'T00:00');x.setMinutes(m);return x.getFullYear()+'-'+pad(x.getMonth()+1)+'-'+pad(x.getDate())+'T'+pad(x.getHours())+':'+pad(x.getMinutes())},o={nuit:e.date,reveils:+e.wakes||0};
+ if(e.bed&&e.up){o.coucher=iso(e.date,mi(e.up)-df(e.bed,e.up));o.lever=iso(e.date,mi(e.up))}
+ if(e.try&&e.wake){o.endormissement=iso(e.date,mi(e.wake)-(df(e.try,e.wake)-(+e.lat||0)));o.reveil=iso(e.date,mi(e.wake))}
+ return 'shortcuts://run-shortcut?name='+encodeURIComponent('Journal sommeil')+'&input=text&text='+encodeURIComponent(JSON.stringify(o))}
+document.addEventListener('click',e=>{const a=e.target.closest('#hk');if(a)a.href=hkUrl()});
+function noteText(e){const M=v=>v!==''&&v!=null?v+' min':'';
+ return `Nuit se terminant le ${fd(e.date)}
+* Mise au lit : ${e.bed}
+* Heure à laquelle j’ai essayé de dormir : ${e.try}
+* Temps estimé avant l’endormissement : ${M(e.lat)}
+* Nombre de réveils nocturnes : ${e.wakes}
+* Durée totale estimée des réveils : ${M(e.wakeDur)}
+* Réveil définitif : ${e.wake}
+* Heure de lever : ${e.up}
+* Sieste(s) et durée(s) : ${e.naps.map(n=>[n.h,M(n.d)].filter(Boolean).join(' ')).join(', ')||'non'}
+
+Conditions de sommeil
+
+* Fond sonore : ${e.sound}${e.soundNote?' ('+e.soundNote+')':''}${e.soundUrl?' '+e.soundUrl:''}
+* Conditions inhabituelles (bruit, lumière, inconfort…) : ${[...e.odd,e.oddNote].filter(Boolean).join(', ')}
+* Donormyl ou autre produit, quantité et heure : ${e.meds.map(m=>[m.n,m.q,m.t].filter(Boolean).join(' ')).join(' ; ')}
+
+Impression générale : ${e.feel}${e.note?'\nNotes : '+e.note:''}`}
+function copy(t,btn){const ok=()=>{btn.textContent='Copié'};
+ try{navigator.clipboard.writeText(t).then(ok,fb)}catch(e){fb()}
+ function fb(){const a=document.createElement('textarea');a.value=t;document.body.appendChild(a);a.select();try{document.execCommand('copy');ok()}catch(e){btn.textContent='Copie impossible'}a.remove()}}
+function hist(){const ds=Object.keys(entries).sort().reverse();
+ if(!ds.length)return '<div class="card">Aucune nuit enregistrée pour l’instant.</div>';
+ const L=ds.slice(0,7).map(d=>({e:entries[d],s:stats(entries[d])})),av=f=>{const v=L.map(f).filter(x=>x!=null&&!isNaN(x));return v.length?v.reduce((a,b)=>a+b,0)/v.length:null};
+ const r=ds.slice(0,14).reverse(),mx=600;
+ return `<div class="card">${hd('chart','Moyennes · '+L.length+' dernière(s) nuit(s)')}<div class="calc"><div><b>${hm(av(x=>x.s.sleep))}</b><small>sommeil</small></div><div><b>${av(x=>+x.e.lat||0)==null?'–':Math.round(av(x=>+x.e.lat||0))+' min'}</b><small>endormissement</small></div><div><b>${av(x=>+x.e.wakes||0)==null?'–':av(x=>+x.e.wakes||0).toFixed(1)}</b><small>réveils</small></div></div>
+ <div class="bars" data-nav>${r.map(d=>{const s=stats(entries[d]).sleep||0;return `<i data-open="${d}" title="${fd(d)}" style="height:${Math.min(100,s/mx*100)}%;background:${FC[entries[d].feel]||'var(--ac)'}"></i>`}).join('')}</div><div class="ax"><span>Sommeil estimé, 14 dernières nuits</span><span>couleur = impression</span></div></div>`
+ +ds.map(d=>{const e=entries[d],s=stats(e);return `<button class="it" data-open="${d}"><span><b>${lg(d)}</b><br><small>${hm(s.sleep)} de sommeil · ${s.eff==null?'–':s.eff+' %'}</small></span><span class="r"><span class="dot" style="background:${FC[e.feel]||'var(--bd)'}"></span>${e.feel||'–'}${ic('cr',16)}</span></button>`}).join('')
+ +`<div class="acts" style="margin-top:14px"><button class="btn" id="cpa" type="button">${ic('copy',16)}Tout copier au format note</button><button class="btn" id="csv" type="button">${ic('file',16)}Exporter en CSV</button><button class="btn" id="bk" type="button">${ic('arch',16)}Sauvegarde complète</button></div>`}
+function lastBk(){try{const t=localStorage.getItem('sommeil-bk');return t?'Dernière sauvegarde : '+new Date(+t).toLocaleDateString('fr-FR',{day:'numeric',month:'long',year:'numeric'}):'Aucune sauvegarde faite sur cet appareil.'}catch(e){return ''}}
+const backupCard=()=>`<div class="card">${hd('arch','Sauvegarde complète')}<p class="st">Les nuits sont gardées uniquement sur cet appareil. Enregistrez régulièrement un fichier de sauvegarde (dans Fichiers ou iCloud Drive) : il permet de tout récupérer, par exemple sur un nouveau téléphone.</p><p class="st">${lastBk()}</p><button class="btn p" id="bk" type="button">${ic('imp',16)}Enregistrer une sauvegarde</button><button class="btn" id="rs" type="button">${ic('up',16)}Restaurer depuis un fichier</button><input type="file" id="rsf" accept=".json,application/json" hidden><p class="st" style="margin:12px 0 0;text-align:center;font-size:.72rem">Version ${APP_VERSION}</p></div>`;
+async function saveFile(blob,name){try{const dl=window.claude&&await claude.use('downloads');if(dl)return await dl.save({filename:name,data:blob})}catch(e){}
+ const f=new File([blob],name,{type:blob.type});
+ if(navigator.canShare&&navigator.canShare({files:[f]})){try{await navigator.share({files:[f],title:name});return}catch(e){if(e.name==='AbortError')throw e}}
+ const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),4000)}
+async function backup(){const n=Object.keys(entries).length;if(!n){setStatus('Aucune nuit à sauvegarder');return}
+ const b=new Blob([JSON.stringify({app:'journal-sommeil',version:1,exported:new Date().toISOString(),entries},null,1)],{type:'application/json'});
+ try{await saveFile(b,'journal-sommeil-'+today()+'.json');try{localStorage.setItem('sommeil-bk',Date.now())}catch(e){}setStatus(n+' nuit(s) sauvegardée(s)');if(tab==4)render()}catch(e){}}
+async function restore(file){let o;try{o=JSON.parse(await file.text())}catch(e){setStatus('Fichier illisible');return}
+ const src=o&&o.entries&&typeof o.entries==='object'?o.entries:o;
+ const ks=Object.keys(src||{}).filter(k=>/^\d{4}-\d{2}-\d{2}$/.test(k)&&src[k]&&typeof src[k]==='object');
+ if(!ks.length){setStatus('Aucune nuit trouvée dans ce fichier');return}
+ ks.forEach(k=>{const e={...blank(k),...src[k],date:k};['naps','odd','meds'].forEach(f=>{if(!Array.isArray(e[f]))e[f]=[]});entries[k]=e});
+ try{if(store)for(const k of ks)await store.doc(k).set(entries[k]);else localStorage.setItem(KEY,JSON.stringify(entries))}catch(e){setStatus('Échec de l’enregistrement');return}
+ if(entries[cur.date])openDate(cur.date);tab=2;render();setStatus(ks.length+' nuit(s) restaurée(s)')}
+function shift(s,n){const d=new Date(s+'T12:00');d.setDate(d.getDate()+n);return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())}
+function go(d){clearTimeout(tmr);save().then(()=>{openDate(d);fresh=true;render()})}
+function miniStrip(){const m=$('#mini');if(tab!==1){m.classList.remove('show');return}let h='';
+ for(let i=13;i>=0;i--){const d=shift(today(),-i);h+=`<button type="button" data-goto="${d}" class="${d===cur.date?'on':''} ${entries[d]?'ok':''}" aria-label="${lg(d)}">${+d.slice(8)}</button>`}
+ const ms=$('.ms',m);ms.innerHTML=h;const a=$('.on',ms);if(a)ms.scrollLeft=a.offsetLeft-ms.clientWidth/2+a.offsetWidth/2;miniCheck()}
+function miniCheck(){const s=$('.strip'),m=$('#mini');m.classList.toggle('show',tab===1&&!!s&&s.getBoundingClientRect().bottom<8)}
+function strip(){let h='';for(let i=13;i>=0;i--){const d=shift(today(),-i),w=new Date(d+'T12:00').toLocaleDateString('fr-FR',{weekday:'short'}).replace('.','');h+=`<button type="button" data-goto="${d}" class="${d===cur.date?'on':''} ${entries[d]?'ok':''}">${w}<b>${+d.slice(8)}</b><i></i></button>`}return `<div class="strip">${h}</div>`}
+const MO=['janv','fevr','mars','avr','mai','juin','juil','aout','sept','oct','nov','dec'];
+function parseDate(s){const n=new Date();let m=s.match(/(\d{1,2})[\/.\-](\d{1,2})(?:[\/.\-](\d{2,4}))?/),d,mo,y=null;
+ if(m){d=+m[1];mo=+m[2];if(m[3])y=+m[3]}else{const l=s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');m=l.match(/(\d{1,2})\s*(?:er)?\s*(janv|fevr|mars|avr|mai|juin|juil|aout|sept|oct|nov|dec)/);if(!m)return '';d=+m[1];mo=MO.indexOf(m[2])+1}
+ if(!y){y=n.getFullYear();if(new Date(y,mo-1,d)>new Date(n.getTime()+864e5))y--}else if(y<100)y+=2000;
+ return y+'-'+pad(mo)+'-'+pad(d)}
+function parseBlock(ls){const e=blank('');
+ const T=s=>{const m=s.match(/(\d{1,2})\s*(?:h|:)\s*(\d{2})?/i);return m?pad(+m[1])+':'+(m[2]||'00'):''};
+ const D=s=>{const h=s.match(/(\d+)\s*h\s*(\d+)?/i);if(h)return String(+h[1]*60+(+h[2]||0));const m=s.match(/\d+/);return m?m[0]:''};
+ const none=/^(non|aucune?|rien|ras|0(\s*min)?|-)?$/i;
+ ls.forEach(raw=>{const l=raw.replace(/^[\s*\-•]+/,''),i=l.indexOf(':');if(i<0)return;const k=l.slice(0,i).toLowerCase(),v=l.slice(i+1).trim();
+  if(/mise au lit/.test(k))e.bed=T(v);else if(/essay/.test(k))e.try=T(v);else if(/endormissement/.test(k))e.lat=D(v);
+  else if(/nombre.*r[eé]veil/.test(k))e.wakes=none.test(v)?'0':D(v);else if(/dur[eé]e.*r[eé]veil/.test(k))e.wakeDur=none.test(v)?'0':D(v);
+  else if(/r[eé]veil d[eé]finitif/.test(k))e.wake=T(v);else if(/lever/.test(k))e.up=T(v);
+  else if(/sieste/.test(k)){if(!none.test(v))v.split(/[,;]| et /).forEach(sg=>{if(!sg.trim())return;if(/min/i.test(sg))e.naps.push({h:T(sg.replace(/\d+\s*min.*/i,'')),d:(sg.match(/(\d+)\s*min/i)||[])[1]});else e.naps.push({h:'',d:D(sg)})})}
+  else if(/fond sonore/.test(k)){const u=v.match(/https?:\/\/\S+/),w=v.replace(/https?:\/\/\S+/,'').trim();e.sound=/^oui/i.test(w)?'oui':/^non/i.test(w)?'non':(u?'oui':'');e.soundUrl=u?u[0]:'';e.soundNote=w.replace(/^(oui|non)\s*[:\-–,]?\s*/i,'').replace(/^\((.*)\)$/,'$1').trim()}
+  else if(/inhabituelles/.test(k)){e.oddNote=none.test(v.trim())?'':v}
+  else if(/donormyl|produit/.test(k)){if(!none.test(v))v.split(/;|\+/).forEach(sg=>{if(!sg.trim())return;const t=T(sg),r=sg.replace(/(à\s*)?\d{1,2}\s*(?:h|:)\s*\d{0,2}/i,'').replace(/\bvers\b/gi,'').trim(),nm=((r.match(/^[A-Za-zÀ-ÿ’' -]+/)||[''])[0]).trim();e.meds.push({n:nm,q:r.slice(nm.length).trim().replace(/^[,\-–:]\s*/,''),t})})}
+  else if(/impression/.test(k)){const f=v.match(/difficile|moyenne|bonne/i);e.feel=f?f[0].toLowerCase():''}});
+ return e}
+function parseNotes(t){const L=t.split(/\r?\n/),st=[],md=imp.mode||'eve',cand=/^\s*(date|nuit|le |du )|^[\d\s\/.\-]+$/i;L.forEach((l,i)=>{if(/mise au lit/i.test(l))st.push(i)});
+ return st.map((s,k)=>{const pe=k?st[k-1]+1:0,en=k+1<st.length?st[k+1]:L.length;let h='';for(let i=s-1;i>=Math.max(pe,s-6);i--)if(cand.test(L[i])&&parseDate(L[i])){h=L[i];break}
+  let d=parseDate(h);if(d&&md==='eve'&&!/\d\s*au\s*\d/i.test(h))d=shift(d,1);
+  return {date:d,e:parseBlock(L.slice(s,en))}})}
+function doParse(){imp.text=$('#impt').value;imp.blocks=parseNotes(imp.text);render()}
+async function doImport(btn){const ok=imp.blocks.filter(b=>b.date);if(!ok.length){btn.textContent='Choisissez une date pour chaque nuit';return}
+ for(const b of ok){const e={...blank(b.date),...b.e,date:b.date};entries[b.date]=e;try{if(store)await store.doc(b.date).set(e);else localStorage.setItem(KEY,JSON.stringify(entries))}catch(x){}}
+ const n=ok.length,sk=imp.blocks.length-n;imp={text:'',blocks:null};tab=2;render();setStatus(n+' nuit(s) importée(s)'+(sk?' · '+sk+' sans date ignorée(s)':''))}
+function importView(){const B=imp.blocks;
+ return backupCard()+`<div class="card">${hd('list','Importer mes notes')}<p class="st">Collez toutes vos nuits d’un coup, au format de votre note : une ligne « Date : jj/mm/aa » avant chaque « Mise au lit ».</p><div class="f"><span>La date de chaque note correspond au…</span><div class="ch"><button type="button" data-im="eve" class="${(imp.mode||'eve')==='eve'?'on':''}">soir du coucher</button><button type="button" data-im="wake" class="${imp.mode==='wake'?'on':''}">jour du réveil</button></div></div><textarea id="impt" style="min-height:220px" placeholder="Date : 12/10/26&#10;&#10;* Mise au lit : 22h30&#10;…">${esc(imp.text)}</textarea><button class="btn p" id="parse" type="button" style="margin-top:10px">Analyser</button></div>`
+ +(B?(B.length?B.map((b,i)=>{const s=stats(b.e);return `<div class="card"><label class="f"><span>Nuit se terminant le</span><input type="date" data-bd="${i}" value="${b.date}"></label><small>${b.e.bed||'–'} → ${b.e.up||'–'} · ${hm(s.sleep)} de sommeil · ${b.e.feel||'–'}${entries[b.date]?' · <b style="color:var(--wa)">remplacera la nuit déjà enregistrée</b>':''}</small></div>`}).join('')+`<button class="btn p" id="doimp" type="button">Importer ${B.length} nuit(s)</button>`:'<div class="card">Aucune nuit détectée : chaque nuit doit contenir la ligne « Mise au lit ».</div>'):'')}
+const slink=u=>{u=(u||'').trim();if(!/^https?:\/\/\S+$/i.test(u))return '';const h=u.toLowerCase();return `<a class="lk" href="${esc(u)}" target="_blank" rel="noopener noreferrer">${ic('play',14)}Ouvrir ${h.includes('spotify')?'dans Spotify':/youtu/.test(h)?'sur YouTube':'le lien'}${ic('ext',14)}</a>`};
+let rg=14,lt=1,fresh=true;const mean=a=>{a=a.filter(x=>x!=null&&!isNaN(x));return a.length?a.reduce((s,x)=>s+x,0)/a.length:null};
+const tavg=a=>{a=a.filter(Boolean).map(t=>(mi(t)+360)%1440);return a.length?hm((mean(a)+1080)%1440):'–'};
+let cm='sleep',back=0,backY=0;
+const NV=k=>x=>x.e[k]===''||x.e[k]==null?null:+x.e[k],sg=v=>v<0?'−':'+',dm=m=>m<60?Math.round(m)+' min':hm(m);
+const CM={sleep:{l:'Sommeil',f:x=>x.s.sleep,fm:hm,up:1,th:10,df:v=>sg(v)+dm(Math.abs(v))},
+ lat:{l:'Endormissement',f:NV('lat'),fm:v=>Math.round(v)+' min',up:0,th:3,df:v=>sg(v)+Math.round(Math.abs(v))+' min'},
+ wakes:{l:'Réveils',f:NV('wakes'),fm:v=>v.toFixed(1),up:0,th:.25,df:v=>sg(v)+Math.abs(v).toFixed(1)},
+ eff:{l:'Efficacité',f:x=>x.s.eff,fm:v=>Math.round(v)+' %',up:1,th:2,max:100,df:v=>sg(v)+Math.round(Math.abs(v))+' pts'},
+ good:{l:'Bonnes nuits',f:x=>x.e.feel?(x.e.feel==='bonne'?100:0):null,fm:v=>Math.round(v)+' %',up:1,th:8,max:100,df:v=>sg(v)+Math.round(Math.abs(v))+' pts'}};
+// Chaque facteur renvoie true (groupe « avec »), false (groupe « sans ») ou null (nuit non classable)
+function factors(L){const F=[],add=(l,f,y,n)=>F.push({l,f,y,n}),M=x=>x.e.meds||[];
+ add('Fond sonore',x=>x.e.sound?x.e.sound==='oui':null,'avec','sans');
+ add('Produit pris',x=>M(x).length>0,'avec','sans');
+ const nms=[...new Set(L.flatMap(x=>M(x).map(m=>(m.n||'').trim()).filter(Boolean)))];
+ if(nms.length>1)nms.forEach(nm=>add(nm,x=>M(x).some(m=>(m.n||'').trim()===nm),'avec','sans'));
+ add('Sieste dans la journée',x=>(x.e.naps||[]).length>0,'avec','sans');
+ [...new Set(L.flatMap(x=>x.e.odd||[]))].forEach(o=>add(o,x=>(x.e.odd||[]).includes(o),'oui','non'));
+ const bt=L.map(x=>x.e.bed).filter(Boolean).map(t=>(mi(t)+720)%1440).sort((a,b)=>a-b);
+ if(bt.length>=4){const md=bt[Math.floor(bt.length/2)];add('Coucher avant '+hm((md+720)%1440),x=>x.e.bed?(mi(x.e.bed)+720)%1440<md:null,'plus tôt','plus tard')}
+ add('Plus de 15 min au lit avant d’essayer',x=>x.e.bed&&x.e.try?df(x.e.bed,x.e.try)>15:null,'oui','non');
+ add('Nuit de week-end',x=>{const g=new Date(x.d+'T12:00').getDay();return g===0||g===6},'week-end','semaine');
+ add('Après une nuit difficile',x=>{const p=entries[shift(x.d,-1)];return p&&p.feel?p.feel==='difficile':null},'oui','non');
+ return F}
+function cmpView(L){const M=CM[cm];
+ const rows=factors(L).map(F=>{const Y=L.filter(x=>F.f(x)===true),Z=L.filter(x=>F.f(x)===false);if(!Y.length||!Z.length)return null;
+  const a=mean(Y.map(M.f)),b=mean(Z.map(M.f));if(a==null||b==null)return null;
+  const d=a-b,few=Y.length<2||Z.length<2,cls=few||Math.abs(d)<M.th?'':((d>0)===!!M.up?'g':'b');
+  return {...F,ny:Y.length,nz:Z.length,a,b,d,few,cls,sc:few?-1:Math.abs(d)/M.th}}).filter(Boolean).sort((p,q)=>q.sc-p.sc);
+ const tabs=`<div class="ch cmh2">${Object.entries(CM).map(([k,v])=>`<button type="button" data-cm="${k}" class="${cm===k?'on':''}">${v.l}</button>`).join('')}</div>`;
+ if(!rows.length)return `<div class="card">${hd('scale','Comparaisons')}${tabs}<p class="st" style="margin-top:10px">Pas encore assez de nuits variées pour comparer. Renseignez fond sonore, produits, siestes et conditions : les comparaisons apparaîtront ici.</p></div>`;
+ const mx=M.max||Math.max(1,...rows.flatMap(r=>[r.a,r.b]))*1.05,best=rows.find(r=>r.cls==='g'),worst=rows.find(r=>r.cls==='b');
+ const sm=(r,t,c)=>r?`<div><span class="dot" style="background:var(--${c})"></span><span>${t} : <b>${esc(r.l)}</b> (${r.y})</span><small>${M.df(r.d)}</small></div>`:'';
+ return `<div class="card">${hd('scale','Comparaisons')}${tabs}${best||worst?`<div class="sum">${sm(best,'Le plus favorable','ok')}${sm(worst,'Le moins favorable','ba')}</div>`:''}`
+ +rows.map(r=>`<div class="cmp"><div class="cmh"><span>${esc(r.l)}</span><span class="dl ${r.cls}">${r.few?'peu de nuits':M.df(r.d)}</span></div>${[[r.y,r.ny,r.a,''],[r.n,r.nz,r.b,'o']].map(([l,n,v,o])=>`<div class="cb"><span>${l} · ${n} nuit${n>1?'s':''}</span><div class="tr"><i class="${o}" style="width:${Math.max(2,v/mx*100)}%"></i></div><b>${M.fm(v)}</b></div>`).join('')}</div>`).join('')
+ +`<p class="st" style="margin:12px 0 0">Écart = nuits « avec » moins nuits « sans ». Vert : plutôt favorable, rouge : plutôt défavorable. Ce sont des tendances, pas des preuves : à lire avec prudence quand il y a peu de nuits.</p></div>`}
+function statsView(){const cut=shift(today(),1-rg),L=Object.keys(entries).sort().filter(d=>d>=cut).map(d=>({d,e:entries[d],s:stats(entries[d])}));
+ const rc=`<div class="card"><div class="ch" style="margin:0">${[7,14,30,90].map(n=>`<button type="button" data-rg="${n}" class="${rg===n?'on':''}">${n} j</button>`).join('')}</div><small style="color:var(--mu);display:block;margin-top:10px">Couleur des barres : ${FEEL.map(f=>`<span class="dot" style="background:${FC[f]};margin-left:6px"></span>${f}`).join('')}</small><small style="color:var(--mu);display:block;margin-top:4px">Touchez une barre pour ouvrir le détail de la nuit.</small></div>`;
+ if(!L.length)return rc+'<div class="card">Aucune nuit sur cette période.</div>';
+ const N=NV,mn=f=>mean(L.map(f)),R=(v,u,g)=>v==null?'–':(g?v.toFixed(1):Math.round(v))+u;
+ const C=[[hm(mn(x=>x.s.sleep)),'sommeil'],[R(mn(N('lat')),' min'),'endormissement'],[R(mn(N('wakes')),'',1),'réveils / nuit'],[R(mn(x=>x.s.eff),' %'),'efficacité'],[tavg(L.map(x=>x.e.bed)),'coucher'],[tavg(L.map(x=>x.e.up)),'lever']];
+ const ch=(t,f,fm)=>{const P=L.map(x=>({d:x.d,v:f(x),f:x.e.feel})).filter(p=>p.v!=null&&!isNaN(p.v));if(!P.length)return '';const mx=Math.max(1,...P.map(p=>p.v)),a=mean(P.map(p=>p.v));
+  return `<div class="card"><h2>${t}</h2><small style="color:var(--mu)">Moyenne ${fm(a)} · max ${fm(mx)}</small><div class="bars" data-nav>${P.map(p=>`<i data-open="${p.d}" title="${fd(p.d)} : ${fm(p.v)}" style="height:${Math.max(3,p.v/mx*100)}%;background:${FC[p.f]||'var(--ac)'}"></i>`).join('')}</div><div class="ax"><span>${fd(P[0].d).slice(0,5)}</span><span>${fd(P[P.length-1].d).slice(0,5)}</span></div></div>`};
+ const n=FEEL.map(f=>L.filter(x=>x.e.feel===f).length),tot=n.reduce((a,b)=>a+b,0)||1;
+ const pr=FEEL.slice().reverse().map(f=>{const g=L.filter(x=>x.e.feel===f),v=(k,u,dd)=>{const m=mean(g.map(N(k)));return m==null?'–':(dd?m.toFixed(1):Math.round(m))+u};
+  return `<tr><td><span class="dot" style="background:${FC[f]}"></span>${f}</td><td>${g.length}</td><td>${g.length?hm(mean(g.map(x=>x.s.sleep))):'–'}</td><td>${v('lat',' min')}</td><td>${v('wakes','',1)}</td><td>${tavg(g.map(x=>x.e.bed))}</td></tr>`}).join('');
+ const pick=(l,f,fm,hi,ok=()=>true)=>{const P=L.filter(x=>{const v=f(x);return v!=null&&!isNaN(v)&&ok(v)});if(!P.length)return '';const x=P.reduce((a,b)=>hi?(f(b)>f(a)?b:a):(f(b)<f(a)?b:a));
+  return `<button class="it s" data-open="${x.d}"><span><small>${l}</small><br><b>${lg(x.d)}</b></span><span class="r"><b>${fm(f(x))}</b>${ic('cr',16)}</span></button>`};
+ const rem=pick('Plus longue nuit',x=>x.s.sleep,hm,1)+pick('Plus courte nuit',x=>x.s.sleep,hm,0)+pick('Endormissement le plus long',N('lat'),v=>v+' min',1,v=>v>0)+pick('Le plus de réveils',N('wakes'),v=>v+' réveil'+(v>1?'s':''),1,v=>v>0)+pick('Meilleure efficacité',x=>x.s.eff,v=>v+' %',1);
+ return rc+`<div class="card">${hd('chart','Moyennes')}<div class="calc" style="row-gap:8px">${C.map(c=>`<div><b>${c[0]}</b><small>${c[1]}</small></div>`).join('')}</div></div>`
+ +ch('Sommeil estimé',x=>x.s.sleep,hm)+ch('Temps d’endormissement',N('lat'),v=>Math.round(v)+' min')+ch('Réveils nocturnes',N('wakes'),v=>v.toFixed(v%1?1:0))+ch('Efficacité du sommeil',x=>x.s.eff,v=>Math.round(v)+' %')
+ +`<div class="card">${hd('star','Impression générale')}<div class="stk">${FEEL.map((f,i)=>`<i style="width:${n[i]/tot*100}%;background:${FC[f]}"></i>`).join('')}</div><small style="color:var(--mu)">${FEEL.map((f,i)=>f+' '+n[i]).join(' · ')}</small>
+ <p class="st" style="margin:14px 0 6px">Profil moyen selon l’impression :</p><div class="tbl"><table><tr><th></th><th>nuits</th><th>sommeil</th><th>endorm.</th><th>réveils</th><th>coucher</th></tr>${pr}</table></div></div>`
+ +cmpView(L)
+ +(rem?`<div class="card">${hd('trophy','Nuits remarquables')}${rem}</div>`:'')}
+function openNight(d){back=tab===1?back:tab;backY=scrollY;openDate(d);tab=1;fresh=true;render();scrollTo({top:0,behavior:'instant'})}
+function render(){if(tab!==1)back=0;const ch=tab!==lt||fresh;fresh=false;if(tab!==lt){scrollTo(0,0);lt=tab}[1,2,3,4].forEach(n=>$('#t'+n).classList.toggle('on',tab==n));$('.pill').style.transform=`translateX(${(tab-1)*100}%)`;$('#app').classList.toggle('anim',ch);
+ $('#app').innerHTML=tab==1?form():tab==2?hist():tab==3?statsView():importView();medNames();if(tab==1){calc();const s=$('.strip'),a=$('.strip .on');if(s&&a)s.scrollLeft=a.offsetLeft-s.clientWidth/2}miniStrip();$$('.bars i').forEach((b,i)=>b.style.animationDelay=Math.min(i*20,600)+'ms')}
+async function csv(){const H=['date','mise_au_lit','essai_dormir','latence_min','reveils','duree_reveils_min','reveil_definitif','lever','siestes','fond_sonore','conditions','produits','impression','sommeil_estime_min','efficacite_pct','notes'];
+ const q=v=>'"'+String(v??'').replace(/"/g,'""')+'"';
+ const rows=Object.keys(entries).sort().map(d=>{const e=entries[d],s=stats(e);return [d,e.bed,e.try,e.lat,e.wakes,e.wakeDur,e.wake,e.up,e.naps.map(n=>n.h+' '+n.d).join(';'),e.sound+(e.soundNote?' '+e.soundNote:'')+(e.soundUrl?' '+e.soundUrl:''),[...e.odd,e.oddNote].filter(Boolean).join(';'),e.meds.map(m=>[m.n,m.q,m.t].join(' ')).join(';'),e.feel,s.sleep,s.eff,e.note].map(q).join(',')});
+ const b=new Blob(['\ufeff'+H.join(',')+'\n'+rows.join('\n')],{type:'text/csv'});try{await saveFile(b,'journal-sommeil.csv')}catch(e){}}
+const app=$('#app');
+[['edit','Saisie'],['cal','Historique'],['chart','Stats'],['imp','Importer']].forEach(([n,l],i)=>{const b=$('#t'+(i+1));b.innerHTML=ic(n,22,1.6)+l;b.onclick=()=>{tab=i+1;back=0;render()}});
+$('#lg').innerHTML=ic('moon',20,1.8);
+function setTheme(n){document.documentElement.dataset.theme=n;$('#th').innerHTML=ic(n==='dark'?'sun':'moon',18);$('meta[name=theme-color]').content=n==='dark'?'#000000':'#f2f2f6'}
+let th0='dark';try{th0=localStorage.getItem('sommeil-th')||'dark'}catch(e){}setTheme(th0);
+$('#th').onclick=()=>{const n=document.documentElement.dataset.theme==='dark'?'light':'dark';setTheme(n);try{localStorage.setItem('sommeil-th',n)}catch(e){}};
+// Glisser le doigt le long de la barre du bas pour changer d'onglet
+(()=>{const tb=$('.tb'),pill=$('.pill'),bs=$$('.tb button');let d=null,skip=false;
+ const at=x=>{const w=(d.r.width-10)/4,p=Math.max(0,Math.min(3*w,x-d.r.left-5-w/2));return {p,i:Math.round(p/w)+1}};
+ tb.addEventListener('pointerdown',e=>{d={x0:e.clientX,r:tb.getBoundingClientRect(),id:e.pointerId,on:false}});
+ tb.addEventListener('pointermove',e=>{if(!d)return;if(!d.on){if(Math.abs(e.clientX-d.x0)<8)return;d.on=true;try{tb.setPointerCapture(d.id)}catch(x){}tb.classList.add('drag')}
+  const {p,i}=at(e.clientX);pill.style.transform=`translateX(${p}px)`;bs.forEach((b,j)=>b.classList.toggle('hov',j+1===i))});
+ const end=e=>{if(!d)return;const was=d.on;if(was){tab=at(e.clientX).i;back=0;skip=true;setTimeout(()=>skip=false,80)}d=null;tb.classList.remove('drag');bs.forEach(b=>b.classList.remove('hov'));if(was)render()};
+ tb.addEventListener('pointerup',end);tb.addEventListener('pointercancel',end);
+ tb.addEventListener('click',e=>{if(skip){e.stopPropagation();e.preventDefault()}},true)})();
+// Glisser l'écran horizontalement sur la page Saisie : nuit précédente / suivante
+(()=>{let g=null;
+ app.addEventListener('touchstart',e=>{if(tab!==1||e.touches.length>1||e.target.closest('.strip,textarea')){g=null;return}const t=e.touches[0];g={x:t.clientX,y:t.clientY,on:false,dx:0}},{passive:true});
+ app.addEventListener('touchmove',e=>{if(!g)return;const t=e.touches[0],dx=t.clientX-g.x,dy=t.clientY-g.y;
+  if(!g.on){if(Math.abs(dy)>12&&Math.abs(dy)>Math.abs(dx)){g=null;return}if(Math.abs(dx)<12)return;g.on=true;app.className='swp';document.activeElement&&document.activeElement.blur&&document.activeElement.blur()}
+  e.preventDefault();const fut=dx<0&&cur.date>=today();g.dx=dx;app.style.transform=`translateX(${fut?dx*.15:dx*.55}px)`;app.style.opacity=1-Math.min(.5,Math.abs(dx)/700)},{passive:false});
+ const end=()=>{if(!g||!g.on){g=null;return}const dx=g.dx;g=null;const n=dx<0?1:-1,d=shift(cur.date,n);
+  if(Math.abs(dx)<70||(n>0&&d>today())){app.className='snap';app.style.transform='';app.style.opacity='';if(n>0&&Math.abs(dx)>=70)setStatus('Pas de nuit après aujourd’hui');setTimeout(()=>app.className='',340);return}
+  app.className='out';app.style.transform=`translateX(${dx<0?-45:45}%)`;app.style.opacity='0';
+  setTimeout(()=>{clearTimeout(tmr);save().then(()=>{openDate(d);render();app.style.transform='';app.style.opacity='';app.className=n>0?'inL':'inR';scrollTo({top:0,behavior:'instant'});setTimeout(()=>app.className='',400)})},190)};
+ app.addEventListener('touchend',end);app.addEventListener('touchcancel',end)})();
+$('#mini').addEventListener('click',e=>{const b=e.target.closest('button[data-goto]');if(b)go(b.dataset.goto)});
+let mtk=0;addEventListener('scroll',()=>{if(!mtk)mtk=requestAnimationFrame(()=>{mtk=0;miniCheck()})},{passive:true});
+app.addEventListener('input',e=>{const t=e.target;
+ if(t.dataset.k&&t.dataset.k!=='date'){cur[t.dataset.k]=t.value;touch();calc();if(t.dataset.k==='soundUrl')$('#sl').innerHTML=slink(t.value);if(['lat','wakeDur'].includes(t.dataset.k))$$('[data-set^="'+t.dataset.k+':"]').forEach(b=>b.classList.toggle('on',b.dataset.set===t.dataset.k+':'+t.value))}
+ else if(t.dataset.nap){const[i,f]=t.dataset.nap.split(':');cur.naps[i][f]=t.value;touch()}
+ else if(t.dataset.med){const[i,f]=t.dataset.med.split(':');cur.meds[i][f]=t.value;touch()}});
+app.addEventListener('change',e=>{const t=e.target;if(t.id==='rsf'){if(t.files[0])restore(t.files[0]);t.value='';return}if(t.dataset.bd!=null){imp.blocks[t.dataset.bd].date=t.value;return}if(t.dataset.k==='date'&&t.value){clearTimeout(tmr);save().then(()=>{openDate(t.value);render()})}});
+app.addEventListener('click',e=>{const bs=e.target.closest('.bars[data-nav]');
+ if(bs){let hit=null,bd=1e9;$$('i[data-open]',bs).forEach(i=>{const r=i.getBoundingClientRect(),dx=Math.abs(r.left+r.width/2-e.clientX);if(dx<bd){bd=dx;hit=i}});if(hit){hit.classList.add('hit');setTimeout(()=>openNight(hit.dataset.open),130)}return}
+ const b=e.target.closest('button');if(!b)return;const d=b.dataset;
+ if(d.day)go(shift(cur.date,+d.day));else if(d.goto)go(d.goto);else if(d.rg){rg=+d.rg;render()}else if(d.im){imp.text=$('#impt').value;imp.mode=d.im;if(imp.text.trim())imp.blocks=parseNotes(imp.text);render()}else if(b.id==='parse')doParse();else if(b.id==='doimp')doImport(b);else if(d.set){const[k,v]=d.set.split(':');cur[k]=(d.tg&&cur[k]===v)?'':v;$$('button',b.parentNode).forEach(x=>x.classList.toggle('on',x.dataset.set===k+':'+cur[k]));const i=$('input[data-k="'+k+'"]');if(i)i.value=cur[k];touch();calc()}
+ else if(d.odd){const i=cur.odd.indexOf(d.odd);i<0?cur.odd.push(d.odd):cur.odd.splice(i,1);b.classList.toggle('on',i<0);touch()}
+ else if(d.add){cur[d.add].push(d.add==='naps'?{h:'',d:''}:{n:'',q:'',t:''});render()}
+ else if(d.rm){const[k,i]=d.rm.split(':');cur[k].splice(i,1);touch();render()}
+ else if(d.open)openNight(d.open);
+ else if(d.cm){cm=d.cm;render()}
+ else if(d.rp){const k=d.rp,p=pv(k);if(!p)return;const v=clone(entries[p][k]);
+  if(k==='naps'||k==='meds'){const have=new Set(cur[k].map(x=>JSON.stringify(x)));v.forEach(x=>{if(!have.has(JSON.stringify(x)))cur[k].push(x)})}
+  else if(k==='note'&&cur.note.trim()&&!cur.note.includes(v))cur.note=cur.note.trimEnd()+'\n'+v;
+  else cur[k]=v;
+  touch();render();const nb=$('[data-rp="'+k+'"]');if(nb){nb.classList.add('done');nb.innerHTML=ic('check',16);setTimeout(()=>{if(nb.isConnected){nb.classList.remove('done');nb.innerHTML=ic('back2',16)}},1200)}
+  setStatus('Repris de la nuit du '+lg(p))}
+ else if(b.id==='back'){const t=back,y=backY;back=0;tab=t;clearTimeout(tmr);save().then(()=>{render();requestAnimationFrame(()=>scrollTo({top:y,behavior:'instant'}))})}
+ else if(b.id==='prev'){const p=Object.keys(entries).sort().filter(x=>x<cur.date).pop();if(p){const o=entries[p];Object.assign(cur,{bed:o.bed,try:o.try,sound:o.sound,soundNote:o.soundNote,meds:clone(o.meds)});touch();render()}else b.textContent='Aucune nuit précédente'}
+ else if(b.id==='cp')copy(noteText(cur),b);
+ else if(b.id==='cpa')copy(Object.keys(entries).sort().map(k=>noteText(entries[k])).join('\n\n———\n\n'),b);
+ else if(b.id==='csv')csv();
+ else if(b.id==='bk')backup();
+ else if(b.id==='rs')$('#rsf').click();
+ else if(b.id==='del'){if(!delArm){delArm=true;b.textContent='Confirmer la suppression'}else{const k=cur.date;delete entries[k];(async()=>{try{if(store)await store.doc(k).delete();else localStorage.setItem(KEY,JSON.stringify(entries))}catch(e){}cur=blank(k);delArm=false;render();setStatus('Nuit supprimée')})()}}});
+(async()=>{try{entries=JSON.parse(localStorage.getItem(KEY)||'{}')}catch(e){}
+ let m='ce navigateur uniquement';render();
+ try{if(window.claude){const u=await claude.use('user'),db=await claude.use('db');const id=u&&await u.id();
+  if(db&&id){store=db.collection('data/users/'+id+'/nuits/items');const loc=entries;Object.keys(loc).forEach(k=>store.doc(k).set(loc[k]));if(Object.keys(loc).length)try{localStorage.removeItem(KEY)}catch(x){}let first=true;
+   store.onSnapshot(s=>{const o={};s.docs.forEach(d=>o[d.id]=d.data());entries=o;
+    if(first){first=false;if(!isFilled(cur)&&o[cur.date])openDate(cur.date)}
+    if(tab==2||tab==3)render();else medNames()});m='compte, privé'}}}catch(e){}
+ $('#mode').innerHTML=store?'<span class="dot" style="background:var(--ok)"></span>Synchronisé avec votre compte':'<span class="dot" style="background:var(--wa)"></span>Sur cet appareil · pensez à sauvegarder';render()})();
+// Mises à jour automatiques : on vérifie à l'ouverture et à chaque retour dans l'app,
+// puis on recharge la page dès que la nouvelle version a pris le relais.
+const APP_VERSION=9;
+if('serviceWorker' in navigator&&location.protocol!=='file:'){const sw=navigator.serviceWorker;let had=!!sw.controller,reloading=false;
+ sw.addEventListener('controllerchange',()=>{if(!had){had=true;return}if(reloading)return;reloading=true;clearTimeout(tmr);
+  Promise.resolve(isFilled(cur)?save():0).finally(()=>{setStatus('Mise à jour…');setTimeout(()=>location.reload(),300)})});
+ addEventListener('load',()=>sw.register('sw.js',{updateViaCache:'none'}).then(reg=>{
+  const check=()=>reg.update().catch(()=>{});
+  document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')check()});
+  addEventListener('focus',check);setInterval(check,30*60*1000)}).catch(()=>{}))}
+try{navigator.storage&&navigator.storage.persist&&navigator.storage.persist()}catch(e){}
+</script></body></html>

@@ -320,6 +320,33 @@ body::after{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;bac
 /* puces et champs : verre plus fin */
 .ch button:not(.on){-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);box-shadow:inset 1px 1px 0 var(--rim2),var(--ins)}
 #mini .ms{background:var(--mbg)}
+
+/* ================= ÉTAPE 1 — ESTHÉTIQUE ================= */
+/* Couleur par impression, partout : difficile = corail, moyenne = ambre, bonne = vert menthe */
+:root{--ba:#e05a45;--wa:#c98710;--ok:#1f9e72}
+:root[data-theme="dark"]{--ba:#f27561;--wa:#f2aa3c;--ok:#3fd09b}
+/* Chiffres : police arrondie à chasse fixe, plus grands que le texte */
+:root{--num:ui-rounded,"SF Pro Rounded","SF Pro Display",-apple-system,system-ui,sans-serif}
+input[type=time],input[type=number],input[type=date],.calc b,.rc b,.strip b,.ms button,.cb b,.dl,td,.it .r b,.sum small,.ax,.day,.num{font-family:var(--num);font-variant-numeric:tabular-nums}
+input[type=time],input[type=number]{font-size:1.2rem;font-weight:600;letter-spacing:.01em}
+input[type=date]{font-size:1.1rem;font-weight:600}
+.calc b{font-size:1.32rem;font-weight:700}.rc b{font-size:2.15rem;font-weight:700}
+.strip button b{font-size:1.18rem}.cb b{font-size:.95rem}.it .r b{font-size:1rem}
+/* Mode ultra-sombre automatique entre 0 h et 5 h : luminosité réduite, teintes ambrées */
+:root[data-night="1"]{--tx:#e3bf93;--mu:rgba(222,168,108,.58);--mu2:rgba(222,168,108,.28);--inv:#d29a58;--invt:#160c03;
+ --hi:rgba(255,190,120,.05);--rim1:rgba(255,178,96,.22);--rim2:rgba(255,178,96,.06);--spec:rgba(255,170,90,.04);
+ --r1:#d99c58;--r2:#6b421a;--ac:#c9955c;--ok:#4f9a76;--wa:#c58a36;--ba:#bf5a49;--cdb:rgba(255,190,120,.07);
+ --glow1:rgba(255,150,60,.025);--glow2:rgba(150,85,30,.05);--tbg:rgba(10,7,4,.6);--mbg:rgba(8,6,4,.93);--pil:rgba(255,180,100,.1);--ring:rgba(255,180,100,.18)}
+:root[data-night="1"] .amb{opacity:.5}
+:root[data-night="1"]{--mnum:rgba(222,168,108,.6)}
+:root[data-night="1"] body::after{background:radial-gradient(120% 80% at 50% 35%,transparent 35%,rgba(0,0,0,.75))}
+:root[data-night="1"] .ch button.on,:root[data-night="1"] .strip button.on,:root[data-night="1"] .ms button.on,:root[data-night="1"] .btn.p{background:linear-gradient(180deg,#d9a161,#a8702f);color:#160c03;box-shadow:inset 0 1px 0 rgba(255,220,170,.4),0 6px 14px -6px rgba(0,0,0,.8)}
+:root[data-night="1"] .strip button.on b{color:#160c03}
+:root[data-night="1"] .pill{background:radial-gradient(120% 120% at 30% 0%,rgba(255,190,120,.2),rgba(255,190,120,.04) 60%)}
+:root[data-night="1"] .tr i{background:linear-gradient(180deg,#d9a161,#8a5a26);box-shadow:none}
+:root[data-night="1"] .logo{background:linear-gradient(160deg,#3a2510,#070503);color:#e3bf93}
+:root[data-night="1"] .bars i,:root[data-night="1"] .stk i,:root[data-night="1"] .feel button.on{filter:brightness(.8) saturate(.85)}
+:root[data-night="1"] input,:root[data-night="1"] textarea{color-scheme:dark}
 </style></head><body><div class="amb"><i></i><i></i></div>
 <header class="hd"><div class="brand"><span class="logo" id="lg"></span><div><h1>Journal du sommeil</h1><p id="mode"></p></div></div><button id="th" type="button" aria-label="Changer de thème"></button></header>
 
@@ -468,11 +495,14 @@ async function restore(file){let o;try{o=JSON.parse(await file.text())}catch(e){
  if(entries[cur.date])openDate(cur.date);tab=2;render();setStatus(ks.length+' nuit(s) restaurée(s)')}
 function shift(s,n){const d=new Date(s+'T12:00');d.setDate(d.getDate()+n);return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())}
 function go(d){clearTimeout(tmr);save().then(()=>{openDate(d);fresh=true;render()})}
+// Dernier jour de la barre des jours : aujourd'hui, ou quelques jours après la nuit affichée si elle est ancienne
+function stripEnd(){const t=maxDay();return cur.date<shift(t,-13)?shift(cur.date,6):t}
+function maxDay(){const t=shift(today(),1);return cur.date>today()||entries[t]?t:today()}
 function miniStrip(){const m=$('#mini');if(tab!==1){m.classList.remove('show');return}let h='';
- for(let i=13;i>=0;i--){const d=shift(today(),-i);h+=`<button type="button" data-goto="${d}" class="${d===cur.date?'on':''} ${entries[d]?'ok':''}" aria-label="${lg(d)}">${+d.slice(8)}</button>`}
+ for(let i=13;i>=0;i--){const d=shift(stripEnd(),-i);h+=`<button type="button" data-goto="${d}" class="${d===cur.date?'on':''} ${entries[d]?'ok':''}" aria-label="${lg(d)}">${+d.slice(8)}</button>`}
  const ms=$('.ms',m);ms.innerHTML=h;const a=$('.on',ms);if(a)ms.scrollLeft=a.offsetLeft-ms.clientWidth/2+a.offsetWidth/2;miniCheck()}
 function miniCheck(){const s=$('.strip'),m=$('#mini');m.classList.toggle('show',tab===1&&!!s&&s.getBoundingClientRect().bottom<8)}
-function strip(){let h='';for(let i=13;i>=0;i--){const d=shift(today(),-i),w=new Date(d+'T12:00').toLocaleDateString('fr-FR',{weekday:'short'}).replace('.','');h+=`<button type="button" data-goto="${d}" class="${d===cur.date?'on':''} ${entries[d]?'ok':''}">${w}<b>${+d.slice(8)}</b><i></i></button>`}return `<div class="strip">${h}</div>`}
+function strip(){let h='';for(let i=13;i>=0;i--){const d=shift(stripEnd(),-i),w=new Date(d+'T12:00').toLocaleDateString('fr-FR',{weekday:'short'}).replace('.','');h+=`<button type="button" data-goto="${d}" class="${d===cur.date?'on':''} ${entries[d]?'ok':''}">${w}<b>${+d.slice(8)}</b><i></i></button>`}return `<div class="strip">${h}</div>`}
 const MO=['janv','fevr','mars','avr','mai','juin','juil','aout','sept','oct','nov','dec'];
 function parseDate(s){const n=new Date();let m=s.match(/(\d{1,2})[\/.\-](\d{1,2})(?:[\/.\-](\d{2,4}))?/),d,mo,y=null;
  if(m){d=+m[1];mo=+m[2];if(m[3])y=+m[3]}else{const l=s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');m=l.match(/(\d{1,2})\s*(?:er)?\s*(janv|fevr|mars|avr|mai|juin|juil|aout|sept|oct|nov|dec)/);if(!m)return '';d=+m[1];mo=MO.indexOf(m[2])+1}
@@ -569,8 +599,13 @@ const app=$('#app');
 [['edit','Saisie'],['cal','Historique'],['chart','Stats'],['imp','Importer']].forEach(([n,l],i)=>{const b=$('#t'+(i+1));b.innerHTML=ic(n,22,1.6)+l;b.onclick=()=>{tab=i+1;back=0;render()}});
 $('#lg').innerHTML=ic('moon',20,1.8);
 function setTheme(n){document.documentElement.dataset.theme=n;$('#th').innerHTML=ic(n==='dark'?'sun':'moon',18);$('meta[name=theme-color]').content=n==='dark'?'#000000':'#f2f2f6'}
-let th0='dark';try{th0=localStorage.getItem('sommeil-th')||'dark'}catch(e){}setTheme(th0);
-$('#th').onclick=()=>{const n=document.documentElement.dataset.theme==='dark'?'light':'dark';setTheme(n);try{localStorage.setItem('sommeil-th',n)}catch(e){}};
+let userTh='dark';try{userTh=localStorage.getItem('sommeil-th')||'dark'}catch(e){}
+// Mode ultra-sombre automatique de 0 h à 5 h (?nuit=1 dans l'adresse pour le forcer)
+const forceNight=/[?&]nuit=1/.test(location.search),isNight=()=>forceNight||new Date().getHours()<5;
+function modeLine(){$('#mode').innerHTML=isNight()?'<span class="dot" style="background:var(--wa)"></span>Mode nuit · luminosité réduite':store?'<span class="dot" style="background:var(--ok)"></span>Synchronisé avec votre compte':'<span class="dot" style="background:var(--wa)"></span>Sur cet appareil · pensez à sauvegarder'}
+function applyTheme(){const n=isNight();document.documentElement.dataset.night=n?'1':'';setTheme(n?'dark':userTh);modeLine()}
+$('#th').onclick=()=>{userTh=userTh==='dark'?'light':'dark';try{localStorage.setItem('sommeil-th',userTh)}catch(e){}applyTheme();if(isNight())setStatus('Mode nuit actif jusqu’à 5 h')};
+applyTheme();setInterval(applyTheme,60000);document.addEventListener('visibilitychange',()=>{if(!document.hidden)applyTheme()});
 // Glisser le doigt le long de la barre du bas pour changer d'onglet
 (()=>{const tb=$('.tb'),pill=$('.pill'),bs=$$('.tb button');let d=null,skip=false;
  const at=x=>{const w=(d.r.width-10)/4,p=Math.max(0,Math.min(3*w,x-d.r.left-5-w/2));return {p,i:Math.round(p/w)+1}};
@@ -585,9 +620,9 @@ $('#th').onclick=()=>{const n=document.documentElement.dataset.theme==='dark'?'l
  app.addEventListener('touchstart',e=>{if(tab!==1||e.touches.length>1||e.target.closest('.strip,textarea')){g=null;return}const t=e.touches[0];g={x:t.clientX,y:t.clientY,on:false,dx:0}},{passive:true});
  app.addEventListener('touchmove',e=>{if(!g)return;const t=e.touches[0],dx=t.clientX-g.x,dy=t.clientY-g.y;
   if(!g.on){if(Math.abs(dy)>12&&Math.abs(dy)>Math.abs(dx)){g=null;return}if(Math.abs(dx)<12)return;g.on=true;app.className='swp';document.activeElement&&document.activeElement.blur&&document.activeElement.blur()}
-  e.preventDefault();const fut=dx<0&&cur.date>=today();g.dx=dx;app.style.transform=`translateX(${fut?dx*.15:dx*.55}px)`;app.style.opacity=1-Math.min(.5,Math.abs(dx)/700)},{passive:false});
+  e.preventDefault();const fut=dx<0&&cur.date>=maxDay();g.dx=dx;app.style.transform=`translateX(${fut?dx*.15:dx*.55}px)`;app.style.opacity=1-Math.min(.5,Math.abs(dx)/700)},{passive:false});
  const end=()=>{if(!g||!g.on){g=null;return}const dx=g.dx;g=null;const n=dx<0?1:-1,d=shift(cur.date,n);
-  if(Math.abs(dx)<70||(n>0&&d>today())){app.className='snap';app.style.transform='';app.style.opacity='';if(n>0&&Math.abs(dx)>=70)setStatus('Pas de nuit après aujourd’hui');setTimeout(()=>app.className='',340);return}
+  if(Math.abs(dx)<70||(n>0&&d>maxDay())){app.className='snap';app.style.transform='';app.style.opacity='';if(n>0&&Math.abs(dx)>=70)setStatus('Pas de nuit après aujourd’hui');setTimeout(()=>app.className='',340);return}
   app.className='out';app.style.transform=`translateX(${dx<0?-45:45}%)`;app.style.opacity='0';
   setTimeout(()=>{clearTimeout(tmr);save().then(()=>{openDate(d);render();app.style.transform='';app.style.opacity='';app.className=n>0?'inL':'inR';scrollTo({top:0,behavior:'instant'});setTimeout(()=>app.className='',400)})},190)};
  app.addEventListener('touchend',end);app.addEventListener('touchcancel',end)})();
@@ -621,14 +656,18 @@ app.addEventListener('click',e=>{const bs=e.target.closest('.bars[data-nav]');
  else if(b.id==='bk')backup();
  else if(b.id==='rs')$('#rsf').click();
  else if(b.id==='del'){if(!delArm){delArm=true;b.textContent='Confirmer la suppression'}else{const k=cur.date;delete entries[k];(async()=>{try{if(store)await store.doc(k).delete();else localStorage.setItem(KEY,JSON.stringify(entries))}catch(e){}cur=blank(k);delArm=false;render();setStatus('Nuit supprimée')})()}}});
-(async()=>{try{entries=JSON.parse(localStorage.getItem(KEY)||'{}')}catch(e){}
+// Migration automatique (sans changement de clé ni de format) : chaque nuit est complétée
+// avec les champs manquants (listes vides, textes vides). Les clés qui ne sont pas des dates sont laissées telles quelles.
+function normalize(o){const r={};Object.keys(o||{}).forEach(k=>{const v=o[k];
+ if(/^\d{4}-\d{2}-\d{2}$/.test(k)&&v&&typeof v==='object'){const e={...blank(k),...v,date:k};['naps','odd','meds'].forEach(f=>{if(!Array.isArray(e[f]))e[f]=[]});r[k]=e}else r[k]=v});return r}
+(async()=>{try{entries=normalize(JSON.parse(localStorage.getItem(KEY)||'{}'))}catch(e){}
  let m='ce navigateur uniquement';render();
  try{if(window.claude){const u=await claude.use('user'),db=await claude.use('db');const id=u&&await u.id();
   if(db&&id){store=db.collection('data/users/'+id+'/nuits/items');const loc=entries;Object.keys(loc).forEach(k=>store.doc(k).set(loc[k]));if(Object.keys(loc).length)try{localStorage.removeItem(KEY)}catch(x){}let first=true;
-   store.onSnapshot(s=>{const o={};s.docs.forEach(d=>o[d.id]=d.data());entries=o;
+   store.onSnapshot(s=>{const o={};s.docs.forEach(d=>o[d.id]=d.data());entries=normalize(o);
     if(first){first=false;if(!isFilled(cur)&&o[cur.date])openDate(cur.date)}
     if(tab==2||tab==3)render();else medNames()});m='compte, privé'}}}catch(e){}
- $('#mode').innerHTML=store?'<span class="dot" style="background:var(--ok)"></span>Synchronisé avec votre compte':'<span class="dot" style="background:var(--wa)"></span>Sur cet appareil · pensez à sauvegarder';render()})();
+ modeLine();render()})();
 // Mises à jour automatiques : on vérifie à l'ouverture et à chaque retour dans l'app,
 // puis on recharge la page dès que la nouvelle version a pris le relais.
 const APP_VERSION=9;
