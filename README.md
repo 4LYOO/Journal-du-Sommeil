@@ -56,6 +56,10 @@ JSON avec les heures de coucher, d'endormissement, de réveil et de lever.
 
 ## Mettre à jour l'application
 
-Après une modification des fichiers, changer la valeur `VERSION` en haut de
-`sw.js` (par ex. `sommeil-v2`) pour que les téléphones récupèrent la nouvelle
-version.
+À chaque modification des fichiers, augmenter `VERSION` en haut de `sw.js`
+(ex. `sommeil-v8`) et `APP_VERSION` dans `index.html` (ex. `8`).
+
+L'application vérifie les mises à jour à l'ouverture et à chaque retour dans
+l'app, puis se recharge toute seule (la saisie en cours est enregistrée avant).
+Le numéro de version affiché en bas de l'onglet **Importer** permet de vérifier
+quelle version tourne sur le téléphone.

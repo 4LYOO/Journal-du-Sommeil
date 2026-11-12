@@ -398,7 +398,7 @@ function hist(){const ds=Object.keys(entries).sort().reverse();
  +ds.map(d=>{const e=entries[d],s=stats(e);return `<button class="it" data-open="${d}"><span><b>${lg(d)}</b><br><small>${hm(s.sleep)} de sommeil · ${s.eff==null?'–':s.eff+' %'}</small></span><span class="r"><span class="dot" style="background:${FC[e.feel]||'var(--bd)'}"></span>${e.feel||'–'}${ic('cr',16)}</span></button>`}).join('')
  +`<div class="acts" style="margin-top:14px"><button class="btn" id="cpa" type="button">${ic('copy',16)}Tout copier au format note</button><button class="btn" id="csv" type="button">${ic('file',16)}Exporter en CSV</button><button class="btn" id="bk" type="button">${ic('arch',16)}Sauvegarde complète</button></div>`}
 function lastBk(){try{const t=localStorage.getItem('sommeil-bk');return t?'Dernière sauvegarde : '+new Date(+t).toLocaleDateString('fr-FR',{day:'numeric',month:'long',year:'numeric'}):'Aucune sauvegarde faite sur cet appareil.'}catch(e){return ''}}
-const backupCard=()=>`<div class="card">${hd('arch','Sauvegarde complète')}<p class="st">Les nuits sont gardées uniquement sur cet appareil. Enregistrez régulièrement un fichier de sauvegarde (dans Fichiers ou iCloud Drive) : il permet de tout récupérer, par exemple sur un nouveau téléphone.</p><p class="st">${lastBk()}</p><button class="btn p" id="bk" type="button">${ic('imp',16)}Enregistrer une sauvegarde</button><button class="btn" id="rs" type="button">${ic('up',16)}Restaurer depuis un fichier</button><input type="file" id="rsf" accept=".json,application/json" hidden></div>`;
+const backupCard=()=>`<div class="card">${hd('arch','Sauvegarde complète')}<p class="st">Les nuits sont gardées uniquement sur cet appareil. Enregistrez régulièrement un fichier de sauvegarde (dans Fichiers ou iCloud Drive) : il permet de tout récupérer, par exemple sur un nouveau téléphone.</p><p class="st">${lastBk()}</p><button class="btn p" id="bk" type="button">${ic('imp',16)}Enregistrer une sauvegarde</button><button class="btn" id="rs" type="button">${ic('up',16)}Restaurer depuis un fichier</button><input type="file" id="rsf" accept=".json,application/json" hidden><p class="st" style="margin:12px 0 0;text-align:center;font-size:.72rem">Version ${APP_VERSION}</p></div>`;
 async function saveFile(blob,name){try{const dl=window.claude&&await claude.use('downloads');if(dl)return await dl.save({filename:name,data:blob})}catch(e){}
  const f=new File([blob],name,{type:blob.type});
  if(navigator.canShare&&navigator.canShare({files:[f]})){try{await navigator.share({files:[f],title:name});return}catch(e){if(e.name==='AbortError')throw e}}
@@ -576,6 +576,15 @@ app.addEventListener('click',e=>{const bs=e.target.closest('.bars[data-nav]');
     if(first){first=false;if(!isFilled(cur)&&o[cur.date])openDate(cur.date)}
     if(tab==2||tab==3)render();else medNames()});m='compte, privé'}}}catch(e){}
  $('#mode').innerHTML=store?'<span class="dot" style="background:var(--ok)"></span>Synchronisé avec votre compte':'<span class="dot" style="background:var(--wa)"></span>Sur cet appareil · pensez à sauvegarder';render()})();
-if('serviceWorker' in navigator&&location.protocol!=='file:')addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
+// Mises à jour automatiques : on vérifie à l'ouverture et à chaque retour dans l'app,
+// puis on recharge la page dès que la nouvelle version a pris le relais.
+const APP_VERSION=7;
+if('serviceWorker' in navigator&&location.protocol!=='file:'){const sw=navigator.serviceWorker;let had=!!sw.controller,reloading=false;
+ sw.addEventListener('controllerchange',()=>{if(!had){had=true;return}if(reloading)return;reloading=true;clearTimeout(tmr);
+  Promise.resolve(isFilled(cur)?save():0).finally(()=>{setStatus('Mise à jour…');setTimeout(()=>location.reload(),300)})});
+ addEventListener('load',()=>sw.register('sw.js',{updateViaCache:'none'}).then(reg=>{
+  const check=()=>reg.update().catch(()=>{});
+  document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')check()});
+  addEventListener('focus',check);setInterval(check,30*60*1000)}).catch(()=>{}))}
 try{navigator.storage&&navigator.storage.persist&&navigator.storage.persist()}catch(e){}
 </script></body></html>
