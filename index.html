@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="fr" data-theme="dark"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#09090b"><title>Journal du sommeil</title>
+<meta name="theme-color" content="#000000"><title>Journal du sommeil</title>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
@@ -267,6 +267,18 @@ body::after{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;bac
 .strip button.on i{background:currentColor;opacity:.35}.strip button.on.ok i{background:var(--ok);opacity:1}
 .ms button{color:var(--mnum)}.ms button.ok{color:var(--tx)}
 .ms button.ok:not(.on){text-shadow:0 0 12px rgba(255,255,255,.25)}
+
+/* ---------- Mode sombre : noirs profonds ---------- */
+:root[data-theme="dark"]{--bg:#000;--glow1:rgba(255,255,255,.045);--glow2:rgba(110,118,160,.09);--grain:.04;
+ --cd:linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.012));--cdb:rgba(255,255,255,.065);--hi:rgba(255,255,255,.075);
+ --btn:linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.018));--fld:rgba(0,0,0,.55);--fldb:rgba(255,255,255,.05);
+ --tbg:rgba(14,14,17,.55);--mbg:rgba(10,10,12,.92);--pil:rgba(255,255,255,.1);--edge:rgba(0,0,0,.7);
+ --ins:inset 0 2px 6px rgba(0,0,0,.8),inset 0 -1px 0 rgba(255,255,255,.04);
+ --sh:0 1px 0 rgba(0,0,0,.6),0 4px 10px -2px rgba(0,0,0,.7),0 20px 40px -14px rgba(0,0,0,.95),0 50px 90px -40px #000}
+:root[data-theme="dark"],:root[data-theme="dark"] body{background-color:#000}
+:root[data-theme="dark"] body::after{background:radial-gradient(120% 80% at 50% 35%,transparent 45%,rgba(0,0,0,.6))}
+:root[data-theme="dark"] .card::before{background:linear-gradient(170deg,rgba(255,255,255,.05),transparent 32%)}
+:root[data-theme="dark"] .logo{background:linear-gradient(160deg,#1f2645,#050507)}
 </style></head><body><div class="amb"><i></i><i></i></div>
 <header class="hd"><div class="brand"><span class="logo" id="lg"></span><div><h1>Journal du sommeil</h1><p id="mode"></p></div></div><button id="th" type="button" aria-label="Changer de thème"></button></header>
 
@@ -515,7 +527,7 @@ async function csv(){const H=['date','mise_au_lit','essai_dormir','latence_min',
 const app=$('#app');
 [['edit','Saisie'],['cal','Historique'],['chart','Stats'],['imp','Importer']].forEach(([n,l],i)=>{const b=$('#t'+(i+1));b.innerHTML=ic(n,22,1.6)+l;b.onclick=()=>{tab=i+1;back=0;render()}});
 $('#lg').innerHTML=ic('moon',20,1.8);
-function setTheme(n){document.documentElement.dataset.theme=n;$('#th').innerHTML=ic(n==='dark'?'sun':'moon',18);$('meta[name=theme-color]').content=n==='dark'?'#09090b':'#f2f2f6'}
+function setTheme(n){document.documentElement.dataset.theme=n;$('#th').innerHTML=ic(n==='dark'?'sun':'moon',18);$('meta[name=theme-color]').content=n==='dark'?'#000000':'#f2f2f6'}
 let th0='dark';try{th0=localStorage.getItem('sommeil-th')||'dark'}catch(e){}setTheme(th0);
 $('#th').onclick=()=>{const n=document.documentElement.dataset.theme==='dark'?'light':'dark';setTheme(n);try{localStorage.setItem('sommeil-th',n)}catch(e){}};
 // Glisser le doigt le long de la barre du bas pour changer d'onglet
@@ -578,7 +590,7 @@ app.addEventListener('click',e=>{const bs=e.target.closest('.bars[data-nav]');
  $('#mode').innerHTML=store?'<span class="dot" style="background:var(--ok)"></span>Synchronisé avec votre compte':'<span class="dot" style="background:var(--wa)"></span>Sur cet appareil · pensez à sauvegarder';render()})();
 // Mises à jour automatiques : on vérifie à l'ouverture et à chaque retour dans l'app,
 // puis on recharge la page dès que la nouvelle version a pris le relais.
-const APP_VERSION=7;
+const APP_VERSION=8;
 if('serviceWorker' in navigator&&location.protocol!=='file:'){const sw=navigator.serviceWorker;let had=!!sw.controller,reloading=false;
  sw.addEventListener('controllerchange',()=>{if(!had){had=true;return}if(reloading)return;reloading=true;clearTimeout(tmr);
   Promise.resolve(isFilled(cur)?save():0).finally(()=>{setStatus('Mise à jour…');setTimeout(()=>location.reload(),300)})});
