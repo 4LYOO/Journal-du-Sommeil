@@ -347,11 +347,88 @@ input[type=date]{font-size:1.1rem;font-weight:600}
 :root[data-night="1"] .logo{background:linear-gradient(160deg,#3a2510,#070503);color:#e3bf93}
 :root[data-night="1"] .bars i,:root[data-night="1"] .stk i,:root[data-night="1"] .feel button.on{filter:brightness(.8) saturate(.85)}
 :root[data-night="1"] input,:root[data-night="1"] textarea{color-scheme:dark}
+
+/* ================= ÉTAPE 2 — ERGONOMIE ================= */
+/* Zones tactiles : 44 px minimum */
+.ch button{min-height:44px;min-width:44px;justify-content:center}.rp{width:44px;height:44px}#th{width:44px;height:44px}.lk{min-height:44px}.btn.back{min-height:44px}
+.ms{padding:0 5px}.ms button{height:44px;position:relative;z-index:0}
+.ms button.on{background:none!important;box-shadow:none!important}
+.ms button{min-width:44px!important;padding:0}
+.ms button::before{content:"";position:absolute;inset:5px 4px;border-radius:14px;z-index:-1}
+.ms button.on::before{background:linear-gradient(180deg,#fff,#d6d6dc);box-shadow:inset 0 1px 0 #fff,0 4px 10px -4px rgba(0,0,0,.6)}
+:root:not([data-theme="dark"]) .ms button.on::before{background:linear-gradient(180deg,#38383e,#111114)}
+:root[data-night="1"] .ms button.on::before{background:linear-gradient(180deg,#d9a161,#a8702f)}
+/* Puces de suggestion (habitudes, valeurs fréquentes) */
+.sug{display:inline-flex;align-items:center;gap:6px;border:1px dashed var(--bd)!important;background:transparent!important;box-shadow:none!important;color:var(--tx);border-radius:999px;padding:6px 12px;font-size:.84rem;font-family:var(--num);font-variant-numeric:tabular-nums}
+.sug.sm{min-height:32px;margin-top:6px;position:relative;font-weight:600}.sug.sm::after{content:"";position:absolute;inset:-6px -4px}
+.sug.on{border-style:solid!important}
+.sugs{margin-top:8px}.f>span .sug{display:flex;width:max-content}
+/* Alertes douces */
+.warn{border:1px solid color-mix(in srgb,var(--wa) 35%,transparent)!important}
+.warn h2{color:var(--wa)}.warn h2 .tile{color:var(--wa)}
+.warn ul{margin:0;padding-left:18px;display:grid;gap:6px;font-size:.9rem}.warn small{display:block;color:var(--mu);margin-top:10px;font-size:.78rem}
+/* Nuits manquantes */
+.miss{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-top:10px;font-size:.82rem;color:var(--mu)}
+.miss span{width:100%;display:flex;align-items:center;gap:6px}
+.miss button{min-height:44px;padding:0 12px;border-radius:999px;border:1px dashed var(--bd);background:transparent;color:var(--tx);font-family:var(--num);font-size:.85rem;text-transform:capitalize}
+.f.flash{animation:flash 1.4s ease}@keyframes flash{20%{background:color-mix(in srgb,var(--ok) 14%,transparent);border-radius:14px}}
+/* Barre d'actions dans la zone du pouce */
+#qa{position:fixed;left:0;right:0;bottom:calc(90px + env(safe-area-inset-bottom,0px));z-index:19;padding:0 14px;display:none;pointer-events:none}
+body.q1 #qa{display:block}body.q1{padding-bottom:calc(172px + env(safe-area-inset-bottom,0px))}
+body.q1 #sv{bottom:calc(150px + env(safe-area-inset-bottom,0px))}
+.qw{pointer-events:auto;max-width:410px;margin:0 auto;display:flex;gap:4px;padding:5px;border-radius:24px;background:var(--mbg);-webkit-backdrop-filter:var(--gl);backdrop-filter:var(--gl);
+ box-shadow:inset 1px 1px 0 var(--rim2),0 2px 6px rgba(0,0,0,.25),0 16px 34px -12px rgba(0,0,0,.7)}
+.qw button{flex:1;min-height:44px;border:0;border-radius:19px;background:none;color:var(--tx);font-weight:600;font-size:.84rem;display:flex;align-items:center;justify-content:center;gap:6px;white-space:nowrap}
+.qw button.p{background:linear-gradient(180deg,#fff,#d6d6dc);color:#0b0b0d;box-shadow:inset 0 1px 0 #fff,0 6px 14px -6px rgba(0,0,0,.6)}
+:root:not([data-theme="dark"]) .qw button.p{background:linear-gradient(180deg,#38383e,#111114);color:#fff}
+:root[data-night="1"] .qw button.p{background:linear-gradient(180deg,#d9a161,#a8702f);color:#160c03}
+/* Assistant du matin */
+body.wz{overflow:hidden}
+#wiz{position:fixed;inset:0;z-index:60;display:none;flex-direction:column;padding:calc(env(safe-area-inset-top,0px) + 10px) max(16px,env(safe-area-inset-right,0px)) calc(env(safe-area-inset-bottom,0px) + 14px) max(16px,env(safe-area-inset-left,0px));
+ background:color-mix(in srgb,var(--bg) 84%,transparent);-webkit-backdrop-filter:blur(30px) saturate(160%);backdrop-filter:blur(30px) saturate(160%)}
+body.wz #wiz{display:flex}
+.wzh,.wzbar,.wzb,.wzn{max-width:440px;width:100%;margin-left:auto;margin-right:auto}
+.wzh{display:flex;align-items:center;gap:10px}
+.wzx{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;border:1px solid var(--cdb);background:var(--btn);color:var(--tx);flex:none}
+.wzx.arm{color:var(--ba);border-color:var(--ba)}
+.wzp{flex:1;text-align:center;min-width:0}.wzp b{display:block;font-size:.88rem}.wzp small{color:var(--mu);font-size:.75rem}
+.wzf{min-height:44px;padding:0 12px;border-radius:999px;border:1px solid var(--cdb);background:var(--btn);color:var(--tx);font-size:.78rem;font-weight:600;flex:none}
+.wzbar{height:4px;border-radius:2px;background:var(--fld);margin-top:12px;overflow:hidden}.wzbar i{display:block;height:100%;background:var(--tx);border-radius:2px;transition:width .4s cubic-bezier(.2,.9,.25,1)}
+.wzb{flex:1;overflow-y:auto;display:flex;flex-direction:column;padding:18px 2px 14px;-webkit-overflow-scrolling:touch}
+.wzb>.q{margin:auto 0;width:100%}.wzb>.q.top{margin-top:0}
+.wzb.fw>.q{animation:wzf .32s cubic-bezier(.2,.9,.25,1.05) both}.wzb.bw>.q{animation:wzbk .32s cubic-bezier(.2,.9,.25,1.05) both}
+@keyframes wzf{from{opacity:0;transform:translateX(36px)}}@keyframes wzbk{from{opacity:0;transform:translateX(-36px)}}
+.wzb h3{font-size:1.42rem;font-weight:700;letter-spacing:-.02em;text-align:center;margin:0 0 22px;line-height:1.2}
+.bigt{position:relative;display:block;margin:0 auto;width:min(100%,300px);text-align:center;padding:20px 0;border-radius:28px;background:var(--fld);box-shadow:var(--ins);border:1px solid var(--fldb)}
+.bigt span{font-size:4.3rem;font-weight:700;letter-spacing:-.02em;line-height:1;font-family:var(--num);font-variant-numeric:tabular-nums}
+.bigt.empty span{color:var(--mu2);font-weight:500}
+.bigt input{position:absolute;inset:0;width:100%;height:100%;opacity:.011;font-size:16px;-webkit-appearance:none;appearance:none;border:0;background:transparent;padding:0;min-height:0;box-shadow:none}
+.wzhint{display:block;text-align:center;color:var(--mu);font-size:.78rem;margin:10px 0 16px}
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.steps button,.pm{min-height:54px;border-radius:16px;border:1px solid var(--cdb);background:var(--btn);color:var(--tx);font-family:var(--num);font-variant-numeric:tabular-nums;font-weight:600;font-size:1rem;box-shadow:inset 0 1px 0 var(--hi),0 6px 14px -8px rgba(0,0,0,.6)}
+.wzb .ch{justify-content:center}
+.bign{display:flex;align-items:center;justify-content:center;gap:14px;margin-bottom:18px}
+.bign .num{font-size:4.3rem;font-weight:700;min-width:2.4ch;text-align:center;font-family:var(--num);font-variant-numeric:tabular-nums;line-height:1}
+.bign em{font-style:normal;color:var(--mu);font-size:1.05rem;margin-left:-10px;align-self:flex-end;margin-bottom:10px}
+.pm{width:62px;height:62px;border-radius:50%;font-size:1.7rem;flex:none}
+.big2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.big2 button{min-height:62px;font-size:1.08rem;border-radius:18px;text-transform:capitalize}
+.wzfeel{display:grid;grid-template-columns:1fr;gap:10px}.wzfeel button{min-height:62px;font-size:1.08rem;justify-content:flex-start;padding:0 20px;border-radius:18px}
+.wzb .iw,.wzb .row{margin-top:10px}.wzb .btn.g{margin-top:10px}
+.none{display:block;margin:16px auto 0;min-height:44px;padding:0 18px;border-radius:999px;border:1px solid var(--cdb);background:var(--btn);color:var(--mu);font-weight:600}
+.wzn{display:grid;grid-template-columns:1fr 1.6fr;gap:10px;padding-top:6px}
+.wzn .btn{min-height:56px;font-size:1rem}.wzn .btn+.btn{margin-top:0}.wzn .btn:disabled{opacity:.35}
+.rcp{display:grid;gap:4px;margin-top:6px}
+.rr{display:flex;justify-content:space-between;align-items:center;gap:12px;min-height:44px;padding:8px 12px;border-radius:12px;border:0;background:var(--fld);color:var(--tx);text-align:left;font-size:.9rem}
+.rr b{font-family:var(--num);font-variant-numeric:tabular-nums;font-weight:600;text-align:right;text-transform:none}.rr span{color:var(--mu)}
+.rsum{display:flex;justify-content:center;gap:26px;text-align:center;margin:4px 0 14px}.rsum b{display:block;font-size:2rem;font-family:var(--num);font-variant-numeric:tabular-nums}.rsum small{color:var(--mu);font-size:.75rem}
+.wzb .warn{margin:0 0 12px}
+@keyframes ringpulse{40%{transform:scale(1.05)}}.ringw.pulse{animation:ringpulse .8s cubic-bezier(.3,1.5,.5,1)}
 </style></head><body><div class="amb"><i></i><i></i></div>
 <header class="hd"><div class="brand"><span class="logo" id="lg"></span><div><h1>Journal du sommeil</h1><p id="mode"></p></div></div><button id="th" type="button" aria-label="Changer de thème"></button></header>
 
 <div id="mini"><div class="ms"></div></div><main id="app"></main>
-<div class="tbw"><nav class="tb"><b class="pill"></b><button id="t1" class="on">Saisie</button><button id="t2">Historique</button><button id="t3">Stats</button><button id="t4">Importer</button></nav></div><div id="sv"></div>
+<div id="qa"><div class="qw"><button id="qBed" type="button"></button><button id="qUp" type="button"></button><button id="qWiz" type="button"></button></div></div><div id="wiz" role="dialog" aria-modal="true" aria-label="Assistant du matin"></div><div class="tbw"><nav class="tb"><b class="pill"></b><button id="t1" class="on">Saisie</button><button id="t2">Historique</button><button id="t3">Stats</button><button id="t4">Importer</button></nav></div><div id="sv"></div>
 <datalist id="dl"><option value="Donormyl"></datalist>
 <script>
 const IP={
@@ -380,6 +457,8 @@ plus:'<path d="M12 5v14M5 12h14"/>',x:'<path d="M18 6 6 18M6 6l12 12"/>',
 file:'<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M8 13h8M8 17h8"/>',
 scale:'<path d="M12 3v18"/><path d="M5 7h14"/><path d="m5 7-3 7a3.5 3.5 0 0 0 6 0Z"/><path d="m19 7-3 7a3.5 3.5 0 0 0 6 0Z"/><path d="M8 21h8"/>',
 trophy:'<path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/>',
+alert:'<path d="M12 9v4"/><path d="M12 17h.01"/><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"/>',
+wand:'<path d="m15 4 5 5L9 20H4v-5Z"/><path d="m13 6 5 5"/><path d="M19 2v3M17.5 3.5h3"/>',
 check:'<path d="M20 6 9 17l-5-5"/>',
 back2:'<path d="M9 14 4 9l5-5"/><path d="M20 20v-7a4 4 0 0 0-4-4H4"/>',
 list:'<path d="M8 6h13M8 12h13M8 18h13"/><path d="M3 6h.01M3 12h.01M3 18h.01"/>'};
@@ -410,16 +489,52 @@ async function save(){if(!isFilled(cur))return;
 function openDate(d){cur=entries[d]?{...blank(d),...clone(entries[d])}:blank(d);delArm=false}
 function medNames(){const s=new Set();Object.values(entries).forEach(e=>(e.meds||[]).forEach(m=>m.n&&s.add(m.n)));$('#dl').innerHTML='<option value="Donormyl">'+[...s].filter(x=>x!=='Donormyl').map(x=>'<option value="'+x.replace(/"/g,'&quot;')+'">').join('')}
 const esc=s=>String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;');
+// ---------- Étape 2 : habitudes, suggestions, garde-fous ----------
+const toT=m=>{m=((Math.round(m)%1440)+1440)%1440;return pad(Math.floor(m/60))+':'+pad(m%60)};
+const nowT=()=>{const d=new Date();return pad(d.getHours())+':'+pad(d.getMinutes())};
+const sh=d=>new Date(d+'T12:00').toLocaleDateString('fr-FR',{weekday:'short',day:'numeric'});
+const TK=['bed','try','wake','up'];
+function recent(n,before){return Object.keys(entries).filter(d=>/^\d{4}-\d{2}-\d{2}$/.test(d)&&d<before).sort().slice(-n).map(d=>entries[d])}
+// Habituel = moyenne des 14 dernières nuits (heures, arrondie à 5 min) ou médiane (durées, nombres)
+function habit(k,before=cur.date){const L=recent(14,before);
+ if(TK.includes(k)){const v=L.map(e=>e[k]).filter(Boolean).map(t=>(mi(t)+720)%1440);return v.length>=2?toT(Math.round(mean(v)/5)*5+720):''}
+ const v=L.map(e=>e[k]).filter(x=>x!==''&&x!=null).map(Number).filter(x=>!isNaN(x)).sort((a,b)=>a-b);return v.length>=2?String(v[Math.floor(v.length/2)]):''}
+// Valeurs fréquentes (au moins 2 fois sur les 30 dernières nuits)
+function frequent(f,before,n=3){const c={},last={};recent(30,before).forEach(e=>f(e).forEach(([k,v])=>{if(!k)return;c[k]=(c[k]||0)+1;last[k]=v}));
+ return Object.keys(c).filter(k=>c[k]>=2).sort((a,b)=>c[b]-c[a]).slice(0,n).map(k=>last[k])}
+const freqTxt=(k,b)=>frequent(e=>[[(e[k]||'').trim().toLowerCase(),(e[k]||'').trim()]],b);
+const medKey=m=>((m.n||'')+'|'+(m.q||'')).trim().toLowerCase();
+const freqMeds=(b,have=[])=>frequent(e=>(e.meds||[]).filter(m=>m.n).map(m=>[medKey(m),{n:m.n,q:m.q,t:m.t}]),b).filter(m=>!have.some(x=>medKey(x)===medKey(m)));
+let medSug=[];
+// Garde-fous : alertes douces, jamais bloquantes
+function warnings(e){const W=[];
+ if(e.bed&&e.up&&df(e.bed,e.up)>16*60)W.push(`Le lever (${e.up}) semble avant la mise au lit (${e.bed}).`);
+ if(e.bed&&e.try&&df(e.bed,e.try)>6*60)W.push(`L’heure d’essai (${e.try}) semble avant la mise au lit (${e.bed}).`);
+ if(e.wake&&e.up&&df(e.wake,e.up)>6*60)W.push(`Le lever (${e.up}) semble avant le réveil définitif (${e.wake}).`);
+ if(e.try&&e.wake){const w=df(e.try,e.wake);if(w>16*60)W.push(`Le réveil définitif (${e.wake}) semble avant l’heure d’essai (${e.try}).`);
+  else{const u=(+e.lat||0)+(+e.wakeDur||0);if(u>w)W.push(`Endormissement + réveils (${u} min) dépassent le temps entre l’essai et le réveil (${hm(w)}).`)}}
+ if(e.wakes==='0'&&+e.wakeDur>0)W.push('Aucun réveil noté, mais une durée de réveils est indiquée.');
+ if(+e.wakes>0&&e.wakeDur==='0')W.push('Des réveils sont notés, mais leur durée totale est de 0 min.');
+ if(+e.lat>180)W.push(`Endormissement très long (${e.lat} min) : à vérifier.`);
+ (e.naps||[]).forEach(n=>{if(+n.d>240)W.push(`Sieste de ${n.d} min : à vérifier.`)});
+ const st=stats(e);if(st.sleep!=null&&st.sleep<60)W.push('Moins d’une heure de sommeil estimé : à vérifier.');
+ return W}
+const warnHTML=e=>{const W=warnings(e);return W.length?`<div class="card warn">${hd('alert','À vérifier')}<ul>${W.map(w=>`<li>${esc(w)}</li>`).join('')}</ul><small>Simple alerte : la nuit est enregistrée quand même.</small></div>`:''};
+// Nuits manquantes sur les 14 derniers jours (depuis la première nuit saisie)
+function missing(){const ks=Object.keys(entries).filter(k=>/^\d{4}-\d{2}-\d{2}$/.test(k)).sort();if(!ks.length)return [];const M=[];
+ for(let i=new Date().getHours()>=12?0:1;i<=14;i++){const d=shift(today(),-i);if(d<ks[0])break;if(!entries[d])M.push(d)}return M.reverse()}
+const sugT=k=>{const h=cur[k]?'':habit(k);return h?`<button type="button" class="sug sm" data-sk="${k}" data-sv="${h}">habituel ${h}</button>`:''};
 // Valeur de la nuit précédente la plus proche qui a ce champ rempli
 const filled=v=>Array.isArray(v)?v.length>0:v!==''&&v!=null;
 function pv(k){return Object.keys(entries).sort().reverse().find(d=>d<cur.date&&filled(entries[d][k]))}
 function rb(k){const p=pv(k),v=p&&entries[p][k],t=p?(Array.isArray(v)?v.length+' élément(s)':String(v).slice(0,40))+' · '+lg(p):'';
  return `<button type="button" class="rp" data-rp="${k}" ${p?'':'disabled'} title="${p?esc('Reprendre : '+t):'Rien à reprendre'}" aria-label="Reprendre la valeur de la nuit précédente">${ic('back2',16)}</button>`}
-const tm=(k,l)=>`<div class="f"><span>${l}</span><div class="iw"><input type="time" data-k="${k}" value="${cur[k]}" aria-label="${l}">${rb(k)}</div></div>`;
-const nm=(k,l,v,u)=>`<div class="f"><span>${l}</span><div class="nr"><input type="number" inputmode="numeric" min="0" data-k="${k}" value="${esc(cur[k])}" placeholder="0"><em>${u}</em>${rb(k)}</div><div class="ch">${v.map(x=>`<button type="button" data-set="${k}:${x}" class="${cur[k]==x&&cur[k]!==''?'on':''}">${x}</button>`).join('')}</div></div>`;
-function form(){const c=cur;
+const tm=(k,l)=>`<div class="f"><span>${l}${sugT(k)}</span><div class="iw"><input type="time" data-k="${k}" value="${cur[k]}" aria-label="${l}">${rb(k)}</div></div>`;
+const nm=(k,l,v,u)=>`<div class="f"><span>${l}</span><div class="nr"><input type="number" inputmode="numeric" min="0" data-k="${k}" value="${esc(cur[k])}" placeholder="0"><em>${u}</em>${rb(k)}</div><div class="ch">${(()=>{const h=cur[k]===''?habit(k):'';return h?`<button type="button" class="sug" data-set="${k}:${h}">habituel ${h}${u?' '+u:''}</button>`:''})()}${v.map(x=>`<button type="button" data-set="${k}:${x}" class="${cur[k]==x&&cur[k]!==''?'on':''}">${x}</button>`).join('')}</div></div>`;
+function form(){const c=cur,M=missing();medSug=freqMeds(c.date,c.meds);
+ const fs=(k,cls='')=>c[k]?'':freqTxt(k,c.date).map(v=>`<button type="button" class="sug" data-sk="${k}" data-sv="${esc(v)}">${esc(v)}</button>`).join('');
  return `${back?`<button class="btn g back" id="back" type="button">${ic('cl',16)}Retour ${back==3?'aux statistiques':'à l’historique'}</button>`:''}${strip()}<div class="card"><div class="nav"><label><span>Nuit se terminant le (jour du réveil)</span><input type="date" data-k="date" value="${c.date}"></label></div><p class="day">${lg(c.date)}${entries[c.date]?'<span class="tag">enregistrée</span>':''}</p>
- <small class="hint" style="margin-bottom:0">Glissez l’écran pour changer de nuit</small></div>
+ ${M.length?`<div class="miss"><span>${ic('alert',14)}${M.length} nuit${M.length>1?'s':''} non saisie${M.length>1?'s':''} :</span>${M.slice(-6).map(d=>`<button type="button" data-goto="${d}">${sh(d)}</button>`).join('')}</div>`:''}</div>
  <div class="card">${hd('bed','Coucher')}<div class="g2">${tm('bed','Mise au lit')}${tm('try','Heure d’essai pour dormir')}</div>
  ${nm('lat','Temps estimé avant l’endormissement',[5,10,15,30,45,60,90],'min')}</div>
  <div class="card">${hd('night','Pendant la nuit')}
@@ -430,18 +545,19 @@ function form(){const c=cur;
  <div class="iw"><button class="btn g" type="button" data-add="naps">${ic('plus',16)}Ajouter une sieste</button>${rb('naps')}</div></div>
  <div class="card">${hd('head','Conditions de sommeil')}
  <div class="f"><span>Fond sonore</span><div class="ch">${['oui','non'].map(x=>`<button type="button" data-tg="1" data-set="sound:${x}" class="${c.sound===x?'on':''}">${x}</button>`).join('')}</div>
- <div class="iw"><input data-k="soundNote" placeholder="Précision (pluie, podcast…)" value="${esc(c.soundNote)}">${rb('soundNote')}</div><div class="iw"><input type="url" inputmode="url" data-k="soundUrl" placeholder="Lien Spotify, YouTube…" value="${esc(c.soundUrl||'')}">${rb('soundUrl')}</div><div id="sl">${slink(c.soundUrl)}</div></div>
+ <div class="iw"><input data-k="soundNote" placeholder="Précision (pluie, podcast…)" value="${esc(c.soundNote)}">${rb('soundNote')}</div><div class="iw"><input type="url" inputmode="url" data-k="soundUrl" placeholder="Lien Spotify, YouTube…" value="${esc(c.soundUrl||'')}">${rb('soundUrl')}</div><div class="ch sugs">${fs('soundNote')}</div><div id="sl">${slink(c.soundUrl)}</div></div>
  <div class="f"><span>Conditions inhabituelles</span><div class="ch">${ODD.map(x=>`<button type="button" data-odd="${x}" class="${c.odd.includes(x)?'on':''}">${x}</button>`).join('')}</div>
- <div class="iw"><input data-k="oddNote" placeholder="Autre précision" value="${esc(c.oddNote)}">${rb('oddNote')}</div></div>
+ <div class="iw"><input data-k="oddNote" placeholder="Autre précision" value="${esc(c.oddNote)}">${rb('oddNote')}</div><div class="ch sugs">${fs('oddNote')}</div></div>
  <div class="f"><span>Donormyl ou autre produit : quantité et heure</span>${c.meds.map((m,i)=>`<div class="row"><input list="dl" data-med="${i}:n" placeholder="Produit" value="${esc(m.n)}"><input data-med="${i}:q" placeholder="Quantité" value="${esc(m.q)}"><input type="time" data-med="${i}:t" value="${m.t}"><button type="button" data-rm="meds:${i}" aria-label="Retirer">${ic('x',16)}</button></div>`).join('')}
- <div class="iw"><button class="btn g" type="button" data-add="meds">${ic('plus',16)}Ajouter un produit</button>${rb('meds')}</div></div></div>
+ ${medSug.length?`<div class="ch sugs">${medSug.map((m,i)=>`<button type="button" class="sug" data-medsug="${i}">${ic('plus',14)}${esc([m.n,m.q].filter(Boolean).join(' '))}${m.t?' · '+m.t:''}</button>`).join('')}</div>`:''}<div class="iw"><button class="btn g" type="button" data-add="meds">${ic('plus',16)}Ajouter un produit</button>${rb('meds')}</div></div></div>
  <div class="card">${hd('star','Impression générale')}<div class="ch feel">${FEEL.map(x=>`<button type="button" data-tg="1" data-set="feel:${x}" class="${c.feel===x?'on':''}"><span class="dot" style="background:${FC[x]}"></span>${x}</button>`).join('')}</div>
  <div class="f" style="margin-top:12px"><span>Notes libres</span><div class="iw ta"><textarea data-k="note" aria-label="Notes libres">${esc(c.note)}</textarea>${rb('note')}</div></div></div>
- <div class="card" id="calc"></div>
+ <div id="warn">${warnHTML(c)}</div><div class="card" id="calc"></div>
  <div class="acts"><button class="btn p" id="cp" type="button">${ic('copy',16)}Copier au format de ma note</button><a class="btn" id="hk" href="#">${ic('heart',16)}Envoyer vers Santé</a>
  ${entries[c.date]?`<button class="btn d" id="del" type="button">${delArm?'Confirmer la suppression':'Supprimer cette nuit'}</button>`:''}</div>`}
 function calc(){const s=stats(cur),el=$('#calc');
  if(!$('#rp')){el.innerHTML=`${hd('gauge','Résumé calculé')}<div class="ringw"><svg viewBox="0 0 120 120" class="ring"><defs><linearGradient id="rg"><stop offset="0" style="stop-color:var(--r2)"/><stop offset="1" style="stop-color:var(--r1)"/></linearGradient></defs><circle cx="60" cy="60" r="52" class="rb"/><circle id="rp" cx="60" cy="60" r="52" class="rf" stroke-dasharray="326.7" stroke-dashoffset="326.7"/></svg><div class="rc"><b id="rv"></b><small>sommeil estimé</small></div></div><div class="calc" style="grid-template-columns:1fr 1fr"><div><b id="ri"></b><small>temps au lit</small></div><div><b id="re"></b><small>efficacité</small></div></div>`;void el.offsetWidth}
+ const w=$('#warn');if(w)w.innerHTML=warnHTML(cur);
  $('#rp').style.strokeDashoffset=326.7*(1-(s.sleep==null?0:Math.min(1,s.sleep/480)));$('#rv').textContent=hm(s.sleep);$('#ri').textContent=hm(s.inbed);$('#re').textContent=s.eff==null?'–':s.eff+' %'}
 function hkUrl(){const e=cur,iso=(d,m)=>{const x=new Date(d+'T00:00');x.setMinutes(m);return x.getFullYear()+'-'+pad(x.getMonth()+1)+'-'+pad(x.getDate())+'T'+pad(x.getHours())+':'+pad(x.getMinutes())},o={nuit:e.date,reveils:+e.wakes||0};
  if(e.bed&&e.up){o.coucher=iso(e.date,mi(e.up)-df(e.bed,e.up));o.lever=iso(e.date,mi(e.up))}
@@ -590,12 +706,94 @@ function statsView(){const cut=shift(today(),1-rg),L=Object.keys(entries).sort()
  +(rem?`<div class="card">${hd('trophy','Nuits remarquables')}${rem}</div>`:'')}
 function openNight(d){back=tab===1?back:tab;backY=scrollY;openDate(d);tab=1;fresh=true;render();scrollTo({top:0,behavior:'instant'})}
 function render(){if(tab!==1)back=0;const ch=tab!==lt||fresh;fresh=false;if(tab!==lt){scrollTo(0,0);lt=tab}[1,2,3,4].forEach(n=>$('#t'+n).classList.toggle('on',tab==n));$('.pill').style.transform=`translateX(${(tab-1)*100}%)`;$('#app').classList.toggle('anim',ch);
- $('#app').innerHTML=tab==1?form():tab==2?hist():tab==3?statsView():importView();medNames();if(tab==1){calc();const s=$('.strip'),a=$('.strip .on');if(s&&a)s.scrollLeft=a.offsetLeft-s.clientWidth/2}miniStrip();$$('.bars i').forEach((b,i)=>b.style.animationDelay=Math.min(i*20,600)+'ms')}
+ $('#app').innerHTML=tab==1?form():tab==2?hist():tab==3?statsView():importView();medNames();if(tab==1){calc();const s=$('.strip'),a=$('.strip .on');if(s&&a)s.scrollLeft=a.offsetLeft-s.clientWidth/2}miniStrip();qaUpdate();$$('.bars i').forEach((b,i)=>b.style.animationDelay=Math.min(i*20,600)+'ms')}
 async function csv(){const H=['date','mise_au_lit','essai_dormir','latence_min','reveils','duree_reveils_min','reveil_definitif','lever','siestes','fond_sonore','conditions','produits','impression','sommeil_estime_min','efficacite_pct','notes'];
  const q=v=>'"'+String(v??'').replace(/"/g,'""')+'"';
  const rows=Object.keys(entries).sort().map(d=>{const e=entries[d],s=stats(e);return [d,e.bed,e.try,e.lat,e.wakes,e.wakeDur,e.wake,e.up,e.naps.map(n=>n.h+' '+n.d).join(';'),e.sound+(e.soundNote?' '+e.soundNote:'')+(e.soundUrl?' '+e.soundUrl:''),[...e.odd,e.oddNote].filter(Boolean).join(';'),e.meds.map(m=>[m.n,m.q,m.t].join(' ')).join(';'),e.feel,s.sleep,s.eff,e.note].map(q).join(',')});
  const b=new Blob(['\ufeff'+H.join(',')+'\n'+rows.join('\n')],{type:'text/csv'});try{await saveFile(b,'journal-sommeil.csv')}catch(e){}}
 const app=$('#app');
+// ---------- Barre d'actions (zone du pouce) ----------
+function qaUpdate(){document.body.classList.toggle('q1',tab===1&&!document.body.classList.contains('wz'));const h=new Date().getHours(),eve=h>=16||h<4;
+ $('#qBed').className=eve?'p':'';$('#qUp').className=eve?'':'p'}
+$('#qBed').innerHTML=ic('moon',17)+'Je me couche';$('#qUp').innerHTML=ic('sun',17)+'Je me lève';$('#qWiz').innerHTML=ic('wand',17)+'Assistant';
+// Horodatage en un tap (modifiable ensuite). Coucher après midi = nuit qui se termine demain.
+function stamp(k){const h=new Date().getHours(),d=k==='bed'&&h>=12?shift(today(),1):today(),t=nowT();clearTimeout(tmr);
+ save().then(()=>{openDate(d);cur[k]=t;tab=1;back=0;fresh=true;return save()}).then(()=>{render();setStatus((k==='bed'?'Mise au lit notée à ':'Lever noté à ')+t+' · modifiable');
+  const i=$('input[data-k="'+k+'"]');if(i){i.closest('.f').classList.add('flash');i.scrollIntoView({block:'center',behavior:'smooth'})}})}
+$('#qBed').onclick=()=>stamp('bed');$('#qUp').onclick=()=>stamp('up');$('#qWiz').onclick=()=>wzOpen();
+// ---------- Assistant du matin : une question par écran ----------
+const WS=[
+ {k:'bed',t:'À quelle heure vous êtes-vous mis au lit ?',ty:'time',l:'Mise au lit'},
+ {k:'try',t:'À quelle heure avez-vous essayé de dormir ?',ty:'time',l:'Essai pour dormir'},
+ {k:'lat',t:'Combien de temps avant de vous endormir ?',ty:'num',u:'min',st:5,q:[5,10,15,30,45,60,90],l:'Endormissement'},
+ {k:'wakes',t:'Combien de réveils pendant la nuit ?',ty:'num',u:'',st:1,q:[0,1,2,3,4,5],l:'Réveils'},
+ {k:'wakeDur',t:'Durée totale de ces réveils ?',ty:'num',u:'min',st:5,q:[5,10,20,30,45,60,90],l:'Durée des réveils',skip:e=>e.wakes==='0'},
+ {k:'wake',t:'À quelle heure était le réveil définitif ?',ty:'time',now:1,l:'Réveil définitif'},
+ {k:'up',t:'À quelle heure vous êtes-vous levé ?',ty:'time',now:1,l:'Lever'},
+ {k:'naps',t:'Des siestes ?',ty:'naps',l:'Siestes'},
+ {k:'sound',t:'Un fond sonore ?',ty:'sound',l:'Fond sonore'},
+ {k:'odd',t:'Des conditions inhabituelles ?',ty:'odd',l:'Conditions'},
+ {k:'meds',t:'Un produit pris ?',ty:'meds',l:'Produits'},
+ {k:'feel',t:'Votre impression générale ?',ty:'feel',l:'Impression'},
+ {k:'recap',t:'Récapitulatif',ty:'recap'}];
+let wz=null;
+const wzVal=(e,k)=>({lat:e.lat!==''?e.lat+' min':'',wakeDur:e.wakeDur!==''?e.wakeDur+' min':'',naps:e.naps.length?e.naps.map(n=>[n.h,n.d&&n.d+' min'].filter(Boolean).join(' ')).join(', '):'',
+ sound:e.sound?e.sound+(e.soundNote?' ('+e.soundNote+')':''):'',odd:[...e.odd,e.oddNote].filter(Boolean).join(', '),meds:e.meds.map(m=>[m.n,m.q,m.t].filter(Boolean).join(' ')).join(' ; ')}[k]??e[k]);
+function wzOpen(){const e=clone(cur),f=WS.findIndex(s=>(s.ty==='time'||s.ty==='num')&&e[s.k]==='');wz={i:f<0?0:f,e,dirty:false,arm:false,dir:'fw'};
+ document.body.classList.add('wz');qaUpdate();wzRender()}
+function wzClose(){wz=null;document.body.classList.remove('wz');$('#wiz').innerHTML='';qaUpdate()}
+function wzMove(n){const e=wz.e;let i=wz.i+n;while(WS[i]&&WS[i].skip&&WS[i].skip(e)){if(WS[i].k==='wakeDur'&&e.wakeDur==='')e.wakeDur='0';i+=n}
+ if(i<0||i>=WS.length)return;wz.i=i;wz.dir=n>0?'fw':'bw';wzRender()}
+function wzBody(s,e){const v=e[s.k],chip=(l,val,cls='')=>`<button type="button" class="sug ${cls}" data-wv="${esc(val)}">${l}</button>`;
+ if(s.ty==='time'){const h=habit(s.k,e.date),pd=Object.keys(entries).sort().reverse().find(d=>d<e.date&&entries[d][s.k]),pvv=pd?entries[pd][s.k]:'';
+  return `<label class="bigt ${v?'':'empty'}"><span>${v||'--:--'}</span><input type="time" data-wk="${s.k}" value="${v}" aria-label="${s.t}"></label><small class="wzhint">Touchez l’heure pour la choisir, ou ajustez :</small>
+  <div class="steps">${[-15,-5,5,15].map(m=>`<button type="button" data-step="${m}">${m>0?'+':'−'}${Math.abs(m)}</button>`).join('')}</div>
+  <div class="ch sugs">${h?chip('Habituel '+h,h):''}${pvv&&pvv!==h?chip('Veille '+pvv,pvv):''}${s.now?chip('Maintenant '+nowT(),nowT()):''}</div>`}
+ if(s.ty==='num'){const h=habit(s.k,e.date);
+  return `<div class="bign"><button type="button" class="pm" data-inc="-${s.st}" aria-label="Moins">−</button><span class="num">${v===''?'–':esc(v)}</span>${s.u?`<em>${s.u}</em>`:''}<button type="button" class="pm" data-inc="${s.st}" aria-label="Plus">+</button></div>
+  <div class="ch">${s.q.map(x=>`<button type="button" data-wv="${x}" data-auto="1" class="${v!==''&&v==x?'on':''}">${x}${s.u?' '+s.u:''}</button>`).join('')}</div>${h&&v===''?`<div class="ch sugs">${chip('Habituel '+h+(s.u?' '+s.u:''),h)}</div>`:''}`}
+ if(s.ty==='naps')return e.naps.map((n,i)=>`<div class="row n"><input type="time" data-wn="naps:${i}:h" value="${n.h}" aria-label="Heure de la sieste"><input type="number" inputmode="numeric" min="0" placeholder="min" data-wn="naps:${i}:d" value="${esc(n.d)}" aria-label="Durée en minutes"><button type="button" data-wrm="naps:${i}" aria-label="Retirer">${ic('x',16)}</button></div>`).join('')
+  +`<button class="btn g" type="button" data-wadd="naps">${ic('plus',16)}Ajouter une sieste</button><button type="button" class="none" data-wnone="naps">Aucune sieste</button>`;
+ if(s.ty==='sound')return `<div class="big2 ch">${['oui','non'].map(x=>`<button type="button" data-wset="sound:${x}" class="${e.sound===x?'on':''}">${x}</button>`).join('')}</div>
+  <input data-wk="soundNote" placeholder="Précision (pluie, podcast…)" value="${esc(e.soundNote)}"><div class="ch sugs">${e.soundNote?'':freqTxt('soundNote',e.date).map(x=>`<button type="button" class="sug" data-wsk="soundNote" data-wv="${esc(x)}">${esc(x)}</button>`).join('')}</div>
+  <input type="url" inputmode="url" style="margin-top:10px" data-wk="soundUrl" placeholder="Lien Spotify, YouTube…" value="${esc(e.soundUrl||'')}">`;
+ if(s.ty==='odd')return `<div class="ch">${ODD.map(x=>`<button type="button" data-wodd="${x}" class="${e.odd.includes(x)?'on':''}">${x}</button>`).join('')}</div>
+  <input style="margin-top:12px" data-wk="oddNote" placeholder="Autre précision" value="${esc(e.oddNote)}"><div class="ch sugs">${e.oddNote?'':freqTxt('oddNote',e.date).map(x=>`<button type="button" class="sug" data-wsk="oddNote" data-wv="${esc(x)}">${esc(x)}</button>`).join('')}</div>
+  <button type="button" class="none" data-wnone="odd">Rien d’inhabituel</button>`;
+ if(s.ty==='meds'){wz.ms=freqMeds(e.date,e.meds);return e.meds.map((m,i)=>`<div class="row"><input list="dl" data-wn="meds:${i}:n" placeholder="Produit" value="${esc(m.n)}"><input data-wn="meds:${i}:q" placeholder="Quantité" value="${esc(m.q)}"><input type="time" data-wn="meds:${i}:t" value="${m.t}" aria-label="Heure de prise"><button type="button" data-wrm="meds:${i}" aria-label="Retirer">${ic('x',16)}</button></div>`).join('')
+  +(wz.ms.length?`<div class="ch sugs">${wz.ms.map((m,i)=>`<button type="button" class="sug" data-wmsug="${i}">${ic('plus',14)}${esc([m.n,m.q].filter(Boolean).join(' '))}${m.t?' · '+m.t:''}</button>`).join('')}</div>`:'')
+  +`<button class="btn g" type="button" data-wadd="meds">${ic('plus',16)}Ajouter un produit</button><button type="button" class="none" data-wnone="meds">Aucun produit</button>`}
+ if(s.ty==='feel')return `<div class="ch feel wzfeel">${FEEL.map(x=>`<button type="button" data-wset="feel:${x}" data-auto="1" class="${e.feel===x?'on':''}"><span class="dot" style="background:${FC[x]}"></span>${x}</button>`).join('')}</div>
+  <textarea style="margin-top:14px" data-wk="note" placeholder="Notes libres (facultatif)" aria-label="Notes libres">${esc(e.note)}</textarea>`;
+ const st=stats(e);
+ return `<div class="rsum"><div><b>${hm(st.sleep)}</b><small>sommeil estimé</small></div><div><b>${hm(st.inbed)}</b><small>au lit</small></div><div><b>${st.eff==null?'–':st.eff+' %'}</b><small>efficacité</small></div></div>
+  <div id="wtl">${typeof tl==='function'?tl(e):''}</div>${warnHTML(e)}<div class="rcp">${WS.filter(x=>x.l).map(x=>`<button type="button" class="rr" data-wgo="${WS.indexOf(x)}"><span>${x.l}</span><b>${esc(wzVal(e,x.k))||'–'}</b></button>`).join('')}</div>`}
+function wzRender(){const s=WS[wz.i],e=wz.e,n=WS.length-1,done=s.ty==='recap'||(Array.isArray(e[s.k])?e[s.k].length:e[s.k]!=='');
+ $('#wiz').innerHTML=`<div class="wzh"><button type="button" class="wzx ${wz.arm?'arm':''}" data-w="close" aria-label="Fermer sans enregistrer">${ic('x',20)}</button><div class="wzp"><b>${s.ty==='recap'?'Avant d’enregistrer':'Question '+(wz.i+1)+' sur '+n}</b><small>Nuit du ${sh(shift(e.date,-1))} au ${sh(e.date)}</small></div><button type="button" class="wzf" data-w="full">Formulaire complet</button></div>
+ <div class="wzbar"><i style="width:${wz.i/n*100}%"></i></div>
+ <div class="wzb ${wz.dir}"><div class="q ${s.ty==='recap'?'top':''}">${s.ty==='recap'?'':`<h3>${s.t}</h3>`}${wzBody(s,e)}</div></div>
+ <div class="wzn"><button type="button" class="btn" data-w="prev" ${wz.i?'':'disabled'}>${ic('cl',16)}Précédent</button>${s.ty==='recap'?`<button type="button" class="btn p" data-w="save">${ic('check',16)}Enregistrer la nuit</button>`:`<button type="button" class="btn p" data-w="next">${done?'Suivant':'Passer'}${ic('cr',16)}</button>`}</div>`}
+function wzSet(k,v){wz.e[k]=v;wz.dirty=true;wz.arm=false}
+function ringPulse(){const r=$('#rp'),w=$('.ringw');if(!r)return;const t=r.style.strokeDashoffset;r.style.transition='none';r.style.strokeDashoffset=326.7;r.getBoundingClientRect();r.style.transition='';requestAnimationFrame(()=>{r.style.strokeDashoffset=t});if(w){w.classList.remove('pulse');void w.offsetWidth;w.classList.add('pulse')}}
+$('#wiz').addEventListener('input',e=>{const t=e.target,d=t.dataset;if(!wz)return;
+ if(d.wk){wzSet(d.wk,t.value);const b=t.closest('.bigt');if(b){b.querySelector('span').textContent=t.value||'--:--';b.classList.toggle('empty',!t.value)}const nx=$('#wiz [data-w="next"]');if(nx&&WS[wz.i].k===d.wk)nx.firstChild.textContent=t.value?'Suivant':'Passer'}
+ else if(d.wn){const[k,i,f]=d.wn.split(':');wz.e[k][i][f]=t.value;wz.dirty=true}});
+$('#wiz').addEventListener('click',ev=>{const b=ev.target.closest('button');if(!b||!wz)return;const d=b.dataset,s=WS[wz.i],e=wz.e;
+ if(d.w==='close'){if(wz.dirty&&!wz.arm){wz.arm=true;wzRender();setStatus('Touchez encore × pour quitter sans enregistrer');return}wzClose()}
+ else if(d.w==='full'){cur=clone(e);wzClose();tab=1;back=0;fresh=true;render();if(isFilled(cur))touch()}
+ else if(d.w==='prev')wzMove(-1);else if(d.w==='next')wzMove(1);
+ else if(d.w==='save'){cur=clone(e);wzClose();tab=1;back=0;fresh=true;clearTimeout(tmr);save().then(()=>{render();scrollTo({top:0,behavior:'instant'});setTimeout(()=>{$('#calc')?.scrollIntoView({block:'center',behavior:'smooth'});ringPulse()},350);setStatus('Nuit enregistrée')})}
+ else if(d.step){const base=e[s.k]||habit(s.k,e.date)||(s.now?nowT():'23:00');wzSet(s.k,toT(mi(base)+(e[s.k]?+d.step:0)));wzRender()}
+ else if(d.inc){wzSet(s.k,String(Math.max(0,(+e[s.k]||0)+ +d.inc)));wzRender()}
+ else if(d.wsk){wzSet(d.wsk,d.wv);wzRender()}
+ else if(d.wv!=null){wzSet(s.k,d.wv);if(d.auto){wzRender();setTimeout(()=>wz&&wzMove(1),260)}else wzRender()}
+ else if(d.wset){const[k,v]=d.wset.split(':');wzSet(k,e[k]===v?'':v);if(d.auto&&e[k]){wzRender();setTimeout(()=>wz&&wzMove(1),260)}else wzRender()}
+ else if(d.wodd){const i=e.odd.indexOf(d.wodd);i<0?e.odd.push(d.wodd):e.odd.splice(i,1);wz.dirty=true;wzRender()}
+ else if(d.wadd){e[d.wadd].push(d.wadd==='naps'?{h:'',d:''}:{n:'',q:'',t:''});wz.dirty=true;wzRender()}
+ else if(d.wrm){const[k,i]=d.wrm.split(':');e[k].splice(i,1);wz.dirty=true;wzRender()}
+ else if(d.wmsug!=null&&wz.ms[d.wmsug]){e.meds.push(clone(wz.ms[d.wmsug]));wz.dirty=true;wzRender()}
+ else if(d.wnone){if(d.wnone==='odd'){e.odd=[];e.oddNote=''}else e[d.wnone]=[];wz.dirty=true;wzMove(1)}
+ else if(d.wgo!=null){wz.i=+d.wgo;wz.dir='bw';wzRender()}});
 [['edit','Saisie'],['cal','Historique'],['chart','Stats'],['imp','Importer']].forEach(([n,l],i)=>{const b=$('#t'+(i+1));b.innerHTML=ic(n,22,1.6)+l;b.onclick=()=>{tab=i+1;back=0;render()}});
 $('#lg').innerHTML=ic('moon',20,1.8);
 function setTheme(n){document.documentElement.dataset.theme=n;$('#th').innerHTML=ic(n==='dark'?'sun':'moon',18);$('meta[name=theme-color]').content=n==='dark'?'#000000':'#f2f2f6'}
@@ -642,6 +840,8 @@ app.addEventListener('click',e=>{const bs=e.target.closest('.bars[data-nav]');
  else if(d.rm){const[k,i]=d.rm.split(':');cur[k].splice(i,1);touch();render()}
  else if(d.open)openNight(d.open);
  else if(d.cm){cm=d.cm;render()}
+ else if(d.sk){cur[d.sk]=d.sv;touch();render();const i=$('[data-k="'+d.sk+'"]');if(i)i.closest('.f')?.classList.add('flash')}
+ else if(d.medsug!=null&&medSug[d.medsug]){cur.meds.push(clone(medSug[d.medsug]));touch();render()}
  else if(d.rp){const k=d.rp,p=pv(k);if(!p)return;const v=clone(entries[p][k]);
   if(k==='naps'||k==='meds'){const have=new Set(cur[k].map(x=>JSON.stringify(x)));v.forEach(x=>{if(!have.has(JSON.stringify(x)))cur[k].push(x)})}
   else if(k==='note'&&cur.note.trim()&&!cur.note.includes(v))cur.note=cur.note.trimEnd()+'\n'+v;
