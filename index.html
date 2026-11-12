@@ -245,6 +245,28 @@ body::after{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;bac
 .rp:disabled{opacity:.3;box-shadow:none}
 .nr .rp{margin-left:2px}
 .iw.ta .rp{margin-top:2px}
+
+/* ---------- Transparence (verre) ---------- */
+:root{--cd:linear-gradient(180deg,rgba(255,255,255,.62),rgba(255,255,255,.4));--btn:linear-gradient(180deg,rgba(255,255,255,.75),rgba(255,255,255,.5));
+ --tbg:rgba(250,250,252,.5);--glow2:rgba(150,160,200,.30);--mbg:rgba(252,252,254,.9);--mnum:rgba(30,30,36,.55)}
+:root[data-theme="dark"]{--cd:linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.018));--btn:linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,.025));
+ --tbg:rgba(30,30,36,.4);--glow2:rgba(130,138,175,.17);--glow1:rgba(255,255,255,.09);--mbg:rgba(24,24,29,.9);--mnum:rgba(235,235,245,.6)}
+.card{-webkit-backdrop-filter:blur(28px) saturate(170%);backdrop-filter:blur(28px) saturate(170%)}
+.amb i{background:radial-gradient(circle,var(--glow2),transparent 60%)}
+.amb i:nth-child(1){top:-20vmax;left:-30vmax}.amb i:nth-child(2){bottom:-25vmax;right:-35vmax}
+.tb{-webkit-backdrop-filter:blur(30px) saturate(190%);backdrop-filter:blur(30px) saturate(190%)}
+.it{background:var(--cd);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px)}
+
+/* ---------- Bande des jours : une seule barre, en grand comme en réduit ---------- */
+.strip,.ms{background:var(--mbg);border:1px solid var(--cdb);-webkit-backdrop-filter:blur(30px) saturate(190%);backdrop-filter:blur(30px) saturate(190%);
+ box-shadow:inset 0 1px 0 var(--hi),inset 0 -1px 0 var(--edge),0 2px 6px rgba(0,0,0,.25),0 16px 34px -12px rgba(0,0,0,.7)}
+.strip{gap:2px;padding:5px;margin:0 0 14px;border-radius:24px}
+.strip button,.strip button:not(.on){border:0;background:none;box-shadow:none;min-width:48px;border-radius:19px;padding:7px 4px 8px;color:var(--mnum)}
+.strip button b{color:var(--mnum)}.strip button.ok b{color:var(--tx)}
+.strip button i{background:transparent}.strip button.ok i{background:var(--ok)}
+.strip button.on i{background:currentColor;opacity:.35}.strip button.on.ok i{background:var(--ok);opacity:1}
+.ms button{color:var(--mnum)}.ms button.ok{color:var(--tx)}
+.ms button.ok:not(.on){text-shadow:0 0 12px rgba(255,255,255,.25)}
 </style></head><body><div class="amb"><i></i><i></i></div>
 <header class="hd"><div class="brand"><span class="logo" id="lg"></span><div><h1>Journal du sommeil</h1><p id="mode"></p></div></div><button id="th" type="button" aria-label="Changer de thème"></button></header>
 
@@ -317,7 +339,7 @@ const tm=(k,l)=>`<div class="f"><span>${l}</span><div class="iw"><input type="ti
 const nm=(k,l,v,u)=>`<div class="f"><span>${l}</span><div class="nr"><input type="number" inputmode="numeric" min="0" data-k="${k}" value="${esc(cur[k])}" placeholder="0"><em>${u}</em>${rb(k)}</div><div class="ch">${v.map(x=>`<button type="button" data-set="${k}:${x}" class="${cur[k]==x&&cur[k]!==''?'on':''}">${x}</button>`).join('')}</div></div>`;
 function form(){const c=cur;
  return `${back?`<button class="btn g back" id="back" type="button">${ic('cl',16)}Retour ${back==3?'aux statistiques':'à l’historique'}</button>`:''}${strip()}<div class="card"><div class="nav"><label><span>Nuit se terminant le (jour du réveil)</span><input type="date" data-k="date" value="${c.date}"></label></div><p class="day">${lg(c.date)}${entries[c.date]?'<span class="tag">enregistrée</span>':''}</p>
- <small class="hint">Glissez l’écran pour changer de nuit</small><button class="btn" id="prev" type="button">${ic('redo',16)}Reprendre la nuit précédente</button></div>
+ <small class="hint" style="margin-bottom:0">Glissez l’écran pour changer de nuit</small></div>
  <div class="card">${hd('bed','Coucher')}<div class="g2">${tm('bed','Mise au lit')}${tm('try','Heure d’essai pour dormir')}</div>
  ${nm('lat','Temps estimé avant l’endormissement',[5,10,15,30,45,60,90],'min')}</div>
  <div class="card">${hd('night','Pendant la nuit')}
