@@ -105,7 +105,7 @@ button:active,a.btn:active{transform:scale(.96)}
 .strip button b{font-size:1.05rem;color:var(--tx);font-weight:600}
 .strip button i{width:5px;height:5px;border-radius:50%;background:var(--mu2)}.strip button.ok i{background:var(--ok)}
 .strip button.on{background:var(--inv);border-color:transparent;color:var(--invt)}.strip button.on b{color:var(--invt)}
-.day{text-align:center;margin:12px 0 14px;color:var(--mu);font-size:.85rem;text-transform:capitalize}
+.day{text-align:center;margin:12px 0 14px;color:var(--mu);font-size:.85rem}
 .tag{display:inline-block;margin-left:6px;padding:1px 8px;border-radius:999px;font-size:.72rem;background:var(--fld);border:1px solid var(--fldb);text-transform:none}
 
 /* ---------- Résumé (anneau) ---------- */
@@ -602,7 +602,7 @@ const tm=(k,l)=>`<div class="f"><span>${l}${sugT(k)}</span><div class="iw"><inpu
 const nm=(k,l,v,u)=>`<div class="f"><span>${l}</span><div class="nr"><input type="number" inputmode="numeric" min="0" data-k="${k}" value="${esc(cur[k])}" placeholder="0"><em>${u}</em>${rb(k)}</div><div class="ch">${(()=>{const h=cur[k]===''?habit(k):'';return h?`<button type="button" class="sug" data-set="${k}:${h}">habituel ${h}${u?' '+u:''}</button>`:''})()}${v.map(x=>`<button type="button" data-set="${k}:${x}" class="${cur[k]==x&&cur[k]!==''?'on':''}">${x}</button>`).join('')}</div></div>`;
 function form(){const c=cur,M=missing();medSug=freqMeds(c.date,c.meds);
  const fs=(k,cls='')=>c[k]?'':freqTxt(k,c.date).map(v=>`<button type="button" class="sug" data-sk="${k}" data-sv="${esc(v)}">${esc(v)}</button>`).join('');
- return `${back?`<button class="btn g back" id="back" type="button">${ic('cl',16)}Retour ${back==3?'aux statistiques':'à l’historique'}</button>`:''}${strip()}<div class="card"><div class="nav"><label><span>Nuit se terminant le (jour du réveil)</span><input type="date" data-k="date" value="${c.date}"></label></div><p class="day">${lg(c.date)}${entries[c.date]?'<span class="tag">enregistrée</span>':''}</p>
+ return `${back?`<button class="btn g back" id="back" type="button">${ic('cl',16)}Retour ${back==3?'aux statistiques':'à l’historique'}</button>`:''}${strip()}<div class="card"><div class="nav"><label><span>Nuit se terminant le (jour du réveil)</span><input type="date" data-k="date" value="${c.date}"></label></div><p class="day">${nightName(c.date)}${c.date===shift(today(),1)?'<span class="tag">nuit à venir</span>':c.date===today()?'<span class="tag">nuit dernière</span>':''}${entries[c.date]?'<span class="tag">enregistrée</span>':''}</p>
  ${M.length?`<div class="miss"><span>${ic('alert',14)}${M.length} nuit${M.length>1?'s':''} non saisie${M.length>1?'s':''} :</span>${M.slice(-6).map(d=>`<button type="button" data-goto="${d}">${sh(d)}</button>`).join('')}</div>`:''}</div>
  <div class="card">${hd('bed','Coucher')}<div class="g2">${tm('bed','Mise au lit')}${tm('try','Heure d’essai pour dormir')}</div>
  ${nm('lat','Temps estimé avant l’endormissement',[5,10,15,30,45,60,90],'min')}</div>
@@ -688,7 +688,7 @@ function copy(t,btn){const ok=()=>{btn.textContent='Copié'};
 let calM='';
 function calView(){const t=today(),m=calM||t.slice(0,7),[y,mo]=m.split('-').map(Number),first=new Date(y,mo-1,1),nd=new Date(y,mo,0).getDate(),off=(first.getDay()+6)%7;
  let c='<span></span>'.repeat(off),nE=0,nM=0;const f0=Object.keys(entries).filter(k=>/^\d{4}-\d{2}-\d{2}$/.test(k)).sort()[0]||t;
- for(let d=1;d<=nd;d++){const k=m+'-'+pad(d),e=entries[k],fut=!e&&k>t;if(e)nE++;else if(!fut&&k>=f0)nM++;
+ for(let d=1;d<=nd;d++){const k=m+'-'+pad(d),e=entries[k],fut=!e&&k>shift(t,1);if(e)nE++;else if(!fut&&k>=f0)nM++;
   c+=`<button type="button" class="cd ${e?(e.feel?'cf':'ce'):fut?'cfu':'cm'} ${k===t?'ctd':''}" ${fut?'disabled':''} data-open="${k}" style="${e&&e.feel?'--c:'+FC[e.feel]:''}" aria-label="${lg(k)} : ${e?(e.feel?'nuit '+e.feel:'nuit saisie'):'non saisie'}">${d}</button>`}
  return `<div class="card cal"><div class="calh"><button type="button" class="cn" data-cal="-1" aria-label="Mois précédent">${ic('cl',18)}</button><b>${first.toLocaleDateString('fr-FR',{month:'long',year:'numeric'})}</b><button type="button" class="cn" data-cal="1" ${m<t.slice(0,7)?'':'disabled'} aria-label="Mois suivant">${ic('cr',18)}</button></div>
  <div class="cgrid wd">${['L','M','M','J','V','S','D'].map(x=>`<span>${x}</span>`).join('')}</div><div class="cgrid">${c}</div>
@@ -722,7 +722,10 @@ function shift(s,n){const d=new Date(s+'T12:00');d.setDate(d.getDate()+n);return
 function go(d){clearTimeout(tmr);save().then(()=>{openDate(d);fresh=true;render()})}
 // Dernier jour de la barre des jours : aujourd'hui, ou quelques jours après la nuit affichée si elle est ancienne
 function stripEnd(){const t=maxDay();return cur.date<shift(t,-13)?shift(cur.date,6):t}
-function maxDay(){const t=shift(today(),1);return cur.date>today()||entries[t]?t:today()}
+const nightName=d=>{const p=new Date(shift(d,-1)+'T12:00').toLocaleDateString('fr-FR',{weekday:'long',day:'numeric'});return 'Nuit du '+p+' au '+lg(d)};
+function maxDay(){return shift(today(),1)}
+// Nuit affichée par défaut : à partir de 16 h, la nuit qui commence ce soir ; avant, celle qui s'est terminée ce matin
+const defNight=()=>new Date().getHours()>=16?shift(today(),1):today();let autoDate='';
 function miniStrip(){const m=$('#mini');if(tab!==1){m.classList.remove('show');return}let h='';
  for(let i=13;i>=0;i--){const d=shift(stripEnd(),-i);h+=`<button type="button" data-goto="${d}" class="${d===cur.date?'on':''} ${entries[d]?'ok':''}" aria-label="${lg(d)}">${+d.slice(8)}</button>`}
  const ms=$('.ms',m);ms.innerHTML=h;const a=$('.on',ms);if(a)ms.scrollLeft=a.offsetLeft-ms.clientWidth/2+a.offsetWidth/2;miniCheck()}
@@ -926,7 +929,9 @@ const forceNight=/[?&]nuit=1/.test(location.search),isNight=()=>forceNight||new 
 function modeLine(){$('#mode').innerHTML=isNight()?'<span class="dot" style="background:var(--wa)"></span>Mode nuit · luminosité réduite':store?'<span class="dot" style="background:var(--ok)"></span>Synchronisé avec votre compte':'<span class="dot" style="background:var(--wa)"></span>Sur cet appareil · pensez à sauvegarder'}
 function applyTheme(){const n=isNight();document.documentElement.dataset.night=n?'1':'';setTheme(n?'dark':userTh);modeLine()}
 $('#th').onclick=()=>{userTh=userTh==='dark'?'light':'dark';try{localStorage.setItem('sommeil-th',userTh)}catch(e){}applyTheme();if(isNight())setStatus('Mode nuit actif jusqu’à 5 h')};
-applyTheme();setInterval(applyTheme,60000);document.addEventListener('visibilitychange',()=>{if(!document.hidden)applyTheme()});
+function followDefault(){const d=defNight();if(tab!==1||document.body.classList.contains('wz')||cur.date!==autoDate||d===autoDate)return;
+ clearTimeout(tmr);save().then(()=>{openDate(d);autoDate=d;fresh=true;render()})}
+applyTheme();setInterval(()=>{applyTheme();followDefault()},60000);document.addEventListener('visibilitychange',()=>{if(!document.hidden){applyTheme();followDefault()}});
 // Glisser le doigt le long de la barre du bas pour changer d'onglet
 (()=>{const tb=$('.tb'),pill=$('.pill'),bs=$$('.tb button');let d=null,skip=false;
  const at=x=>{const w=(d.r.width-10)/4,p=Math.max(0,Math.min(3*w,x-d.r.left-5-w/2));return {p,i:Math.round(p/w)+1}};
@@ -943,7 +948,7 @@ applyTheme();setInterval(applyTheme,60000);document.addEventListener('visibility
   if(!g.on){if(Math.abs(dy)>12&&Math.abs(dy)>Math.abs(dx)){g=null;return}if(Math.abs(dx)<12)return;g.on=true;app.className='swp';document.activeElement&&document.activeElement.blur&&document.activeElement.blur()}
   e.preventDefault();const fut=dx<0&&cur.date>=maxDay();g.dx=dx;app.style.transform=`translateX(${fut?dx*.15:dx*.55}px)`;app.style.opacity=1-Math.min(.5,Math.abs(dx)/700)},{passive:false});
  const end=()=>{if(!g||!g.on){g=null;return}const dx=g.dx;g=null;const n=dx<0?1:-1,d=shift(cur.date,n);
-  if(Math.abs(dx)<70||(n>0&&d>maxDay())){app.className='snap';app.style.transform='';app.style.opacity='';if(n>0&&Math.abs(dx)>=70)setStatus('Pas de nuit après aujourd’hui');setTimeout(()=>app.className='',340);return}
+  if(Math.abs(dx)<70||(n>0&&d>maxDay())){app.className='snap';app.style.transform='';app.style.opacity='';if(n>0&&Math.abs(dx)>=70)setStatus('La nuit à venir est la dernière disponible');setTimeout(()=>app.className='',340);return}
   app.className='out';app.style.transform=`translateX(${dx<0?-45:45}%)`;app.style.opacity='0';
   setTimeout(()=>{clearTimeout(tmr);save().then(()=>{openDate(d);render();app.style.transform='';app.style.opacity='';app.className=n>0?'inL':'inR';scrollTo({top:0,behavior:'instant'});setTimeout(()=>app.className='',400)})},190)};
  app.addEventListener('touchend',end);app.addEventListener('touchcancel',end)})();
@@ -985,6 +990,7 @@ app.addEventListener('click',e=>{const bs=e.target.closest('.bars[data-nav]');
 function normalize(o){const r={};Object.keys(o||{}).forEach(k=>{const v=o[k];
  if(/^\d{4}-\d{2}-\d{2}$/.test(k)&&v&&typeof v==='object'){const e={...blank(k),...v,date:k};['naps','odd','meds'].forEach(f=>{if(!Array.isArray(e[f]))e[f]=[]});r[k]=e}else r[k]=v});return r}
 (async()=>{try{entries=normalize(JSON.parse(localStorage.getItem(KEY)||'{}'))}catch(e){}
+ openDate(defNight());autoDate=cur.date;
  let m='ce navigateur uniquement';render();
  try{if(window.claude){const u=await claude.use('user'),db=await claude.use('db');const id=u&&await u.id();
   if(db&&id){store=db.collection('data/users/'+id+'/nuits/items');const loc=entries;Object.keys(loc).forEach(k=>store.doc(k).set(loc[k]));if(Object.keys(loc).length)try{localStorage.removeItem(KEY)}catch(x){}let first=true;
@@ -994,7 +1000,7 @@ function normalize(o){const r={};Object.keys(o||{}).forEach(k=>{const v=o[k];
  modeLine();render()})();
 // Mises à jour automatiques : on vérifie à l'ouverture et à chaque retour dans l'app,
 // puis on recharge la page dès que la nouvelle version a pris le relais.
-const APP_VERSION=11;
+const APP_VERSION=12;
 if('serviceWorker' in navigator&&location.protocol!=='file:'){const sw=navigator.serviceWorker;let had=!!sw.controller,reloading=false;
  sw.addEventListener('controllerchange',()=>{if(!had){had=true;return}if(reloading)return;reloading=true;clearTimeout(tmr);
   Promise.resolve(isFilled(cur)?save():0).finally(()=>{setStatus('Mise à jour…');setTimeout(()=>location.reload(),300)})});
